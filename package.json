@@ -1,0 +1,126 @@
+{
+  "name": "airview-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "test:coverage": "npm test -- --coverage --watchAll=false --maxWorkers=50%",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -s public -p 6006",
+    "build-storybook": "build-storybook",
+    "lint-js": "eslint './src/**/*.{js, jsx}'",
+    "lint-js:fix": "npm run lint-js -- --fix",
+    "format": "prettier --check './src/'",
+    "format:fix": "npm run format -- --write"
+  },
+  "dependencies": {
+    "@date-io/dayjs": "^1.3.13",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@material-ui/pickers": "^3.3.10",
+    "@storybook/preset-create-react-app": "^3.2.0",
+    "@storybook/preset-scss": "^1.0.3",
+    "@types/mime-types": "^2.1.1",
+    "axios": "^0.21.1",
+    "btoa": "^1.2.1",
+    "css-loader": "^5.0.1",
+    "dayjs": "^1.10.4",
+    "dotenv": "^8.2.0",
+    "file-loader": "^6.2.0",
+    "gray-matter": "^4.0.3",
+    "http-proxy-middleware": "^2.0.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jss-plugin-compose": "^10.5.1",
+    "jss-plugin-extend": "^10.5.1",
+    "lodash-es": "^4.17.21",
+    "mdi-material-ui": "^6.22.1",
+    "oidc-client": "^1.11.5",
+    "oidc-react": "^1.5.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-helmet": "^6.1.0",
+    "react-markdown": "^5.0.3",
+    "react-router-dom": "^5.2.0",
+    "react-router-hash-link": "^2.4.3",
+    "react-scripts": "4.0.3",
+    "react-syntax-highlighter": "^15.4.3",
+    "remark": "^12.0.0",
+    "remark-gfm": "^1.0.0",
+    "remark-html": "^12.0.0",
+    "rich-markdown-editor": "^11.17.2",
+    "slug": "^4.0.2",
+    "style-loader": "^2.0.0",
+    "styled-components": "^5.2.1",
+    "swr": "^0.4.2",
+    "typescript": "^4.3.5",
+    "web-vitals": "^1.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@storybook/addon-actions": "^6.2.8",
+    "@storybook/addon-controls": "^6.2.8",
+    "@storybook/addon-essentials": "^6.2.8",
+    "@storybook/addon-links": "^6.2.8",
+    "@storybook/react": "^6.2.8",
+    "@testing-library/dom": "^7.29.4",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.3",
+    "@testing-library/react-hooks": "^7.0.1",
+    "@testing-library/user-event": "^12.6.3",
+    "@types/js-cookie": "^2.2.7",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.18.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-react": "^7.25.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "faker": "^5.5.3",
+    "git-clone": "^0.1.0",
+    "mockdate": "^3.0.2",
+    "msw": "^0.28.2",
+    "msw-storybook-addon": "^1.1.0",
+    "node-fetch": "^2.6.1",
+    "prettier": "2.2.1",
+    "stylelint": "^13.9.0",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-scss": "^3.18.0"
+  },
+  "jest": {
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "<rootDir>/src/components/**/*.{js,jsx}",
+      "!**/*.stories.{js,jsx}",
+      "!**/*.styles.{js,jsx}",
+      "!<rootDir>/src/pages/**",
+      "!<rootDir>/src/stories/**"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/tests/__mocks__/fileMock.js",
+      "\\.(css|scss|less)$": "identity-obj-proxy"
+    }
+  },
+  "msw": {
+    "workerDirectory": "public"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "prettier"
+    ]
+  },
+  "browserslist": [
+    "last 2 Chrome major versions",
+    "last 2 Firefox major versions",
+    "last 2 Safari major versions",
+    "last 2 Edge major versions",
+    "last 2 ChromeAndroid major versions",
+    "last 2 FirefoxAndroid major versions",
+    "last 2 iOS major versions",
+    "not IE > 0"
+  ]
+}

@@ -1,0 +1,29 @@
+import React from "react";
+import { useLocation } from "react-router-dom";
+import siteConfig from "../../site-config.json";
+import { useNav } from "../../hooks/use-nav";
+import { BasicTextPageFullWidthTemplate } from "../../components/basic-text-page-full-width-template";
+
+export function NotFoundPage() {
+  const location = useLocation();
+  const requestedUrl = location.state?.location.pathname ?? location.pathname;
+
+  return (
+    <BasicTextPageFullWidthTemplate
+      currentRoute="/not-found"
+      pageTitle="Page Not Found"
+      siteTitle={siteConfig.siteTitle}
+      version={siteConfig.version}
+      logoSrc={siteConfig.theme.logoSrc}
+      navItems={useNav()}
+      breadcrumbLinks={[
+        {
+          label: "Home",
+          url: "/",
+        },
+      ]}
+      bodyContent={`The requested page at path **${requestedUrl}** was not found. Please check you have requested the correct URL, alternatively head back to the [homepage](/).`}
+      loading={false}
+    />
+  );
+}

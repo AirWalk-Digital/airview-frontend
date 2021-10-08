@@ -1,0 +1,8 @@
+{
+  "siteTitle": "AirView",
+  "version": "1.0.0",
+  "theme": {
+    "logoSrc": "/logo-airwalk-reply.svg",
+    "color": "#002b3d"
+  }
+}
