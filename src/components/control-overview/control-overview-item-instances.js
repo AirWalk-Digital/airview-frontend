@@ -122,7 +122,7 @@ export function ControlOverviewItemInstances({ instanceData }) {
       <TableContainer>
         <Toolbar variant="dense" className={classes.toolbar}>
           <Typography variant="subtitle2" component="p">
-            Instances
+            Resources
           </Typography>
 
           {filters && filters.length > 1 && (
