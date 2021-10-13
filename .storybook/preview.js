@@ -15,7 +15,7 @@ export const parameters = {
 };
 
 export const decorators = [
-  //mswDecorator(),
+  mswDecorator,
   (Story) => {
     const jss = create({
       plugins: [...jssPreset().plugins, compose()],
@@ -34,4 +34,4 @@ export const decorators = [
   },
 ];
 
-//initializeWorker();
+initializeWorker();
