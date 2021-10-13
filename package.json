@@ -80,7 +80,7 @@
     "git-clone": "^0.1.0",
     "mockdate": "^3.0.2",
     "msw": "^0.28.2",
-    "msw-storybook-addon": "^1.1.0",
+    "msw-storybook-addon": "^1.4.1",
     "node-fetch": "^2.6.1",
     "prettier": "2.2.1",
     "stylelint": "^13.9.0",
