@@ -90,7 +90,7 @@ export const controls = {
   2: [],
 };
 
-export const instances = {
+export const resources = {
   1: [
     {
       id: 1,

@@ -7,7 +7,7 @@ import { ControlOverviewGroup } from "./control-overview-group";
 import { ControlOverviewItem } from "./control-overview-item";
 import { Message } from "../message";
 import { ControlOverviewItemDetail } from "./control-overview-item-detail";
-import { ControlOverviewItemInstances } from "./control-overview-item-instances";
+import { ControlOverviewItemResources } from "./control-overview-item-resources";
 import { ControlOverviewLoadingIndicator } from "./control-overview-loading-indicator";
 import Box from "@material-ui/core/Box";
 
@@ -15,7 +15,7 @@ export function ControlOverview({
   title,
   data,
   onRequestOfControlsData,
-  onRequestOfInstancesData,
+  onRequestOfResourcesData,
 }) {
   const theme = useTheme();
 
@@ -81,7 +81,7 @@ export function ControlOverview({
                         severity={control.severity}
                         applied={control.applied}
                         exempt={control.exempt}
-                        onChange={onRequestOfInstancesData}
+                        onChange={onRequestOfResourcesData}
                         key={control.id}
                       >
                         <ControlOverviewItemDetail
@@ -93,27 +93,27 @@ export function ControlOverview({
 
                         {(() => {
                           if (
-                            !data.instances ||
-                            !data.instances[control.id] ||
-                            data.instances[control.id] === "loading"
+                            !data.resources ||
+                            !data.resources[control.id] ||
+                            data.resources[control.id] === "loading"
                           ) {
                             return <ControlOverviewLoadingIndicator />;
                           }
 
-                          if (data.instances[control.id] === "error") {
+                          if (data.resources[control.id] === "error") {
                             return <Box paddingTop={1}>{errorMessage}</Box>;
                           }
 
-                          if (Array.isArray(data.instances[control.id])) {
-                            if (data.instances[control.id].length < 1) {
+                          if (Array.isArray(data.resources[control.id])) {
+                            if (data.resources[control.id].length < 1) {
                               return (
                                 <Box paddingTop={1}>{noIssuesMessage}</Box>
                               );
                             }
 
                             return (
-                              <ControlOverviewItemInstances
-                                instanceData={data.instances[control.id]}
+                              <ControlOverviewItemResources
+                                resourcesData={data.resources[control.id]}
                               />
                             );
                           }
@@ -177,7 +177,7 @@ ControlOverview.propTypes = {
       ])
     ),
 
-    instances: PropTypes.objectOf(
+    resources: PropTypes.objectOf(
       PropTypes.oneOfType([
         PropTypes.arrayOf(
           PropTypes.shape({
@@ -194,11 +194,11 @@ ControlOverview.propTypes = {
     ),
   }),
   /**
-   * Callback for when a user expands a control group. **Signature:** `function(groupId: int) => void`
+   * Callback for when a user expands a control group and a request is made to fetch the controls for that group. **Signature:** `function(groupId: int) => void`
    */
   onRequestOfControlsData: PropTypes.func,
   /**
-   * Callback for when a user expands a control within a given group. **Signature:** `function(controlId: int) => void`
+   * Callback for when a user expands a control within a given group and a request is made to fetch the resource data for that control. **Signature:** `function(controlId: int) => void`
    */
-  onRequestOfInstancesData: PropTypes.func,
+  onRequestOfResourcesData: PropTypes.func,
 };

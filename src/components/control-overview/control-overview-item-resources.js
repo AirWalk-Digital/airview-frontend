@@ -23,8 +23,8 @@ import Box from "@material-ui/core/Box";
 import clsx from "clsx";
 import dayjs from "dayjs";
 
-export function ControlOverviewItemInstances({ instanceData }) {
-  const classes = useControlOverviewItemInstancesStyles();
+export function ControlOverviewItemResources({ resourcesData }) {
+  const classes = useControlOverviewItemResourcesStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeFilters, setActiveFilters] = useState([]);
@@ -49,7 +49,7 @@ export function ControlOverviewItemInstances({ instanceData }) {
   };
 
   const filters = useMemo(() => {
-    return instanceData
+    return resourcesData
       .map((instance) => instance.environment)
       .reduce((uniqueFilters, filter) => {
         return uniqueFilters.includes(filter)
@@ -57,19 +57,19 @@ export function ControlOverviewItemInstances({ instanceData }) {
           : [...uniqueFilters, filter];
       }, [])
       .sort();
-  }, [instanceData]);
+  }, [resourcesData]);
 
-  const getInstancesByFilterValues = (instances, filterValues) => {
-    if (filterValues.length < 1) return instances;
+  const getResourcesByFilterValues = (resources, filterValues) => {
+    if (filterValues.length < 1) return resources;
 
-    return instances.filter((instance) =>
+    return resources.filter((instance) =>
       filterValues.includes(instance.environment)
     );
   };
 
-  const getInstancesSortedByLastSeenDate = (instances, sortBy) => {
+  const getResourcesSortedByLastSeenDate = (resources, sortBy) => {
     return [
-      ...instances.sort((a, b) => {
+      ...resources.sort((a, b) => {
         if (sortBy === "asc") {
           return Date.parse(a.lastSeen) - Date.parse(b.lastSeen);
         }
@@ -82,12 +82,12 @@ export function ControlOverviewItemInstances({ instanceData }) {
     ];
   };
 
-  const processedInstanceData = useMemo(() => {
-    return getInstancesByFilterValues(
-      getInstancesSortedByLastSeenDate(instanceData, lastSeenOrder),
+  const processedResourcesData = useMemo(() => {
+    return getResourcesByFilterValues(
+      getResourcesSortedByLastSeenDate(resourcesData, lastSeenOrder),
       activeFilters
     );
-  }, [instanceData, lastSeenOrder, activeFilters]);
+  }, [resourcesData, lastSeenOrder, activeFilters]);
 
   const handleOnSortByLastSeenClick = () => {
     if (lastSeenOrder === "asc") {
@@ -208,7 +208,7 @@ export function ControlOverviewItemInstances({ instanceData }) {
               <TableCell>Resource</TableCell>
               <TableCell>Environment</TableCell>
               <TableCell sortDirection={lastSeenOrder}>
-                {processedInstanceData.length > 1 ? (
+                {processedResourcesData.length > 1 ? (
                   <TableSortLabel
                     active={true}
                     direction={lastSeenOrder}
@@ -234,23 +234,23 @@ export function ControlOverviewItemInstances({ instanceData }) {
           </TableHead>
 
           <TableBody className={classes.tableBody}>
-            {processedInstanceData.map((instance) => {
+            {processedResourcesData.map((resource) => {
               return (
-                <TableRow key={instance.type}>
-                  <TableCell>{instance.type}</TableCell>
-                  <TableCell>{instance.reference}</TableCell>
-                  <TableCell>{instance.environment}</TableCell>
+                <TableRow key={resource.type}>
+                  <TableCell>{resource.type}</TableCell>
+                  <TableCell>{resource.reference}</TableCell>
+                  <TableCell>{resource.environment}</TableCell>
                   <TableCell>
-                    {dayjs(instance.lastSeen).format("MMM D YYYY - h:mm A")}
+                    {dayjs(resource.lastSeen).format("MMM D YYYY - h:mm A")}
                   </TableCell>
                   <TableCell>
                     <span
                       className={clsx(
                         classes.statusLabel,
-                        classes[getStatusLabelClassName(instance.status)]
+                        classes[getStatusLabelClassName(resource.status)]
                       )}
                     >
-                      {instance.status}
+                      {resource.status}
                     </span>
                   </TableCell>
                 </TableRow>
@@ -263,8 +263,8 @@ export function ControlOverviewItemInstances({ instanceData }) {
   );
 }
 
-ControlOverviewItemInstances.propTypes = {
-  instanceData: PropTypes.arrayOf(
+ControlOverviewItemResources.propTypes = {
+  resourcesData: PropTypes.arrayOf(
     PropTypes.shape({
       type: PropTypes.string,
       reference: PropTypes.string,
@@ -275,7 +275,7 @@ ControlOverviewItemInstances.propTypes = {
   ),
 };
 
-const useControlOverviewItemInstancesStyles = makeStyles((theme) => {
+const useControlOverviewItemResourcesStyles = makeStyles((theme) => {
   return {
     container: {
       marginTop: theme.spacing(2),

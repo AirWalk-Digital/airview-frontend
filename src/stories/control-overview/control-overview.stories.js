@@ -40,19 +40,21 @@ const config = {
 };
 
 function Default() {
-  const [state, setControlData, setInstanceData] = useControlOverviewController(
-    "https://testapi.dev/quality-models"
-  );
+  const [
+    state,
+    setControlsData,
+    setResourcesData,
+  ] = useControlOverviewController("https://testapi.dev/quality-models");
 
   const handleOnRequestOfControlsData = async (id) => {
-    setControlData(
+    setControlsData(
       id,
       `https://testapi.dev/applications/1/control-overviews?qualityModelId=${id}`
     );
   };
 
-  const handleOnRequestOfInstancesData = async (id) => {
-    setInstanceData(
+  const handleOnRequestOfResourcesData = async (id) => {
+    setResourcesData(
       id,
       `https://testapi.dev/applications/1/monitored-resources?technicalControlId=${id}`
     );
@@ -63,7 +65,7 @@ function Default() {
       title="Control Overview"
       data={state}
       onRequestOfControlsData={handleOnRequestOfControlsData}
-      onRequestOfInstancesData={handleOnRequestOfInstancesData}
+      onRequestOfResourcesData={handleOnRequestOfResourcesData}
     />
   );
 }
@@ -72,7 +74,7 @@ function WithNoIssues() {
   const data = {
     groups: [],
     controls: undefined,
-    instances: undefined,
+    resources: undefined,
   };
 
   return (
@@ -80,7 +82,7 @@ function WithNoIssues() {
       title="Control Overview"
       data={data}
       onRequestOfControlsData={(id) => console.log("group id", id)}
-      onRequestOfInstancesData={(id) => console.log("control id", id)}
+      onRequestOfResourcesData={(id) => console.log("control id", id)}
     />
   );
 }
@@ -89,7 +91,7 @@ function WithError() {
   const data = {
     groups: "error",
     controls: undefined,
-    instances: undefined,
+    resources: undefined,
   };
 
   return (
@@ -97,7 +99,7 @@ function WithError() {
       title="Control Overview"
       data={data}
       onRequestOfControlsData={(id) => console.log("group id", id)}
-      onRequestOfInstancesData={(id) => console.log("control id", id)}
+      onRequestOfResourcesData={(id) => console.log("control id", id)}
     />
   );
 }

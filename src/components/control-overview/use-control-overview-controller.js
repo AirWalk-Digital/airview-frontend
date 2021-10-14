@@ -7,10 +7,10 @@ function reducer(state, action) {
       return {
         groups: action.payload,
         controls: undefined,
-        instances: undefined,
+        resources: undefined,
       };
     }
-    case "SET_CONTROL_DATA": {
+    case "SET_CONTROLS_DATA": {
       return {
         ...state,
         controls: {
@@ -19,11 +19,11 @@ function reducer(state, action) {
         },
       };
     }
-    case "SET_INSTANCE_DATA": {
+    case "SET_RESOURCES_DATA": {
       return {
         ...state,
-        instances: {
-          ...state?.instances,
+        resources: {
+          ...state?.resources,
           [action.id]: action.payload,
         },
       };
@@ -57,55 +57,55 @@ function useControlOverviewController(initEndpoint) {
     }
   }
 
-  async function setControlData(id, endpoint) {
+  async function setControlsData(id, endpoint) {
     const groupDataValue = state?.controls?.[id];
 
     if (
       groupDataValue !== "loading" &&
       (groupDataValue === undefined || groupDataValue === "error")
     ) {
-      dispatch({ type: "SET_CONTROL_DATA", id, payload: "loading" });
+      dispatch({ type: "SET_CONTROLS_DATA", id, payload: "loading" });
 
       try {
         const response = await fetch(endpoint);
         const data = await response.json();
 
         if (!response.ok) {
-          dispatch({ type: "SET_CONTROL_DATA", id, payload: "error" });
+          dispatch({ type: "SET_CONTROLS_DATA", id, payload: "error" });
         } else {
-          dispatch({ type: "SET_CONTROL_DATA", id, payload: data });
+          dispatch({ type: "SET_CONTROLS_DATA", id, payload: data });
         }
       } catch {
-        dispatch({ type: "SET_CONTROL_DATA", id, payload: "error" });
+        dispatch({ type: "SET_CONTROLS_DATA", id, payload: "error" });
       }
     }
   }
 
-  async function setInstanceData(id, endpoint) {
-    const instanceDataValue = state?.instances?.[id];
+  async function setResourcesData(id, endpoint) {
+    const resourcesDataValue = state?.resources?.[id];
 
     if (
-      instanceDataValue !== "loading" &&
-      (instanceDataValue === undefined || instanceDataValue === "error")
+      resourcesDataValue !== "loading" &&
+      (resourcesDataValue === undefined || resourcesDataValue === "error")
     ) {
-      dispatch({ type: "SET_INSTANCE_DATA", id, payload: "loading" });
+      dispatch({ type: "SET_RESOURCES_DATA", id, payload: "loading" });
 
       try {
         const response = await fetch(endpoint);
         const data = await response.json();
 
         if (!response.ok) {
-          dispatch({ type: "SET_INSTANCE_DATA", id, payload: "error" });
+          dispatch({ type: "SET_RESOURCES_DATA", id, payload: "error" });
         } else {
-          dispatch({ type: "SET_INSTANCE_DATA", id, payload: data });
+          dispatch({ type: "SET_RESOURCES_DATA", id, payload: data });
         }
       } catch {
-        dispatch({ type: "SET_INSTANCE_DATA", id, payload: "error" });
+        dispatch({ type: "SET_RESOURCES_DATA", id, payload: "error" });
       }
     }
   }
 
-  return [state, setControlData, setInstanceData, initializeData];
+  return [state, setControlsData, setResourcesData, initializeData];
 }
 
 export { useControlOverviewController };
