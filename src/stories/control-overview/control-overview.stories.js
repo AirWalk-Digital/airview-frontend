@@ -40,22 +40,58 @@ const config = {
 };
 
 function Default() {
-  const [state, setControlData, setInstanceData] = useControlOverviewController(
-    "https://testapi.dev/quality-models"
-  );
+  const [
+    state,
+    setControlsData,
+    setResourcesData,
+  ] = useControlOverviewController(async () => {
+    try {
+      const response = await fetch(`https://testapi.dev/quality-models`);
 
-  const handleOnRequestOfControlsData = async (id) => {
-    setControlData(
-      id,
-      `https://testapi.dev/applications/1/control-overviews?qualityModelId=${id}`
-    );
+      if (response.ok) {
+        return await response.json();
+      }
+
+      throw new Error();
+    } catch (error) {
+      return "error";
+    }
+  });
+
+  const handleOnRequestOfControlsData = (id) => {
+    setControlsData(id, async () => {
+      try {
+        const response = await fetch(
+          `https://testapi.dev/applications/1/control-overviews?qualityModelId=${id}`
+        );
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        throw new Error();
+      } catch (error) {
+        return "error";
+      }
+    });
   };
 
-  const handleOnRequestOfInstancesData = async (id) => {
-    setInstanceData(
-      id,
-      `https://testapi.dev/applications/1/monitored-resources?technicalControlId=${id}`
-    );
+  const handleOnRequestOfResourcesData = (id) => {
+    setResourcesData(id, async () => {
+      try {
+        const response = await fetch(
+          `https://testapi.dev/applications/1/monitored-resources?technicalControlId=${id}`
+        );
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        throw new Error();
+      } catch (error) {
+        return "error";
+      }
+    });
   };
 
   return (
@@ -63,7 +99,7 @@ function Default() {
       title="Control Overview"
       data={state}
       onRequestOfControlsData={handleOnRequestOfControlsData}
-      onRequestOfInstancesData={handleOnRequestOfInstancesData}
+      onRequestOfResourcesData={handleOnRequestOfResourcesData}
     />
   );
 }
@@ -72,7 +108,7 @@ function WithNoIssues() {
   const data = {
     groups: [],
     controls: undefined,
-    instances: undefined,
+    resources: undefined,
   };
 
   return (
@@ -80,7 +116,7 @@ function WithNoIssues() {
       title="Control Overview"
       data={data}
       onRequestOfControlsData={(id) => console.log("group id", id)}
-      onRequestOfInstancesData={(id) => console.log("control id", id)}
+      onRequestOfResourcesData={(id) => console.log("control id", id)}
     />
   );
 }
@@ -89,7 +125,7 @@ function WithError() {
   const data = {
     groups: "error",
     controls: undefined,
-    instances: undefined,
+    resources: undefined,
   };
 
   return (
@@ -97,7 +133,7 @@ function WithError() {
       title="Control Overview"
       data={data}
       onRequestOfControlsData={(id) => console.log("group id", id)}
-      onRequestOfInstancesData={(id) => console.log("control id", id)}
+      onRequestOfResourcesData={(id) => console.log("control id", id)}
     />
   );
 }

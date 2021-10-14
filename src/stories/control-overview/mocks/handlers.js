@@ -1,7 +1,7 @@
 import { rest } from "msw";
-import { groups, controls, instances } from "./data";
+import { groups, controls, resources } from "./data";
 
-const delay = process.env.NODE_ENV === "test" ? 0 : 2000;
+const delay = process.env.NODE_ENV === "test" ? 0 : 500;
 
 export const handlers = [
   rest.get("https://testapi.dev/quality-models", (req, res, ctx) => {
@@ -36,7 +36,7 @@ export const handlers = [
         );
       }
 
-      return res(ctx.delay(delay), ctx.json(instances[technicalControlId]));
+      return res(ctx.delay(delay), ctx.json(resources[technicalControlId]));
     }
   ),
 ];
