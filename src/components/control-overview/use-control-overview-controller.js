@@ -33,7 +33,7 @@ function reducer(state, action) {
   }
 }
 
-function useControlOverviewController(initEndpoint) {
+function useControlOverviewController(getInitalData) {
   const [state, dispatch] = useReducer(reducer);
 
   useEffect(() => {
@@ -43,21 +43,11 @@ function useControlOverviewController(initEndpoint) {
   async function initializeData() {
     dispatch({ type: "INITIALIZE", payload: "loading" });
 
-    try {
-      const response = await fetch(initEndpoint);
-      const data = await response.json();
-
-      if (!response.ok) {
-        dispatch({ type: "INITIALIZE", payload: "error" });
-      } else {
-        dispatch({ type: "INITIALIZE", payload: data });
-      }
-    } catch {
-      dispatch({ type: "INITIALIZE", payload: "error" });
-    }
+    const data = await getInitalData();
+    dispatch({ type: "INITIALIZE", payload: data });
   }
 
-  async function setControlsData(id, endpoint) {
+  async function setControlsData(id, getData) {
     const groupDataValue = state?.controls?.[id];
 
     if (
@@ -66,22 +56,12 @@ function useControlOverviewController(initEndpoint) {
     ) {
       dispatch({ type: "SET_CONTROLS_DATA", id, payload: "loading" });
 
-      try {
-        const response = await fetch(endpoint);
-        const data = await response.json();
-
-        if (!response.ok) {
-          dispatch({ type: "SET_CONTROLS_DATA", id, payload: "error" });
-        } else {
-          dispatch({ type: "SET_CONTROLS_DATA", id, payload: data });
-        }
-      } catch {
-        dispatch({ type: "SET_CONTROLS_DATA", id, payload: "error" });
-      }
+      const data = await getData();
+      dispatch({ type: "SET_CONTROLS_DATA", id, payload: data });
     }
   }
 
-  async function setResourcesData(id, endpoint) {
+  async function setResourcesData(id, getData) {
     const resourcesDataValue = state?.resources?.[id];
 
     if (
@@ -90,18 +70,8 @@ function useControlOverviewController(initEndpoint) {
     ) {
       dispatch({ type: "SET_RESOURCES_DATA", id, payload: "loading" });
 
-      try {
-        const response = await fetch(endpoint);
-        const data = await response.json();
-
-        if (!response.ok) {
-          dispatch({ type: "SET_RESOURCES_DATA", id, payload: "error" });
-        } else {
-          dispatch({ type: "SET_RESOURCES_DATA", id, payload: data });
-        }
-      } catch {
-        dispatch({ type: "SET_RESOURCES_DATA", id, payload: "error" });
-      }
+      const data = await getData();
+      dispatch({ type: "SET_RESOURCES_DATA", id, payload: data });
     }
   }
 

@@ -44,20 +44,54 @@ function Default() {
     state,
     setControlsData,
     setResourcesData,
-  ] = useControlOverviewController("https://testapi.dev/quality-models");
+  ] = useControlOverviewController(async () => {
+    try {
+      const response = await fetch(`https://testapi.dev/quality-models`);
 
-  const handleOnRequestOfControlsData = async (id) => {
-    setControlsData(
-      id,
-      `https://testapi.dev/applications/1/control-overviews?qualityModelId=${id}`
-    );
+      if (response.ok) {
+        return await response.json();
+      }
+
+      throw new Error();
+    } catch (error) {
+      return "error";
+    }
+  });
+
+  const handleOnRequestOfControlsData = (id) => {
+    setControlsData(id, async () => {
+      try {
+        const response = await fetch(
+          `https://testapi.dev/applications/1/control-overviews?qualityModelId=${id}`
+        );
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        throw new Error();
+      } catch (error) {
+        return "error";
+      }
+    });
   };
 
-  const handleOnRequestOfResourcesData = async (id) => {
-    setResourcesData(
-      id,
-      `https://testapi.dev/applications/1/monitored-resources?technicalControlId=${id}`
-    );
+  const handleOnRequestOfResourcesData = (id) => {
+    setResourcesData(id, async () => {
+      try {
+        const response = await fetch(
+          `https://testapi.dev/applications/1/monitored-resources?technicalControlId=${id}`
+        );
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        throw new Error();
+      } catch (error) {
+        return "error";
+      }
+    });
   };
 
   return (
