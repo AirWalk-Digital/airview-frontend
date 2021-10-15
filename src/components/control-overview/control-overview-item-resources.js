@@ -26,7 +26,10 @@ import ClearIcon from "@material-ui/icons/Clear";
 import clsx from "clsx";
 import dayjs from "dayjs";
 
-export function ControlOverviewItemResources({ resourcesData }) {
+export function ControlOverviewItemResources({
+  resourcesData,
+  onManageResourceClick,
+}) {
   const classes = useControlOverviewItemResourcesStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -273,6 +276,7 @@ export function ControlOverviewItemResources({ resourcesData }) {
                             aria-label="Manage Exemption"
                             color="primary"
                             size="small"
+                            onClick={() => onManageResourceClick(resource.id)}
                           >
                             <SettingsIcon fontSize="small" />
                           </IconButton>
@@ -303,6 +307,7 @@ ControlOverviewItemResources.propTypes = {
       pending: PropTypes.bool,
     })
   ),
+  onManageResourceClick: PropTypes.func.isRequired,
 };
 
 const useControlOverviewItemResourcesStyles = makeStyles((theme) => {
