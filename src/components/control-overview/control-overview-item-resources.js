@@ -271,6 +271,7 @@ ControlOverviewItemResources.propTypes = {
       environment: PropTypes.string,
       lastSeen: PropTypes.string,
       status: PropTypes.oneOf(["Monitoring", "Non-Compliant", "Exempt"]),
+      pending: PropTypes.bool,
     })
   ),
 };
