@@ -229,6 +229,8 @@ export function ControlOverviewItemResources({ resourcesData }) {
                   "Last seen"
                 )}
               </TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Pending</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -252,6 +254,10 @@ export function ControlOverviewItemResources({ resourcesData }) {
                     >
                       {resource.status}
                     </span>
+                  </TableCell>
+                  <TableCell>{resource.pending ? "Y" : "N"}</TableCell>
+                  <TableCell>
+                    {resource.status === "Exempt" ? "A" : null}
                   </TableCell>
                 </TableRow>
               );
