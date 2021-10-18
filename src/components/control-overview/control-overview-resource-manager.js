@@ -16,6 +16,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import { WorkingOverlay } from "../working-overlay";
 
 export function ControlOverviewResourceManager({
   open,
@@ -76,6 +77,8 @@ export function ControlOverviewResourceManager({
       fullWidth
       disableEscapeKeyDown
     >
+      <WorkingOverlay open={working} />
+
       <DialogTitle id="control-overview-resource-manager-title">
         Manage Resource Exemption
       </DialogTitle>
