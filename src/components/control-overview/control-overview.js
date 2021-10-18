@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
 import { ControlOverviewHeader } from "./control-overview-header";
 import { ControlOverviewGroup } from "./control-overview-group";
 import { ControlOverviewItem } from "./control-overview-item";
@@ -9,15 +10,27 @@ import { Message } from "../message";
 import { ControlOverviewItemDetail } from "./control-overview-item-detail";
 import { ControlOverviewItemResources } from "./control-overview-item-resources";
 import { ControlOverviewLoadingIndicator } from "./control-overview-loading-indicator";
-import Box from "@material-ui/core/Box";
+import { ControlOverviewResourceManager } from "./control-overview-resource-manager";
 
 export function ControlOverview({
   title,
   data,
   onRequestOfControlsData,
   onRequestOfResourcesData,
+  onResourceExemptionDelete,
+  onResourceExemptionSave,
 }) {
   const theme = useTheme();
+
+  const initialResourceManagerStatus = {
+    open: false,
+    controlId: null,
+    resourceId: null,
+  };
+
+  const [exemptionManagerStatus, setExemptionManagerStatus] = useState({
+    ...initialResourceManagerStatus,
+  });
 
   const errorMessage = (
     <Message
@@ -35,6 +48,34 @@ export function ControlOverview({
     />
   );
 
+  const handleOnManageResourceClick = (controlId, resourceId) => {
+    setExemptionManagerStatus({
+      open: true,
+      controlId,
+      resourceId,
+    });
+  };
+
+  const handleOnResourceManagerClose = () => {
+    setExemptionManagerStatus({ ...initialResourceManagerStatus });
+  };
+
+  const resourceManagerData = useMemo(() => {
+    if (!exemptionManagerStatus.open) return null;
+
+    const resourcesData =
+      data.resources[exemptionManagerStatus.controlId].filter(
+        (resource) => resource.id === exemptionManagerStatus.resourceId
+      )[0]?.exemptionData ?? null;
+
+    if (resourcesData) {
+      resourcesData.controlId = exemptionManagerStatus.controlId;
+      resourcesData.resourceId = exemptionManagerStatus.resourceId;
+    }
+
+    return resourcesData;
+  }, [data, exemptionManagerStatus]);
+
   if (!data || !data.groups || data.groups === "loading")
     return <ControlOverviewLoadingIndicator padding />;
 
@@ -44,89 +85,104 @@ export function ControlOverview({
     if (data.groups.length < 1) return noIssuesMessage;
 
     return (
-      <Paper elevation={1}>
-        <ControlOverviewHeader title={title} />
+      <React.Fragment>
+        <Paper elevation={1}>
+          <ControlOverviewHeader title={title} />
 
-        {data.groups.map((group) => {
-          return (
-            <ControlOverviewGroup
-              groupTitle={group.title}
-              id={group.id}
-              onChange={onRequestOfControlsData}
-              key={group.id}
-            >
-              {(() => {
-                if (
-                  !data.controls ||
-                  !data.controls[group.id] ||
-                  data.controls[group.id] === "loading"
-                ) {
-                  return <ControlOverviewLoadingIndicator padding />;
-                }
-
-                if (data.controls[group.id] === "error") {
-                  return <Box padding={2}>{errorMessage}</Box>;
-                }
-
-                if (Array.isArray(data.controls[group.id])) {
-                  if (data.controls[group.id].length < 1) {
-                    return <Box padding={2}>{noIssuesMessage}</Box>;
+          {data.groups.map((group) => {
+            return (
+              <ControlOverviewGroup
+                groupTitle={group.title}
+                id={group.id}
+                onChange={onRequestOfControlsData}
+                key={group.id}
+              >
+                {(() => {
+                  if (
+                    !data.controls ||
+                    !data.controls[group.id] ||
+                    data.controls[group.id] === "loading"
+                  ) {
+                    return <ControlOverviewLoadingIndicator padding />;
                   }
 
-                  return data.controls[group.id]?.map((control) => {
-                    return (
-                      <ControlOverviewItem
-                        id={control.id}
-                        name={control.name}
-                        severity={control.severity}
-                        applied={control.applied}
-                        exempt={control.exempt}
-                        onChange={onRequestOfResourcesData}
-                        key={control.id}
-                      >
-                        <ControlOverviewItemDetail
-                          control={control.control}
-                          frameworks={control.frameworks}
-                          controlType={control.controlType}
-                          lifecycle={control.lifecycle}
-                        />
+                  if (data.controls[group.id] === "error") {
+                    return <Box padding={2}>{errorMessage}</Box>;
+                  }
 
-                        {(() => {
-                          if (
-                            !data.resources ||
-                            !data.resources[control.id] ||
-                            data.resources[control.id] === "loading"
-                          ) {
-                            return <ControlOverviewLoadingIndicator />;
-                          }
+                  if (Array.isArray(data.controls[group.id])) {
+                    if (data.controls[group.id].length < 1) {
+                      return <Box padding={2}>{noIssuesMessage}</Box>;
+                    }
 
-                          if (data.resources[control.id] === "error") {
-                            return <Box paddingTop={1}>{errorMessage}</Box>;
-                          }
+                    return data.controls[group.id]?.map((control) => {
+                      return (
+                        <ControlOverviewItem
+                          id={control.id}
+                          name={control.name}
+                          severity={control.severity}
+                          applied={control.applied}
+                          exempt={control.exempt}
+                          onChange={onRequestOfResourcesData}
+                          key={control.id}
+                        >
+                          <ControlOverviewItemDetail
+                            control={control.control}
+                            frameworks={control.frameworks}
+                            controlType={control.controlType}
+                            lifecycle={control.lifecycle}
+                          />
 
-                          if (Array.isArray(data.resources[control.id])) {
-                            if (data.resources[control.id].length < 1) {
-                              return (
-                                <Box paddingTop={1}>{noIssuesMessage}</Box>
-                              );
+                          {(() => {
+                            if (
+                              !data.resources ||
+                              !data.resources[control.id] ||
+                              data.resources[control.id] === "loading"
+                            ) {
+                              return <ControlOverviewLoadingIndicator />;
                             }
 
-                            return (
-                              <ControlOverviewItemResources
-                                resourcesData={data.resources[control.id]}
-                              />
-                            );
-                          }
-                        })()}
-                      </ControlOverviewItem>
-                    );
-                  });
-                }
-              })()}
-            </ControlOverviewGroup>
-          );
-        })}
-      </Paper>
+                            if (data.resources[control.id] === "error") {
+                              return <Box paddingTop={1}>{errorMessage}</Box>;
+                            }
+
+                            if (Array.isArray(data.resources[control.id])) {
+                              if (data.resources[control.id].length < 1) {
+                                return (
+                                  <Box paddingTop={1}>{noIssuesMessage}</Box>
+                                );
+                              }
+
+                              return (
+                                <ControlOverviewItemResources
+                                  controlId={control.id}
+                                  resourcesData={data.resources[control.id]}
+                                  onManageResourceClick={(resourceId) => {
+                                    handleOnManageResourceClick(
+                                      control.id,
+                                      resourceId
+                                    );
+                                  }}
+                                />
+                              );
+                            }
+                          })()}
+                        </ControlOverviewItem>
+                      );
+                    });
+                  }
+                })()}
+              </ControlOverviewGroup>
+            );
+          })}
+        </Paper>
+        <ControlOverviewResourceManager
+          open={exemptionManagerStatus.open}
+          onClose={handleOnResourceManagerClose}
+          resourceData={resourceManagerData}
+          {...{ onResourceExemptionDelete, onResourceExemptionSave }}
+        />
+      </React.Fragment>
     );
   }
 }
@@ -187,6 +243,12 @@ ControlOverview.propTypes = {
             environment: PropTypes.string,
             lastSeen: PropTypes.string,
             status: PropTypes.oneOf(["Monitoring", "Non-Compliant", "Exempt"]),
+            pending: PropTypes.bool,
+            exemptionData: PropTypes.shape({
+              ticket: PropTypes.string.isRequired,
+              expires: PropTypes.string.isRequired,
+              resources: PropTypes.arrayOf(PropTypes.string).isRequired,
+            }),
           })
         ),
         PropTypes.oneOf(["error", "loading"]),
@@ -201,4 +263,12 @@ ControlOverview.propTypes = {
    * Callback for when a user expands a control within a given group and a request is made to fetch the resource data for that control. **Signature:** `function(controlId: int) => void`
    */
   onRequestOfResourcesData: PropTypes.func,
+  /**
+   * Callback for when a user requests to delete a specific resource exemption. **Signature:** `function({controlId: Int, resourceId: Int}): Promise`
+   */
+  onResourceExemptionDelete: PropTypes.func,
+  /**
+   * Callback for when a user requests to change the date of a specific resource exemption. **Signature:** `function({controlId: Int, resourceId: Int, revisedExpiryDate: ISO Date String}): Promise`
+   */
+  onResourceExemptionSave: PropTypes.func,
 };

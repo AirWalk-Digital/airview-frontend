@@ -20,10 +20,16 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import Box from "@material-ui/core/Box";
+import SettingsIcon from "@material-ui/icons/Settings";
+import CheckIcon from "@material-ui/icons/Check";
+import ClearIcon from "@material-ui/icons/Clear";
 import clsx from "clsx";
 import dayjs from "dayjs";
 
-export function ControlOverviewItemResources({ resourcesData }) {
+export function ControlOverviewItemResources({
+  resourcesData,
+  onManageResourceClick,
+}) {
   const classes = useControlOverviewItemResourcesStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -229,6 +235,8 @@ export function ControlOverviewItemResources({ resourcesData }) {
                   "Last seen"
                 )}
               </TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Pending</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -241,7 +249,7 @@ export function ControlOverviewItemResources({ resourcesData }) {
                   <TableCell>{resource.reference}</TableCell>
                   <TableCell>{resource.environment}</TableCell>
                   <TableCell>
-                    {dayjs(resource.lastSeen).format("MMM D YYYY - h:mm A")}
+                    {dayjs(resource.lastSeen).format("MMM D YYYY h:mm A")}
                   </TableCell>
                   <TableCell>
                     <span
@@ -252,6 +260,31 @@ export function ControlOverviewItemResources({ resourcesData }) {
                     >
                       {resource.status}
                     </span>
+                  </TableCell>
+                  <TableCell>
+                    {resource.pending ? (
+                      <CheckIcon color="primary" fontSize="small" />
+                    ) : (
+                      <ClearIcon color="primary" fontSize="small" />
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    {resource.status === "Exempt" && !resource.pending ? (
+                      <Tooltip title={"Manage Exemption"}>
+                        <span>
+                          <IconButton
+                            aria-label="Manage Exemption"
+                            color="primary"
+                            size="small"
+                            onClick={() => onManageResourceClick(resource.id)}
+                          >
+                            <SettingsIcon fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    ) : (
+                      "-"
+                    )}
                   </TableCell>
                 </TableRow>
               );
@@ -271,8 +304,10 @@ ControlOverviewItemResources.propTypes = {
       environment: PropTypes.string,
       lastSeen: PropTypes.string,
       status: PropTypes.oneOf(["Monitoring", "Non-Compliant", "Exempt"]),
+      pending: PropTypes.bool,
     })
   ),
+  onManageResourceClick: PropTypes.func.isRequired,
 };
 
 const useControlOverviewItemResourcesStyles = makeStyles((theme) => {
@@ -321,6 +356,7 @@ const useControlOverviewItemResourcesStyles = makeStyles((theme) => {
       border: `1px solid ${theme.palette.primary.main}`,
       borderRadius: theme.shape.borderRadius,
       padding: "2px 8px",
+      whiteSpace: "nowrap",
     },
 
     statusLabelMonitoring: {

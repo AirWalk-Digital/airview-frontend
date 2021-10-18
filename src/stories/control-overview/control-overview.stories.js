@@ -94,12 +94,32 @@ function Default() {
     });
   };
 
+  const handleOnResourceExemptionDelete = (data) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log(data);
+        resolve();
+      }, [1000]);
+    });
+  };
+
+  const handleOnResourceExemptionSave = (data) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log(data);
+        resolve();
+      }, [1000]);
+    });
+  };
+
   return (
     <ControlOverview
       title="Control Overview"
       data={state}
       onRequestOfControlsData={handleOnRequestOfControlsData}
       onRequestOfResourcesData={handleOnRequestOfResourcesData}
+      onResourceExemptionDelete={handleOnResourceExemptionDelete}
+      onResourceExemptionSave={handleOnResourceExemptionSave}
     />
   );
 }
