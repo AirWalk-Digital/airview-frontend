@@ -134,7 +134,7 @@ export const resources = {
       pending: false,
       exemptionData: {
         ticket: "Ticket label for test instance 4",
-        expires: dayjs().toISOString(),
+        expires: dayjs().add(2, "day").toISOString(),
         resources: ["Resource One", "Resource Two", "Resource Three"],
       },
     },

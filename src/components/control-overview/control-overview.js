@@ -17,6 +17,8 @@ export function ControlOverview({
   data,
   onRequestOfControlsData,
   onRequestOfResourcesData,
+  onResourceExemptionDelete,
+  onResourceExemptionSave,
 }) {
   const theme = useTheme();
   const initialResourceManagerStatus = {
@@ -59,11 +61,17 @@ export function ControlOverview({
   const resourceManagerData = useMemo(() => {
     if (!exemptionManagerStatus.open) return null;
 
-    return (
+    const resourcesData =
       data.resources[exemptionManagerStatus.controlId].filter(
         (resource) => resource.id === exemptionManagerStatus.resourceId
-      )[0]?.exemptionData ?? []
-    );
+      )[0]?.exemptionData ?? null;
+
+    if (resourcesData) {
+      resourcesData.controlId = exemptionManagerStatus.controlId;
+      resourcesData.resourceId = exemptionManagerStatus.resourceId;
+    }
+
+    return resourcesData;
   }, [data, exemptionManagerStatus]);
 
   if (!data || !data.groups || data.groups === "loading")
@@ -170,6 +178,7 @@ export function ControlOverview({
           open={exemptionManagerStatus.open}
           onClose={handleOnResourceManagerClose}
           resourceData={resourceManagerData}
+          {...{ onResourceExemptionDelete, onResourceExemptionSave }}
         />
       </React.Fragment>
     );
