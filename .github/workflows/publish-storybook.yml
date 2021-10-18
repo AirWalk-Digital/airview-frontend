@@ -4,7 +4,7 @@ name: Build Storybook
 on:
   push:
     branches:
-      - "105-storybook-publish"
+      - "main"
 
 jobs:
   build:
