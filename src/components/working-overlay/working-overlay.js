@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { theme } from "rich-markdown-editor";
 
-export function WorkingOverlay({ open, ...rest }) {
-  const styles = useWorkingOverlayStyles();
+export function WorkingOverlay({ open, color, ...rest }) {
+  const styles = useWorkingOverlayStyles({ color });
 
   const { className, ...otherProps } = rest;
 
@@ -13,12 +14,12 @@ export function WorkingOverlay({ open, ...rest }) {
 
   return (
     <div className={clsx(styles.root, className)} {...otherProps}>
-      <CircularProgress color="primary" />
+      <CircularProgress classes={{ circle: styles.circle }} />
     </div>
   );
 }
 
-const useWorkingOverlayStyles = makeStyles({
+const useWorkingOverlayStyles = makeStyles((theme) => ({
   root: {
     position: "absolute",
     backgroundColor: "rgba(0,0,0, 0.1)",
@@ -30,11 +31,18 @@ const useWorkingOverlayStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
   },
-});
+  circle: ({ color }) => ({
+    color: color ?? theme.palette.primary.main,
+  }),
+}));
 
 WorkingOverlay.propTypes = {
   /**
    * Toggles the visibility of the component
    */
   open: PropTypes.bool.isRequired,
+  /**
+   * Sets the color of the progress circle, defaults to theme.primary.main if not set. Accepts a valid [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)
+   */
+  color: PropTypes.string,
 };

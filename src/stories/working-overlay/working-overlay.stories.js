@@ -32,6 +32,15 @@ function Template(args) {
 
 Template.args = {
   open: true,
+  color: null,
+};
+
+Template.argTypes = {
+  color: {
+    control: {
+      type: "color",
+    },
+  },
 };
 
 const Visible = Template.bind({});
@@ -40,11 +49,19 @@ Visible.args = {
   ...Template.args,
 };
 
+Visible.argTypes = {
+  ...Template.argTypes,
+};
+
 const NotVisible = Template.bind({});
 
 NotVisible.args = {
   ...Template.args,
   open: false,
+};
+
+NotVisible.argTypes = {
+  ...Template.argTypes,
 };
 
 export { Visible, NotVisible };
