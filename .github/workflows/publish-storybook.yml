@@ -19,7 +19,7 @@ jobs:
       with:
         node-version: '14.x'
     - run: npm install
-    - run: npm run build-storybook -- -o ./github-pages
+    - run: npm run build-storybook -- -o ./docs
 
     - name: setup git config
       run: |
@@ -28,7 +28,7 @@ jobs:
 
     - name: commit
       run: |
-        git add github-pages
+        git add docs
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "Automated add listing.json from Github actions"
             git push
