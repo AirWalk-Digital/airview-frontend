@@ -93,6 +93,12 @@ The function should return data equal to the `resources` key within the `data` p
     environment: string,
     lastSeen: string,
     status: "Monitoring" | "Non-Compliant" | "Exempt",
+    pending: bool,
+    exemptionData: {
+      ticket: string,
+      expires: string // ISO Date String
+      resources: [string]
+    }
   },
 ] | "error";
 ```
