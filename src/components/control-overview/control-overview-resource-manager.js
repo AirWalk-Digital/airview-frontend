@@ -200,3 +200,15 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 0 0 18px",
   },
 }));
+
+ControlOverviewResourceManager.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  resourceData: PropTypes.shape({
+    ticket: PropTypes.string.isRequired,
+    expires: PropTypes.string.isRequired,
+    resources: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }),
+  onResourceExemptionDelete: PropTypes.func.isRequired,
+  onResourceExemptionSave: PropTypes.func.isRequired,
+};

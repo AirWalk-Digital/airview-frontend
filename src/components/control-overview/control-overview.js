@@ -21,11 +21,13 @@ export function ControlOverview({
   onResourceExemptionSave,
 }) {
   const theme = useTheme();
+
   const initialResourceManagerStatus = {
     open: false,
     controlId: null,
     resourceId: null,
   };
+
   const [exemptionManagerStatus, setExemptionManagerStatus] = useState({
     ...initialResourceManagerStatus,
   });
@@ -242,6 +244,11 @@ ControlOverview.propTypes = {
             lastSeen: PropTypes.string,
             status: PropTypes.oneOf(["Monitoring", "Non-Compliant", "Exempt"]),
             pending: PropTypes.bool,
+            exemptionData: PropTypes.shape({
+              ticket: PropTypes.string.isRequired,
+              expires: PropTypes.string.isRequired,
+              resources: PropTypes.arrayOf(PropTypes.string).isRequired,
+            }),
           })
         ),
         PropTypes.oneOf(["error", "loading"]),
@@ -256,4 +263,12 @@ ControlOverview.propTypes = {
    * Callback for when a user expands a control within a given group and a request is made to fetch the resource data for that control. **Signature:** `function(controlId: int) => void`
    */
   onRequestOfResourcesData: PropTypes.func,
+  /**
+   * Callback for when a user requests to delete a specific resource exemption. **Signature:** `function({controlId: Int, resourceId: Int}): Promise`
+   */
+  onResourceExemptionDelete: PropTypes.func,
+  /**
+   * Callback for when a user requests to change the date of a specific resource exemption. **Signature:** `function({controlId: Int, resourceId: Int, revisedExpiryDate: ISO Date String}): Promise`
+   */
+  onResourceExemptionSave: PropTypes.func,
 };
