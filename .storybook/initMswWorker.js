@@ -5,7 +5,7 @@ export async function initMswWorker() {
     if (process.env.NODE_ENV === "production") {
       await worker.start({
         serviceWorker: {
-          url: "/docs/mockServiceWorker.js",
+          url: "/airview-frontend/mockServiceWorker.js",
         },
       });
 
