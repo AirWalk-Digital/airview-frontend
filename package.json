@@ -105,9 +105,6 @@
       "\\.(css|scss|less)$": "identity-obj-proxy"
     }
   },
-  "msw": {
-    "workerDirectory": "public"
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -124,5 +121,8 @@
     "last 2 FirefoxAndroid major versions",
     "last 2 iOS major versions",
     "not IE > 0"
-  ]
+  ],
+  "msw": {
+    "workerDirectory": "public"
+  }
 }
