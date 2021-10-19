@@ -1,5 +1,4 @@
 import React from "react";
-import { handlers } from "./mocks/handlers";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   ControlOverview,
@@ -30,7 +29,6 @@ const config = {
     },
   ],
   parameters: {
-    msw: handlers,
     docs: {
       description: {
         component: docs,

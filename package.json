@@ -10,6 +10,7 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -s public -p 6006",
     "build-storybook": "build-storybook -s public",
+    "deploy-storybook": "storybook-to-ghpages",
     "lint-js": "eslint './src/**/*.{js, jsx}'",
     "lint-js:fix": "npm run lint-js -- --fix",
     "format": "prettier --check './src/'",
@@ -65,6 +66,7 @@
     "@storybook/addon-essentials": "^6.2.8",
     "@storybook/addon-links": "^6.2.8",
     "@storybook/react": "^6.2.8",
+    "@storybook/storybook-deployer": "^2.8.10",
     "@testing-library/dom": "^7.29.4",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
@@ -79,7 +81,7 @@
     "faker": "^5.5.3",
     "git-clone": "^0.1.0",
     "mockdate": "^3.0.2",
-    "msw": "^0.28.2",
+    "msw": "^0.35.0",
     "msw-storybook-addon": "^1.4.1",
     "node-fetch": "^2.6.1",
     "prettier": "2.2.1",
@@ -103,9 +105,6 @@
       "\\.(css|scss|less)$": "identity-obj-proxy"
     }
   },
-  "msw": {
-    "workerDirectory": "public"
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -122,5 +121,8 @@
     "last 2 FirefoxAndroid major versions",
     "last 2 iOS major versions",
     "not IE > 0"
-  ]
+  ],
+  "msw": {
+    "workerDirectory": "public"
+  }
 }
