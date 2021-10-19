@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { PageHeader } from "../../components/page-header";
 import { AccordionMenu } from "../../components/accordion-menu";
 import { LocationProvider } from "../../hooks/use-location";
+import logo from "../__resources/logo-airwalk-reply.svg";
 
 const config = {
   title: "Modules/Page Header",
@@ -99,7 +100,7 @@ const Default = Template.bind({});
 Default.args = {
   siteTitle: "AirView",
   version: "1.0",
-  logoSrc: "/logo-airwalk-reply.svg",
+  logoSrc: logo,
   navItems: [...testNavItems],
 };
 
