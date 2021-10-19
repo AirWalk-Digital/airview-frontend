@@ -3,7 +3,7 @@ name: Build Storybook
 on:
   push:
     branches:
-      - "fix-gh-pages-storybook-errors"
+      - "main"
 
 jobs:
   build:
