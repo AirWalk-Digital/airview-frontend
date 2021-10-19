@@ -9,7 +9,7 @@
     "test:coverage": "npm test -- --coverage --watchAll=false --maxWorkers=50%",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -s public -p 6006",
-    "build-storybook": "build-storybook",
+    "build-storybook": "build-storybook -s public",
     "lint-js": "eslint './src/**/*.{js, jsx}'",
     "lint-js:fix": "npm run lint-js -- --fix",
     "format": "prettier --check './src/'",
