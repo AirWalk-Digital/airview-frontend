@@ -14,6 +14,8 @@ export const parameters = {
   layout: "centered",
 };
 
+initializeWorker();
+
 export const decorators = [
   mswDecorator,
   (Story) => {
@@ -33,5 +35,3 @@ export const decorators = [
     );
   },
 ];
-
-initializeWorker();
