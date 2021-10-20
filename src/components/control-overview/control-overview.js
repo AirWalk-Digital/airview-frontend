@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useTheme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { ControlOverviewHeader } from "./control-overview-header";
 import { ControlOverviewGroup } from "./control-overview-group";
 import { ControlOverviewItem } from "./control-overview-item";
@@ -12,7 +13,15 @@ import { ControlOverviewItemResources } from "./control-overview-item-resources"
 import { ControlOverviewLoadingIndicator } from "./control-overview-loading-indicator";
 import { ControlOverviewResourceManager } from "./control-overview-resource-manager";
 
+/**
+To do:
+- invalidPermissionsMessage (return null for data)
+- noDataMessage (return empty object)
+- loading status
+*/
+
 export function ControlOverview({
+  loading,
   title,
   data,
   onRequestOfControlsData,
@@ -75,6 +84,10 @@ export function ControlOverview({
 
     return resourcesData;
   }, [data, exemptionManagerStatus]);
+
+  if (loading) {
+    return <Skeleton variant="rect" width="100%" height={200} />;
+  }
 
   if (!data || !data.groups || data.groups === "loading")
     return <ControlOverviewLoadingIndicator padding />;

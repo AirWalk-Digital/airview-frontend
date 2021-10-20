@@ -122,7 +122,7 @@ function Default() {
   );
 }
 
-function WithNoIssues() {
+function WithNoData() {
   const data = {
     groups: [],
     controls: undefined,
@@ -133,8 +133,8 @@ function WithNoIssues() {
     <ControlOverview
       title="Control Overview"
       data={data}
-      onRequestOfControlsData={(id) => console.log("group id", id)}
-      onRequestOfResourcesData={(id) => console.log("control id", id)}
+      onRequestOfControlsData={(id) => {}}
+      onRequestOfResourcesData={(id) => {}}
     />
   );
 }
@@ -150,11 +150,29 @@ function WithError() {
     <ControlOverview
       title="Control Overview"
       data={data}
-      onRequestOfControlsData={(id) => console.log("group id", id)}
-      onRequestOfResourcesData={(id) => console.log("control id", id)}
+      onRequestOfControlsData={(id) => {}}
+      onRequestOfResourcesData={(id) => {}}
+    />
+  );
+}
+
+function Loading() {
+  const data = {
+    groups: undefined,
+    controls: undefined,
+    resources: undefined,
+  };
+
+  return (
+    <ControlOverview
+      title="Control Overview"
+      data={data}
+      loading={true}
+      onRequestOfControlsData={(id) => {}}
+      onRequestOfResourcesData={(id) => {}}
     />
   );
 }
 
 export default config;
-export { Default, WithNoIssues, WithError };
+export { Default, WithNoData, WithError, Loading };
