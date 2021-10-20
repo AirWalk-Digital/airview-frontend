@@ -13,13 +13,6 @@ import { ControlOverviewItemResources } from "./control-overview-item-resources"
 import { ControlOverviewLoadingIndicator } from "./control-overview-loading-indicator";
 import { ControlOverviewResourceManager } from "./control-overview-resource-manager";
 
-/**
-To do:
-- invalidPermissionsMessage (return null for data)
-- noDataMessage (return empty object)
-- loading status
-*/
-
 export function ControlOverview({
   loading,
   title,
@@ -41,19 +34,27 @@ export function ControlOverview({
     ...initialResourceManagerStatus,
   });
 
-  const errorMessage = (
+  const errorMessageFeedback = (
     <Message
       title="Error"
-      message="Error message"
+      message="There was an error attempting to load controls for this application"
       borderColor={theme.palette.error.main}
     />
   );
 
-  const noIssuesMessage = (
+  const noIssuesMessageFeedback = (
     <Message
-      title="No issues"
-      message="No issues message"
-      borderColor={theme.palette.success.main}
+      title="No Controls"
+      message="There are no controls to display for this application"
+      borderColor={theme.palette.primary.main}
+    />
+  );
+
+  const invalidPermissionsMessageFeedback = (
+    <Message
+      title="Permisions Notice"
+      message="You do not have the required permissions to view controls for this application"
+      borderColor={theme.palette.primary.main}
     />
   );
 
@@ -89,13 +90,18 @@ export function ControlOverview({
     return <Skeleton variant="rect" width="100%" height={200} />;
   }
 
-  if (!data || !data.groups || data.groups === "loading")
+  if (!data || data.groups === "loading") {
     return <ControlOverviewLoadingIndicator padding />;
+  }
 
-  if (data.groups === "error") return errorMessage;
+  if (!data.groups) {
+    return invalidPermissionsMessageFeedback;
+  }
+
+  if (data.groups === "error") return errorMessageFeedback;
 
   if (Array.isArray(data.groups)) {
-    if (data.groups.length < 1) return noIssuesMessage;
+    if (data.groups.length < 1) return noIssuesMessageFeedback;
 
     return (
       <React.Fragment>
@@ -120,12 +126,28 @@ export function ControlOverview({
                   }
 
                   if (data.controls[group.id] === "error") {
-                    return <Box padding={2}>{errorMessage}</Box>;
+                    return (
+                      <Box padding={2}>
+                        <Message
+                          title="Error"
+                          message="There was an error attempting to fetch controls for this group"
+                          borderColor={theme.palette.error.main}
+                        />
+                      </Box>
+                    );
                   }
 
                   if (Array.isArray(data.controls[group.id])) {
                     if (data.controls[group.id].length < 1) {
-                      return <Box padding={2}>{noIssuesMessage}</Box>;
+                      return (
+                        <Box padding={2}>
+                          <Message
+                            title="No Controls"
+                            message="There are no controls to display for this group"
+                            borderColor={theme.palette.primary.main}
+                          />
+                        </Box>
+                      );
                     }
 
                     return data.controls[group.id]?.map((control) => {
@@ -156,13 +178,27 @@ export function ControlOverview({
                             }
 
                             if (data.resources[control.id] === "error") {
-                              return <Box paddingTop={1}>{errorMessage}</Box>;
+                              return (
+                                <Box paddingTop={1}>
+                                  <Message
+                                    title="Error"
+                                    message="There was an error attempting to fetch resources for this control"
+                                    borderColor={theme.palette.error.main}
+                                  />
+                                </Box>
+                              );
                             }
 
                             if (Array.isArray(data.resources[control.id])) {
                               if (data.resources[control.id].length < 1) {
                                 return (
-                                  <Box paddingTop={1}>{noIssuesMessage}</Box>
+                                  <Box paddingTop={1}>
+                                    <Message
+                                      title="No Resources"
+                                      message="There are no resources to display for this control"
+                                      borderColor={theme.palette.primary.main}
+                                    />
+                                  </Box>
                                 );
                               }
 

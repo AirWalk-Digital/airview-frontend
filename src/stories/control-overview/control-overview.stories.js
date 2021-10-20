@@ -122,7 +122,7 @@ function Default() {
   );
 }
 
-function WithNoData() {
+function WithNoControls() {
   const data = {
     groups: [],
     controls: undefined,
@@ -156,6 +156,23 @@ function WithError() {
   );
 }
 
+function WithoutRequiredPermissions() {
+  const data = {
+    groups: null,
+    controls: undefined,
+    resources: undefined,
+  };
+
+  return (
+    <ControlOverview
+      title="Control Overview"
+      data={data}
+      onRequestOfControlsData={(id) => {}}
+      onRequestOfResourcesData={(id) => {}}
+    />
+  );
+}
+
 function Loading() {
   const data = {
     groups: undefined,
@@ -175,4 +192,10 @@ function Loading() {
 }
 
 export default config;
-export { Default, WithNoData, WithError, Loading };
+export {
+  Default,
+  WithNoControls,
+  WithError,
+  WithoutRequiredPermissions,
+  Loading,
+};
