@@ -391,4 +391,28 @@ ApplicationsTemplate.propTypes = {
    * Used for the ApplicationCreator (see [PreviewModeController - ApplicationCreator](/?path=/docs/modules-preview-mode-controller) `onSubmit` prop API for details)
    */
   onRequestToCreateApplication: PropTypes.func,
+  /**
+   * Used to set the title for the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `title` prop API for details)
+   */
+  controlOverviewTitle: PropTypes.string,
+  /**
+   * Used to set the data for the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `data` prop API for details)
+   */
+  controlOverviewData: PropTypes.object,
+  /**
+   * Callback when a user requests a specific control group data for the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onRequestOfControlsData` prop API for details)
+   */
+  onRequestOfControlsData: PropTypes.func,
+  /**
+   * Callback when a user requests a specific controls resources data for the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onRequestOfResourcesData` prop API for details)
+   */
+  onRequestOfResourcesData: PropTypes.func,
+  /**
+   * Callback when a user requests to delete a specific resource exemption within the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onResourceExemptionDelete` prop API for details)
+   */
+  onResourceExemptionDelete: PropTypes.func,
+  /**
+   * Callback when a user requests to change the date of a specific resource exemption within the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onResourceExemptionSave` prop API for details)
+   */
+  onResourceExemptionSave: PropTypes.func,
 };
