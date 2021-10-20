@@ -12,7 +12,9 @@ import {
   ApplicationCreator,
 } from "../../components/preview-mode-controller";
 import { ApplicationsTemplate } from "../../components/applications-template";
+import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
 import markdownContent from "../__resources/markdown-content.md";
+import logo from "../__resources/logo-airwalk-reply.svg";
 
 const config = {
   title: "Templates/Applications Template",
@@ -48,7 +50,89 @@ const config = {
 };
 
 const Template = (args) => {
-  return <ApplicationsTemplate {...args} />;
+  const [
+    state,
+    setControlsData,
+    setResourcesData,
+  ] = useControlOverviewController(async () => {
+    try {
+      const response = await fetch(`https://testapi.dev/quality-models`);
+
+      if (response.ok) {
+        return await response.json();
+      }
+
+      throw new Error();
+    } catch (error) {
+      return "error";
+    }
+  });
+
+  const handleOnRequestOfControlsData = (id) => {
+    setControlsData(id, async () => {
+      try {
+        const response = await fetch(
+          `https://testapi.dev/applications/1/control-overviews?qualityModelId=${id}`
+        );
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        throw new Error();
+      } catch (error) {
+        return "error";
+      }
+    });
+  };
+
+  const handleOnRequestOfResourcesData = (id) => {
+    setResourcesData(id, async () => {
+      try {
+        const response = await fetch(
+          `https://testapi.dev/applications/1/monitored-resources?technicalControlId=${id}`
+        );
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        throw new Error();
+      } catch (error) {
+        return "error";
+      }
+    });
+  };
+
+  const handleOnResourceExemptionDelete = (data) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log(data);
+        resolve();
+      }, [1000]);
+    });
+  };
+
+  const handleOnResourceExemptionSave = (data) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log(data);
+        resolve();
+      }, [1000]);
+    });
+  };
+
+  return (
+    <ApplicationsTemplate
+      controlOverviewTitle="Control Overview"
+      controlOverviewData={state}
+      onRequestOfControlsData={handleOnRequestOfControlsData}
+      onRequestOfResourcesData={handleOnRequestOfResourcesData}
+      onResourceExemptionDelete={handleOnResourceExemptionDelete}
+      onResourceExemptionSave={handleOnResourceExemptionSave}
+      {...args}
+    />
+  );
 };
 
 Template.args = {
@@ -56,7 +140,7 @@ Template.args = {
   siteTitle: "AirView",
   pageTitle: "Application Template",
   version: "1.0",
-  logoSrc: "/logo-airwalk-reply.svg",
+  logoSrc: logo,
   navItems: [
     {
       id: "1",
