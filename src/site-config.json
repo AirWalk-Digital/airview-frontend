@@ -4,5 +4,17 @@
   "theme": {
     "logoSrc": "/logo-airwalk-reply.svg",
     "color": "#002b3d"
+  },
+  "contentRepositories": {
+    "application_github": {
+      "workingRepoName": "AirWalk-Digital/airview_demo_applications",
+      "workingBranchName": "main",
+      "staticStorageFolderName": "/storage/applications/"
+    },
+    "application": {
+      "workingRepoName": "airview_demo_applications",
+      "workingBranchName": "main",
+      "staticStorageFolderName": "/storage/applications/"
+    }
   }
 }

@@ -22,7 +22,7 @@ import { NotFoundPage } from "./pages/not-found-page";
 import { ControllerProvider } from "./providers/controller-provider";
 import { PrivateRoute } from "./components/private-route";
 import { AuthProvider } from "oidc-react";
-import { GithubClient } from "./lib/remote-clients";
+import { getContentBackendConfig } from "./lib/markdown-backend-config";
 
 // Move into lib
 function getOidcConfig(history, location) {
@@ -49,49 +49,7 @@ function getOidcConfig(history, location) {
   };
 }
 
-// Move into lib
-const initialState = {
-  error: false,
-  previewMode: false,
-  routeRepoData: {
-    home: {
-      workingRepoName: null,
-      workingBranchName: null,
-    },
-    application: {
-      /* workingRepoName: "airview", //for ado */
-      workingRepoName: "AirWalk-Digital/airview_demo_applications", //for github
-      workingBranchName: "main",
-      staticStorageFolderName: "/storage/applications/",
-    },
-    knowledge: {
-      workingRepoName: "AirWalk-Digital/airview_demo_applications",
-      workingBranchName: "main",
-      staticStorageFolderName: "/storage/applications/",
-    },
-  },
-  editMode: false,
-};
-
-/*
-const adoClientConfig = {
-  authCallbackRoute: `${process.env.REACT_APP_API_HOST}/gitproxy/create-ado-access-token`,
-  clientId: process.env.REACT_APP_ADO_CLIENT_ID,
-  organisation: "mdrnwrk-ado",
-  project: "airview",
-  redirect_uri: `${process.env.REACT_APP_GIT_CALLBACK_URL}`,
-};
-*/
-
-const githubClientConfig = {
-  authCallbackRoute: `${process.env.REACT_APP_API_HOST}/gitproxy/create-github-access-token`,
-  clientId: process.env.REACT_APP_GITHUB_CLIENT_ID,
-  authScope: "repo", //normally defaults to 'public_repo'
-  redirect_uri: `${process.env.REACT_APP_GIT_CALLBACK_URL}`,
-};
-
-/* const client = new AdoClient(adoClientConfig); */
-const client = new GithubClient(githubClientConfig);
+const { initialState, client } = getContentBackendConfig();
 
 function App() {
   const jss = create({
