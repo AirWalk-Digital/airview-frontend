@@ -124,13 +124,13 @@ const Template = (args) => {
 
   return (
     <ApplicationsTemplate
+      {...args}
       controlOverviewTitle="Control Overview"
       controlOverviewData={state}
       onRequestOfControlsData={handleOnRequestOfControlsData}
       onRequestOfResourcesData={handleOnRequestOfResourcesData}
       onResourceExemptionDelete={handleOnResourceExemptionDelete}
       onResourceExemptionSave={handleOnResourceExemptionSave}
-      {...args}
     />
   );
 };
