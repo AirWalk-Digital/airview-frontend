@@ -12,6 +12,7 @@ Environment variables should be set for the following:
 | REACT_APP_AUTH_REDIRECT_URI    | Oauth redirct page| https://mysite.com/signin-callback|
 | REACT_APP_AUTH_SCOPE           | Scope for Oauth token request | api://myapi/.default |
 | REACT_APP_API_HOST             | API host | https://myapi.com
+| REACT_APP_CONTENT_BACKEND      | Backend type (github or ado) | github|
 | REACT_APP_CONTENT_CLIENT_ID    | Oauth client id for content backend (github, ado)| xyz-789
 | REACT_APP_CONTENT_CALLBACK_URL | Callback url for content backend token exchange| https://mysite.com/github/authorizing
 | REACT_APP_CONTENT_ORGANISATION | ADO organisation (ado only) |my org
