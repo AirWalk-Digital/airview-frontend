@@ -22,8 +22,10 @@ export function getContentBackendConfig() {
   switch (process.env.REACT_APP_CONTENT_BACKEND) {
     case "github":
       client = new GithubClient(backendClientConfig);
+      break;
     case "ado":
       client = new AdoClient(backendClientConfig);
+      break;
   }
 
   return { initialState, client };
