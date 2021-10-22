@@ -445,6 +445,16 @@ export function ApplicationsPage() {
       onTogglePreviewMode={controller.togglePreviewModeStatus}
       onRequestToUploadImage={handleOnUploadImage}
       onRequestToCreatePage={handleOnCreatePage}
+      controlOverviewTitle="Control Overview"
+      controlOverviewData={{
+        groups: [],
+        controls: undefined,
+        resources: undefined,
+      }}
+      onRequestOfControlsData={() => {}}
+      onRequestOfResourcesData={() => {}}
+      onResourceExemptionDelete={() => {}}
+      onResourceExemptionSave={() => {}}
     />
   );
 }

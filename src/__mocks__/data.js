@@ -3,15 +3,15 @@ import dayjs from "dayjs";
 export const groups = [
   {
     id: 1,
-    title: "Group will resolve controls with success",
+    title: "Control group will resolve with controls",
   },
   {
     id: 2,
-    title: "Group will resolve controls with no issues",
+    title: "Control group will resolve with no controls",
   },
   {
     id: 3,
-    title: "Group will resolve controls with error",
+    title: "Control group will resolve with error",
   },
 ];
 
@@ -19,7 +19,7 @@ export const controls = {
   1: [
     {
       id: 1,
-      name: "Control will resolve instances with success",
+      name: "Control will resolve with resources",
       severity: "Low",
       applied: 5,
       exempt: 6,
@@ -42,7 +42,7 @@ export const controls = {
     },
     {
       id: 2,
-      name: "Control will resolve instances with no issues",
+      name: "Control will resolve with no resources",
       severity: "Medium",
       applied: 5,
       exempt: 6,
@@ -65,7 +65,7 @@ export const controls = {
     },
     {
       id: 3,
-      name: "Control will resolve instances with error",
+      name: "Control will resolve with error",
       severity: "High",
       applied: 5,
       exempt: 6,

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
 import { Container, Typography } from "@material-ui/core";
 import { Helmet } from "react-helmet";
 import { PageHeader } from "../page-header";
@@ -13,6 +14,7 @@ import {
 } from "../aside-and-main-container";
 import { MarkdownContent } from "../markdown-content";
 import { ComplianceTable } from "../compliance-table";
+import { ControlOverview } from "../control-overview";
 import {
   PreviewModeController,
   BranchSwitcher,
@@ -56,6 +58,12 @@ export function ApplicationsTemplate({
   onRequestToCreatePage,
   onRequestToUploadImage,
   onSave,
+  controlOverviewTitle,
+  controlOverviewData,
+  onRequestOfControlsData,
+  onRequestOfResourcesData,
+  onResourceExemptionDelete,
+  onResourceExemptionSave,
 }) {
   const styles = useStyles();
   const [canSave, setCanSave] = useState(false);
@@ -137,23 +145,25 @@ export function ApplicationsTemplate({
 
       <AsideAndMainContainer rootClasses={styles.mainContainer}>
         <Main>
-          <article>
-            {!loading && (
-              <Typography variant="h1" paragraph>
-                {pageTitle}
-              </Typography>
-            )}
-            <MarkdownContent
-              readOnly={!previewMode}
-              defaultValue={bodyContent}
-              onChange={handleOnEdit}
-              onRequestToUploadImage={onRequestToUploadImage}
-              ref={editorRef}
-              loading={loading}
-            />
-          </article>
+          <section className={clsx(styles.section, styles.mainArticleSection)}>
+            <article>
+              {!loading && (
+                <Typography variant="h1" paragraph>
+                  {pageTitle}
+                </Typography>
+              )}
+              <MarkdownContent
+                readOnly={!previewMode}
+                defaultValue={bodyContent}
+                onChange={handleOnEdit}
+                onRequestToUploadImage={onRequestToUploadImage}
+                ref={editorRef}
+                loading={loading}
+              />
+            </article>
+          </section>
 
-          <section>
+          <section className={styles.section}>
             <ComplianceTable
               loading={loading}
               title={complianceTableTitle}
@@ -163,6 +173,20 @@ export function ApplicationsTemplate({
                 complianceTableInvalidPermissionsMessage
               }
               noDataMessage={complianceTableNoDataMessage}
+            />
+          </section>
+
+          <section>
+            <ControlOverview
+              loading={loading}
+              title={controlOverviewTitle}
+              data={controlOverviewData}
+              {...{
+                onRequestOfControlsData,
+                onRequestOfResourcesData,
+                onResourceExemptionDelete,
+                onResourceExemptionSave,
+              }}
             />
           </section>
         </Main>
@@ -220,6 +244,14 @@ const useStyles = makeStyles((theme) => {
     },
     editButton: {
       marginBottom: theme.spacing(3),
+    },
+    section: {
+      paddingBottom: theme.spacing(8),
+      marginBottom: theme.spacing(8),
+      borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+    mainArticleSection: {
+      paddingBottom: 0,
     },
   };
 });
@@ -359,4 +391,28 @@ ApplicationsTemplate.propTypes = {
    * Used for the ApplicationCreator (see [PreviewModeController - ApplicationCreator](/?path=/docs/modules-preview-mode-controller) `onSubmit` prop API for details)
    */
   onRequestToCreateApplication: PropTypes.func,
+  /**
+   * Used to set the title for the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `title` prop API for details)
+   */
+  controlOverviewTitle: PropTypes.string,
+  /**
+   * Used to set the data for the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `data` prop API for details)
+   */
+  controlOverviewData: PropTypes.object,
+  /**
+   * Callback when a user requests a specific control group data for the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onRequestOfControlsData` prop API for details)
+   */
+  onRequestOfControlsData: PropTypes.func,
+  /**
+   * Callback when a user requests a specific controls resources data for the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onRequestOfResourcesData` prop API for details)
+   */
+  onRequestOfResourcesData: PropTypes.func,
+  /**
+   * Callback when a user requests to delete a specific resource exemption within the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onResourceExemptionDelete` prop API for details)
+   */
+  onResourceExemptionDelete: PropTypes.func,
+  /**
+   * Callback when a user requests to change the date of a specific resource exemption within the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onResourceExemptionSave` prop API for details)
+   */
+  onResourceExemptionSave: PropTypes.func,
 };

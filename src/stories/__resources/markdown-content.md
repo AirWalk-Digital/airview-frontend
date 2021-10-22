@@ -43,6 +43,8 @@ This line of text includes `inline` code
 6. Quisque aliquam cursus urna, non bibendum massa viverra eget.
 7. Vivamus maximus ultricies pulvinar.
 
+---
+
 > Ut venenatis, nisl scelerisque sollicitudin fermentum, quam libero hendrerit ipsum, ut blandit est tellus sit amet turpis.
 
 ```html
@@ -60,5 +62,3 @@ Lorem/ipsum/dolor/sit/amet/consectetur/adipisicing/elit/dolore/doloremque/obcaec
 | 2   | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas dolorum quasi illo.                                     | Yes       |
 | 3   | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore doloremque obcaecati eveniet laboriosam et, eos deleniti. | Yes       |
 | 4   | Lorem/ipsum/dolor/sit/amet/consectetur/adipisicing/elit/dolore/doloremque/obcaecati/eveniet/laboriosam/et/eos/deleniti     | Yes       |
-
----
