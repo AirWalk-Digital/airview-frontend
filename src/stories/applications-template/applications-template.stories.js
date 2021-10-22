@@ -13,6 +13,11 @@ import {
 } from "../../components/preview-mode-controller";
 import { ApplicationsTemplate } from "../../components/applications-template";
 import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
+import {
+  data,
+  messages,
+  useComplianceTableDemoController,
+} from "../compliance-table/compliance-table-demo-controller";
 import markdownContent from "../__resources/markdown-content.md";
 import logo from "../__resources/logo-airwalk-reply.svg";
 
@@ -122,6 +127,11 @@ const Template = (args) => {
     });
   };
 
+  const {
+    applicationData,
+    handleOnAcceptOfRisk,
+  } = useComplianceTableDemoController([...data]);
+
   return (
     <ApplicationsTemplate
       {...args}
@@ -131,6 +141,13 @@ const Template = (args) => {
       onRequestOfResourcesData={handleOnRequestOfResourcesData}
       onResourceExemptionDelete={handleOnResourceExemptionDelete}
       onResourceExemptionSave={handleOnResourceExemptionSave}
+      complianceTableTitle="Compliance Table"
+      complianceTableApplications={applicationData}
+      complianceTableOnAcceptOfRisk={handleOnAcceptOfRisk}
+      complianceTableNoDataMessage={messages.noDataMessage}
+      complianceTableInvalidPermissionsMessage={
+        messages.invalidPermissionsMessage
+      }
     />
   );
 };
@@ -171,18 +188,6 @@ Template.args = {
       url: "/knowledge/some-knowledge/knowledge-item",
     },
   ],
-  complianceTableTitle: "Compliance Table",
-  complianceTableApplications: [],
-  complianceTableOnAcceptOfRisk: () => {},
-  complianceTableNoDataMessage: {
-    title: "No issues",
-    message: "There are no issues to display for this application",
-  },
-  complianceTableInvalidPermissionsMessage: {
-    title: "Notice",
-    message:
-      "You do not have the required permissions to view the data for this application",
-  },
   workingRepo: "test-org/test-repo",
   workingBranch: "master",
   branches: [
