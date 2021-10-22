@@ -4,5 +4,12 @@
   "theme": {
     "logoSrc": "/logo-airwalk-reply.svg",
     "color": "#002b3d"
+  },
+  "contentRepositories": {
+    "application": {
+      "workingRepoName": "AirWalk-Digital/airview_demo_applications",
+      "workingBranchName": "main",
+      "staticStorageFolderName": "/storage/applications/"
+    }
   }
 }
