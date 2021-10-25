@@ -171,6 +171,8 @@ export function KnowledgePage() {
 
   const getPageData = async () => {
     if (queryBranch) {
+      controller.setWorkingBranchName("application", queryBranch);
+      await controller.setPreviewModeStatus(true);
       history.replace(location.pathname);
       return;
     }
@@ -285,15 +287,6 @@ export function KnowledgePage() {
   };
 
   useEffect(() => {
-    (async () => {
-      if (queryBranch) {
-        controller.setWorkingBranchName("application", queryBranch);
-        await controller.setPreviewModeStatus(true);
-      }
-    })();
-  }, [queryBranch]);
-
-  useEffect(() => {
     if (!isMounted) return;
 
     getPageData();
@@ -312,8 +305,6 @@ export function KnowledgePage() {
 
   useEffect(() => {
     if (!pageData.shouldRefreshContent || !isMounted) return;
-
-    console.log("doing re-fetch of content");
 
     getPageData();
 
