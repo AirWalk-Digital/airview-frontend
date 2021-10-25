@@ -11,6 +11,11 @@ import { BrowserRouter as Router } from "react-router-dom";
 //   document.getElementById("root")
 // );
 
+// if (process.env.NODE_ENV === "development") {
+//   const { worker } = require("./__mocks__/browser");
+//   worker.start();
+// }
+
 ReactDOM.render(
   <Router>
     <App />
