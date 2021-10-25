@@ -39,4 +39,42 @@ export const handlers = [
       return res(ctx.delay(delay), ctx.json(resources[technicalControlId]));
     }
   ),
+  rest.get(
+    "https://api.github.com/repos/AirWalk-Digital/airview_demo_applications/contents/microsoft_teams/_index.md",
+    (req, res, ctx) => {
+      const branch = req.url.searchParams.get("ref");
+
+      const markdownResponse =
+        branch === "main" ? "main branch content" : `${branch} content`;
+
+      const encodedData = Buffer.from(markdownResponse).toString("base64");
+
+      return res(ctx.json({ content: encodedData }));
+    }
+  ),
+  rest.get(
+    "/api/storage/applications/microsoft_teams/_index.md",
+    (req, res, ctx) => {
+      return res(ctx.json("Non-preview content"));
+    }
+  ),
+  rest.get(
+    "https://api.github.com/repos/AirWalk-Digital/airview_demo_applications/contents/microsoft_teams/knowledge/activity_feed_guide/_index.md",
+    (req, res, ctx) => {
+      const branch = req.url.searchParams.get("ref");
+
+      const markdownResponse =
+        branch === "main" ? "main branch content" : `${branch} content`;
+
+      const encodedData = Buffer.from(markdownResponse).toString("base64");
+
+      return res(ctx.json({ content: encodedData }));
+    }
+  ),
+  rest.get(
+    "/api/storage/applications/microsoft_teams/knowledge/activity_feed_guide/_index.md",
+    (req, res, ctx) => {
+      return res(ctx.json("Non-preview content"));
+    }
+  ),
 ];

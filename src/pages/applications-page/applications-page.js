@@ -42,6 +42,7 @@ export function ApplicationsPage() {
     title: "No issues",
     message: "There are no issues to display for this application",
   };
+
   const complianceTableInvalidPermissionsMessage = {
     title: "Notice",
     message:
@@ -238,19 +239,12 @@ export function ApplicationsPage() {
   };
 
   useEffect(() => {
-    (async () => {
-      if (queryBranch) {
-        controller.setWorkingBranchName("application", queryBranch);
-        await controller.setPreviewModeStatus(true);
-      }
-    })();
-  }, [queryBranch]);
-
-  useEffect(() => {
     if (!isMounted) return;
 
     const getPageData = async () => {
       if (queryBranch) {
+        controller.setWorkingBranchName("application", queryBranch);
+        await controller.setPreviewModeStatus(true);
         history.replace(location.pathname);
         return;
       }
@@ -277,6 +271,8 @@ export function ApplicationsPage() {
             "application",
             `${application_id}/_index.md`
           );
+
+          console.log("markdown response", markdownResponse);
 
           bodyContent = await resolveInbound(
             markdownResponse.content,
