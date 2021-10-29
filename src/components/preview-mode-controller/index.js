@@ -8,3 +8,4 @@ export {
 export { PageSectionCreator } from "./page-section-creator";
 export { ContentCommitter } from "./content-committer";
 export { ApplicationCreator } from "./application-creator";
+export { PullRequestCreator } from "./pull-request-creator";

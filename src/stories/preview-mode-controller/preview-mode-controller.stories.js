@@ -9,6 +9,7 @@ import {
   PageSectionCreator,
   ContentCommitter,
   ApplicationCreator,
+  PullRequestCreator,
 } from "../../components/preview-mode-controller";
 
 const config = {
@@ -120,6 +121,15 @@ function ActiveWithNoChanges(args) {
     });
   };
 
+  const handleOnPullRequestSubmit = async (from, to) => {
+    console.log(`PR request from branch ${from} to branch ${to}`);
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve("https://github.com"), 2000);
+      //setTimeout(() => reject("Server error, please try again"), 2000);
+    });
+  };
+
   return (
     <PreviewModeController {...args}>
       <BranchSwitcher onSubmit={handleOnSubmit} />
@@ -135,6 +145,11 @@ function ActiveWithNoChanges(args) {
         onSubmit={handleOnApplicationCreateSubmit}
       />
       <ContentCommitter disabled onSubmit={handleOnSubmit} />
+      <PullRequestCreator
+        onSubmit={handleOnPullRequestSubmit}
+        workingBranch="feature-branch"
+        baseBranch="main"
+      />
     </PreviewModeController>
   );
 }
