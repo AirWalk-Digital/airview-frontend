@@ -30,7 +30,7 @@ const config = {
   },
 };
 
-function makeSubComponentArgs(rejectPromise = false) {
+function makeSubComponentArgs(rejectPromise) {
   return {
     branchSwitcherArgs: {
       onSubmit: async (branchName) => {
@@ -193,36 +193,27 @@ function makeSubComponentArgs(rejectPromise = false) {
 
 function Template(args) {
   const {
-    enabled,
-    onToggle,
-    branches,
-    workingRepo,
-    workingBranch,
-    baseBranch,
-    loading,
+    branchSwitcherArgs,
+    branchCreatorArgs,
+    knowledgePageCreatorArgs,
+    knowledgePageMetaEditorArgs,
+    pageSectionCreatorArgs,
+    applicationCreatorArgs,
+    contentCommitterArgs,
+    pullRequestCreatorArgs,
     ...rest
   } = args;
 
   return (
-    <PreviewModeController
-      {...{
-        enabled,
-        onToggle,
-        branches,
-        workingRepo,
-        workingBranch,
-        baseBranch,
-        loading,
-      }}
-    >
-      <BranchSwitcher {...rest.branchSwitcherArgs} />
-      <BranchCreator {...rest.branchCreatorArgs} />
-      <KnowledgePageCreator {...rest.knowledgePageCreatorArgs} />
-      <KnowledgePageMetaEditor {...rest.knowledgePageMetaEditorArgs} />
-      <PageSectionCreator {...rest.pageSectionCreatorArgs} />
-      <ApplicationCreator {...rest.applicationCreatorArgs} />
-      <ContentCommitter {...rest.contentCommitterArgs} />
-      <PullRequestCreator {...rest.pullRequestCreatorArgs} />
+    <PreviewModeController {...rest}>
+      <BranchSwitcher {...branchSwitcherArgs} />
+      <BranchCreator {...branchCreatorArgs} />
+      <KnowledgePageCreator {...knowledgePageCreatorArgs} />
+      <KnowledgePageMetaEditor {...knowledgePageMetaEditorArgs} />
+      <PageSectionCreator {...pageSectionCreatorArgs} />
+      <ApplicationCreator {...applicationCreatorArgs} />
+      <ContentCommitter {...contentCommitterArgs} />
+      <PullRequestCreator {...pullRequestCreatorArgs} />
     </PreviewModeController>
   );
 }
@@ -241,10 +232,60 @@ Template.args = {
   ...makeSubComponentArgs(),
 };
 
+Template.argTypes = {
+  branchSwitcherArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  branchCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  knowledgePageCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  knowledgePageMetaEditorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  pageSectionCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  applicationCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  contentCommitterArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  pullRequestCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  children: {
+    control: false,
+  },
+};
+
 const Loading = Template.bind({});
 
 Loading.args = {
   ...Template.args,
+};
+
+Loading.argTypes = {
+  ...Template.argTypes,
 };
 
 const Inactive = Template.bind({});
@@ -255,6 +296,10 @@ Inactive.args = {
   loading: false,
 };
 
+Inactive.argTypes = {
+  ...Template.argTypes,
+};
+
 const Active = Template.bind({});
 
 Active.args = {
@@ -263,5 +308,22 @@ Active.args = {
   loading: false,
 };
 
+Active.argTypes = {
+  ...Template.argTypes,
+};
+
+const ActiveWithErrors = Template.bind({});
+
+ActiveWithErrors.args = {
+  ...Template.args,
+  enabled: true,
+  loading: false,
+  ...makeSubComponentArgs(true),
+};
+
+ActiveWithErrors.argTypes = {
+  ...Template.argTypes,
+};
+
 export default config;
-export { Loading, Inactive, Active };
+export { Loading, Inactive, Active, ActiveWithErrors };
