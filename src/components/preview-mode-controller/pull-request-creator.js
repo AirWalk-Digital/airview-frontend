@@ -174,7 +174,9 @@ export function PullRequestCreator({ onSubmit }) {
               size="small"
               disabled={state.status === "working"}
             >
-              Create
+              {state.status === "working"
+                ? "Working, please wait..."
+                : "Create"}
             </Button>
           ) : null}
         </WidgetDialogActions>
