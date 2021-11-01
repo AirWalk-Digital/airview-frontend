@@ -65,8 +65,6 @@ export function PullRequestCreator({
     }
   };
 
-  console.log(state);
-
   return (
     <div>
       <WidgetButton
@@ -208,3 +206,14 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
 }));
+
+PullRequestCreator.propTypes = {
+  /**
+   * Sets the disabled state for the component
+   */
+  disabled: PropTypes.bool,
+  /**
+   * Fired when a user requests to raise a pull request. Expectes the return of a resolved or rejected promise, resolve with the URL of the pull request (String) or reject with an error message (String). **Signature:** `function(fromBranch: String, toBranch: String) => Promise.resolve(pullRequestUrl: String) || Promise.reject(errorMessage: String)`
+   */
+  onSubmit: PropTypes.func.isRequired,
+};
