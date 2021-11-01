@@ -13,6 +13,7 @@ import {
   WidgetDialogContent,
   WidgetDialogActions,
 } from "./widget-dialog";
+import { usePreviewModeControllerContext } from "./preview-mode-controller-context";
 import { Link } from "../link";
 
 const intialState = {
@@ -22,14 +23,10 @@ const intialState = {
   pullRequestUrl: null,
 };
 
-export function PullRequestCreator({
-  disabled = false,
-  onSubmit,
-  workingBranch,
-  baseBranch,
-}) {
+export function PullRequestCreator({ onSubmit }) {
   const [state, setState] = useState({ ...intialState });
   const styles = useStyles();
+  const { baseBranch, workingBranch } = usePreviewModeControllerContext();
 
   const handleOnWidgetButtonClick = useCallback(() => {
     setState((prevState) => ({
@@ -71,6 +68,7 @@ export function PullRequestCreator({
         title="Create Pull Request"
         onClick={handleOnWidgetButtonClick}
         icon={<SourceBranch />}
+        disabled={workingBranch === baseBranch}
       />
 
       <WidgetDialog
@@ -208,10 +206,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 PullRequestCreator.propTypes = {
-  /**
-   * Sets the disabled state for the component
-   */
-  disabled: PropTypes.bool,
   /**
    * Fired when a user requests to raise a pull request. Expectes the return of a resolved or rejected promise, resolve with the URL of the pull request (String) or reject with an error message (String). **Signature:** `function(fromBranch: String, toBranch: String) => Promise.resolve(pullRequestUrl: String) || Promise.reject(errorMessage: String)`
    */

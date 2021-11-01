@@ -11,6 +11,7 @@ export function PreviewModeController({
   branches,
   workingRepo,
   workingBranch,
+  baseBranch,
   loading,
   children,
 }) {
@@ -24,6 +25,7 @@ export function PreviewModeController({
         branches,
         workingRepo,
         workingBranch,
+        baseBranch,
         loading,
       }}
     >
@@ -90,6 +92,10 @@ PreviewModeController.propTypes = {
    * The current working branch name
    */
   workingBranch: PropTypes.string,
+  /**
+   * The base branch name for the repository
+   */
+  baseBranch: PropTypes.string,
   /**
    * Any valid PreviewModeController sub-component controller widgets
    */

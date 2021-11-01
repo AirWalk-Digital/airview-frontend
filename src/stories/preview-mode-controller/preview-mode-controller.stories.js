@@ -21,7 +21,9 @@ const config = {
     KnowledgePageCreator,
     KnowledgePageMetaEditor,
     PageSectionCreator,
+    ContentCommitter,
     ApplicationCreator,
+    PullRequestCreator,
   },
   parameters: {
     layout: "padded",
@@ -122,11 +124,10 @@ function ActiveWithNoChanges(args) {
   };
 
   const handleOnPullRequestSubmit = async (from, to) => {
-    console.log(`PR request from branch ${from} to branch ${to}`);
+    console.log(`PR request from branch "${from}" to branch "${to}"`);
 
     return new Promise((resolve, reject) => {
       setTimeout(() => resolve("https://github.com"), 2000);
-      //setTimeout(() => reject("Server error, please try again"), 2000);
     });
   };
 
@@ -162,7 +163,8 @@ ActiveWithNoChanges.args = {
     { name: "development", protected: false },
   ],
   workingRepo: "test-org/test-repository",
-  workingBranch: "master",
+  workingBranch: "development",
+  baseBranch: "master",
 };
 
 function ActiveWithChanges(args) {
