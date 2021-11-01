@@ -127,7 +127,7 @@ export function PullRequestCreator({ onSubmit }) {
                 <div className={styles.branchDetailAdornmentDetails}>
                   <Typography variant="subtitle2">From:</Typography>
                   <Typography variant="body2">
-                    <span>feature-add-raise-pull-request-ui</span>
+                    <span>{workingBranch}</span>
                   </Typography>
                 </div>
               </Paper>
@@ -143,7 +143,7 @@ export function PullRequestCreator({ onSubmit }) {
                 <div className={styles.branchDetailAdornmentDetails}>
                   <Typography variant="subtitle2">To:</Typography>
                   <Typography variant="body2">
-                    <span>main</span>
+                    <span>{baseBranch}</span>
                   </Typography>
                 </div>
               </Paper>
