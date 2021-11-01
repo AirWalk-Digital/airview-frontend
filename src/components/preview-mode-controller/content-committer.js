@@ -16,7 +16,6 @@ const initialState = {
   modalVisible: false,
   status: "initial",
   errorMessage: null,
-  working: false,
   valid: undefined,
   commitMessage: "",
 };
