@@ -7,6 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import { WidgetButton } from "./widget-button";
 import {
   WidgetDialog,
@@ -19,6 +20,7 @@ const setInitialState = (initialBranch) => {
   return {
     modalVisible: false,
     working: false,
+    errorMessage: null,
     selectedBranch: initialBranch,
   };
 };
@@ -37,9 +39,22 @@ export function BranchSwitcher({ onSubmit }) {
     }));
   };
 
-  const handleOnSubmit = () => {
-    onSubmit(state.selectedBranch);
-    setState((prevState) => ({ ...prevState, modalVisible: false }));
+  const handleOnSubmit = async () => {
+    try {
+      setState((prevState) => ({
+        ...prevState,
+        working: true,
+        errorMessage: null,
+      }));
+      await onSubmit(state.selectedBranch);
+      setState((prevState) => ({ ...prevState, modalVisible: false }));
+    } catch (errorMessage) {
+      setState((prevState) => ({
+        ...prevState,
+        working: false,
+        errorMessage,
+      }));
+    }
   };
 
   const cleanup = () => {
@@ -68,8 +83,15 @@ export function BranchSwitcher({ onSubmit }) {
         id="branch-switcher"
         onExited={cleanup}
         title="Switch Working Branch"
+        working={state.working}
       >
         <WidgetDialogContent>
+          {state.errorMessage && (
+            <Typography paragraph variant="body2" color="error">
+              {state.errorMessage}
+            </Typography>
+          )}
+
           <FormControl variant="outlined" fullWidth size="small">
             <InputLabel id="branch-select-label">Working Branch</InputLabel>
             <Select
@@ -104,6 +126,7 @@ export function BranchSwitcher({ onSubmit }) {
             variant="outlined"
             disableElevation
             size="small"
+            disabled={state.working}
           >
             Cancel
           </Button>
@@ -114,9 +137,13 @@ export function BranchSwitcher({ onSubmit }) {
             variant="contained"
             disableElevation
             size="small"
-            disabled={workingBranch === state.selectedBranch ? true : false}
+            disabled={
+              workingBranch === state.selectedBranch
+                ? true
+                : false || state.working
+            }
           >
-            Change Branch
+            {state.working ? "Working, please wait..." : "Change Branch"}
           </Button>
         </WidgetDialogActions>
       </WidgetDialog>
@@ -135,7 +162,7 @@ const useBranchSwitcherStyles = makeStyles((theme) => ({
 
 BranchSwitcher.propTypes = {
   /**
-   * Fired when a user selects a branch to switch to. **Signature:** `function(branchName:string) => void`
+   * Fired when a user requests to switch branch. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(branchName:String) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };

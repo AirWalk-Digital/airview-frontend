@@ -39,11 +39,11 @@ function makeSubComponentArgs(rejectPromise) {
             console.log(branchName);
 
             if (rejectPromise) {
-              reject("Branch Switcher error message");
+              reject("Error: Unable to switch branch, please try again");
             } else {
               resolve();
             }
-          }, 2000);
+          }, 1000);
         });
       },
     },
@@ -54,11 +54,11 @@ function makeSubComponentArgs(rejectPromise) {
             console.log(branchName);
 
             if (rejectPromise) {
-              reject("Branch Creator error message");
+              reject("Error: Unable to create branch, please try again");
             } else {
               resolve();
             }
-          }, 2000);
+          }, 1000);
         });
       },
     },
@@ -69,11 +69,13 @@ function makeSubComponentArgs(rejectPromise) {
             console.log(formData);
 
             if (rejectPromise) {
-              reject("Knowledge Page Creator error message");
+              reject(
+                "Error: Unable to create a new Knowledge page, please try again"
+              );
             } else {
               resolve();
             }
-          }, 2000);
+          }, 1000);
         });
       },
     },
@@ -84,11 +86,13 @@ function makeSubComponentArgs(rejectPromise) {
             console.log(formData);
 
             if (rejectPromise) {
-              reject("Knowledge Page Meta Editor error message");
+              reject(
+                "Error: Unable to submit page meta changes, please try again"
+              );
             } else {
               resolve();
             }
-          }, 2000);
+          }, 1000);
         });
       },
       initialData: {
@@ -104,11 +108,13 @@ function makeSubComponentArgs(rejectPromise) {
             console.log(sectionName);
 
             if (rejectPromise) {
-              reject("Page Section Creator error message");
+              reject(
+                "Error: Unable to create a page section, please try again"
+              );
             } else {
               resolve();
             }
-          }, 2000);
+          }, 1000);
         });
       },
     },
@@ -150,11 +156,11 @@ function makeSubComponentArgs(rejectPromise) {
             console.log(formData);
 
             if (rejectPromise) {
-              reject("Application Creator error message");
+              reject("Error: Unable to create application, please try again");
             } else {
               resolve();
             }
-          }, 2000);
+          }, 1000);
         });
       },
     },
@@ -165,11 +171,11 @@ function makeSubComponentArgs(rejectPromise) {
             console.log("Committing changes");
 
             if (rejectPromise) {
-              reject("Content Committer error message");
+              reject("Error: Unable to commit changes, please try again");
             } else {
               resolve();
             }
-          }, 2000);
+          }, 1000);
         });
       },
     },
@@ -180,11 +186,13 @@ function makeSubComponentArgs(rejectPromise) {
             console.log(`PR request from branch "${from}" to branch "${to}"`);
 
             if (rejectPromise) {
-              reject("Pull Request Creator error message");
+              reject(
+                "Error: Unable to create a pull request, please try again"
+              );
             } else {
               resolve("https://github.com");
             }
-          }, 2000);
+          }, 1000);
         });
       },
     },

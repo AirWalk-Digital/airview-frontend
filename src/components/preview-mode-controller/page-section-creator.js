@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { WidgetButton } from "./widget-button";
 import {
@@ -14,6 +15,7 @@ import {
 const initialState = {
   modalVisible: false,
   working: false,
+  errorMessage: null,
   valid: undefined,
   sectionName: "",
 };
@@ -36,12 +38,15 @@ export function PageSectionCreator({ onSubmit }) {
 
   const handleOnSubmit = async () => {
     try {
-      setState((prevState) => ({ ...prevState, working: true }));
+      setState((prevState) => ({
+        ...prevState,
+        working: true,
+        errorMessage: null,
+      }));
       await onSubmit(state.sectionName);
-    } catch (error) {
-      console.warn(error);
-    } finally {
       setState((prevState) => ({ ...prevState, modalVisible: false }));
+    } catch (errorMessage) {
+      setState((prevState) => ({ ...prevState, working: false, errorMessage }));
     }
   };
 
@@ -70,6 +75,12 @@ export function PageSectionCreator({ onSubmit }) {
         working={state.working}
       >
         <WidgetDialogContent>
+          {state.errorMessage && (
+            <Typography paragraph variant="body2" color="error">
+              {state.errorMessage}
+            </Typography>
+          )}
+
           <TextField
             label="Page Section Name"
             id="page-name"
@@ -112,7 +123,7 @@ export function PageSectionCreator({ onSubmit }) {
             size="small"
             disabled={!state.valid || state.working}
           >
-            Create
+            {state.working ? "Working, please wait..." : "Create"}
           </Button>
         </WidgetDialogActions>
       </WidgetDialog>
@@ -131,7 +142,7 @@ const usePageSectionCreatorStyles = makeStyles(() => ({
 
 PageSectionCreator.propTypes = {
   /**
-   * Fired when a user requests a new page section creation. **Signature:** `function(sectionName:string) => Promise`
+   * Fired when a user requests to create a new page section. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(sectionName:String) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };

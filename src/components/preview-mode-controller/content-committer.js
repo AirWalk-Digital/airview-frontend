@@ -36,7 +36,11 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
 
   const handleOnSubmit = async () => {
     try {
-      setState((prevState) => ({ ...prevState, working: true }));
+      setState((prevState) => ({
+        ...prevState,
+        working: true,
+        errorMessage: null,
+      }));
 
       await onSubmit(state.commitMessage);
 
@@ -151,7 +155,7 @@ ContentCommitter.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * Fired when a user requests to commit content. Expectes the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function() => Promise.resolve() || Promise.reject(errorMessage: String)`
+   * Fired when a user requests to commit content. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function() => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };

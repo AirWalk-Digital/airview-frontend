@@ -519,7 +519,7 @@ ApplicationCreator.propTypes = {
    */
   referenceTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   /**
-   * Fired when a user requests to create a new application. On rejection pass an error message to display to the user in the UI **Signature:** `function(formData:object) => Promise`
+   * Fired when a user requests to create a new application. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:Object) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };
