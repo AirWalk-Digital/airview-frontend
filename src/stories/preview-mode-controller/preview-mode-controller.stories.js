@@ -33,7 +33,7 @@ const config = {
 function makeSubComponentArgs(rejectPromise) {
   return {
     branchSwitcherArgs: {
-      onSubmit: async (branchName) => {
+      onSubmit: (branchName) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log(branchName);
@@ -48,7 +48,7 @@ function makeSubComponentArgs(rejectPromise) {
       },
     },
     branchCreatorArgs: {
-      onSubmit: async (branchName) => {
+      onSubmit: (branchName) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log(branchName);
@@ -63,7 +63,7 @@ function makeSubComponentArgs(rejectPromise) {
       },
     },
     knowledgePageCreatorArgs: {
-      onSubmit: async (formData) => {
+      onSubmit: (formData) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log(formData);
@@ -80,7 +80,7 @@ function makeSubComponentArgs(rejectPromise) {
       },
     },
     knowledgePageMetaEditorArgs: {
-      onSubmit: async (formData) => {
+      onSubmit: (formData) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log(formData);
@@ -102,7 +102,7 @@ function makeSubComponentArgs(rejectPromise) {
       },
     },
     pageSectionCreatorArgs: {
-      onSubmit: async (sectionName) => {
+      onSubmit: (sectionName) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log(sectionName);
@@ -150,7 +150,7 @@ function makeSubComponentArgs(rejectPromise) {
         },
       ],
       referenceTypes: ["type_one", "type_two"],
-      onSubmit: async (formData) => {
+      onSubmit: (formData) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log(formData);
@@ -165,7 +165,7 @@ function makeSubComponentArgs(rejectPromise) {
       },
     },
     contentCommitterArgs: {
-      onSubmit: async () => {
+      onSubmit: () => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log("Committing changes");
@@ -180,7 +180,7 @@ function makeSubComponentArgs(rejectPromise) {
       },
     },
     pullRequestCreatorArgs: {
-      onSubmit: async (from, to) => {
+      onSubmit: (from, to) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             console.log(`PR request from branch "${from}" to branch "${to}"`);
