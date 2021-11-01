@@ -14,7 +14,7 @@ import {
 
 const initialState = {
   modalVisible: false,
-  status: "initial",
+  working: false,
   errorMessage: null,
   valid: undefined,
   commitMessage: "",
@@ -36,7 +36,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
 
   const handleOnSubmit = async () => {
     try {
-      setState((prevState) => ({ ...prevState, status: "working" }));
+      setState((prevState) => ({ ...prevState, working: true }));
 
       await onSubmit(state.commitMessage);
 
@@ -44,7 +44,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
     } catch (errorMessage) {
       setState((prevState) => ({
         ...prevState,
-        status: "error",
+        working: false,
         errorMessage,
       }));
     }
@@ -73,17 +73,15 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
         id="content-commiter"
         onExited={cleanup}
         title="Commit Changes to Remote"
-        working={state.status === "working"}
+        working={state.working}
       >
         <WidgetDialogContent>
           <Typography
             paragraph
             variant="body2"
-            color={state.status === "error" ? "error" : "initial"}
+            color={state.errorMessage ? "error" : "initial"}
           >
-            {state.status === "error"
-              ? state.errorMessage
-              : "Enter a commit message for your changes"}
+            {state.errorMessage ?? "Enter a commit message for your changes"}
           </Typography>
 
           <TextField
@@ -103,7 +101,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
             autoComplete="off"
             value={state.commitMessage}
             onChange={handleOnInputChange}
-            disabled={state.status === "working"}
+            disabled={state.working}
             multiline
             rows={3}
           />
@@ -118,7 +116,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
             variant="outlined"
             disableElevation
             size="small"
-            disabled={state.status === "working"}
+            disabled={state.working}
           >
             Cancel
           </Button>
@@ -128,9 +126,9 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
             variant="contained"
             disableElevation
             size="small"
-            disabled={!state.valid || state.status === "working"}
+            disabled={!state.valid || state.working}
           >
-            {state.status === "working" ? "Working, please wait..." : "Commit"}
+            {state.working ? "Working, please wait..." : "Commit"}
           </Button>
         </WidgetDialogActions>
       </WidgetDialog>
