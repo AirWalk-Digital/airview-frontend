@@ -30,6 +30,167 @@ const config = {
   },
 };
 
+function makeSubComponentArgs(rejectPromise = false) {
+  return {
+    branchSwitcherArgs: {
+      onSubmit: async (branchName) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(branchName);
+
+            if (rejectPromise) {
+              reject("Branch Switcher error message");
+            } else {
+              resolve();
+            }
+          }, 2000);
+        });
+      },
+    },
+    branchCreatorArgs: {
+      onSubmit: async (branchName) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(branchName);
+
+            if (rejectPromise) {
+              reject("Branch Creator error message");
+            } else {
+              resolve();
+            }
+          }, 2000);
+        });
+      },
+    },
+    knowledgePageCreatorArgs: {
+      onSubmit: async (formData) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(formData);
+
+            if (rejectPromise) {
+              reject("Knowledge Page Creator error message");
+            } else {
+              resolve();
+            }
+          }, 2000);
+        });
+      },
+    },
+    knowledgePageMetaEditorArgs: {
+      onSubmit: async (formData) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(formData);
+
+            if (rejectPromise) {
+              reject("Knowledge Page Meta Editor error message");
+            } else {
+              resolve();
+            }
+          }, 2000);
+        });
+      },
+      initialData: {
+        title: "Test document title",
+        reviewDate: dayjs().subtract(1, "day").toISOString(),
+        userFacing: true,
+      },
+    },
+    pageSectionCreatorArgs: {
+      onSubmit: async (sectionName) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(sectionName);
+
+            if (rejectPromise) {
+              reject("Page Section Creator error message");
+            } else {
+              resolve();
+            }
+          }, 2000);
+        });
+      },
+    },
+    applicationCreatorArgs: {
+      applications: [
+        {
+          name: "Application One",
+          id: 1,
+        },
+        {
+          name: "Application Two",
+          id: 2,
+        },
+      ],
+      applicationTypes: [
+        {
+          name: "Type One",
+          id: 1,
+        },
+        {
+          name: "Type Two",
+          id: 2,
+        },
+      ],
+      environments: [
+        {
+          name: "Environment One",
+          id: 1,
+        },
+        {
+          name: "Environment Two",
+          id: 2,
+        },
+      ],
+      referenceTypes: ["type_one", "type_two"],
+      onSubmit: async (formData) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(formData);
+
+            if (rejectPromise) {
+              reject("Application Creator error message");
+            } else {
+              resolve();
+            }
+          }, 2000);
+        });
+      },
+    },
+    contentCommitterArgs: {
+      onSubmit: async () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log("Committing changes");
+
+            if (rejectPromise) {
+              reject("Content Committer error message");
+            } else {
+              resolve();
+            }
+          }, 2000);
+        });
+      },
+    },
+    pullRequestCreatorArgs: {
+      onSubmit: async (from, to) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(`PR request from branch "${from}" to branch "${to}"`);
+
+            if (rejectPromise) {
+              reject("Pull Request Creator error message");
+            } else {
+              resolve("https://github.com");
+            }
+          }, 2000);
+        });
+      },
+    },
+  };
+}
+
 function Template(args) {
   const {
     enabled,
@@ -77,122 +238,7 @@ Template.args = {
   workingBranch: "development",
   baseBranch: "master",
   loading: true,
-  branchSwitcherArgs: {
-    onSubmit: async (branchName) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log(branchName);
-          resolve();
-        }, 2000);
-      });
-    },
-  },
-  branchCreatorArgs: {
-    onSubmit: async (branchName) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log(branchName);
-          resolve();
-        }, 2000);
-      });
-    },
-  },
-  knowledgePageCreatorArgs: {
-    onSubmit: async (formData) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log(formData);
-          resolve();
-        }, 2000);
-      });
-    },
-  },
-  knowledgePageMetaEditorArgs: {
-    onSubmit: async (formData) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log(formData);
-          resolve();
-        }, 2000);
-      });
-    },
-    initialData: {
-      title: "Test document title",
-      reviewDate: dayjs().subtract(1, "day").toISOString(),
-      userFacing: true,
-    },
-  },
-  pageSectionCreatorArgs: {
-    onSubmit: async (sectionName) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log(sectionName);
-          resolve();
-        }, 2000);
-      });
-    },
-  },
-  applicationCreatorArgs: {
-    applications: [
-      {
-        name: "Application One",
-        id: 1,
-      },
-      {
-        name: "Application Two",
-        id: 2,
-      },
-    ],
-    applicationTypes: [
-      {
-        name: "Type One",
-        id: 1,
-      },
-      {
-        name: "Type Two",
-        id: 2,
-      },
-    ],
-    environments: [
-      {
-        name: "Environment One",
-        id: 1,
-      },
-      {
-        name: "Environment Two",
-        id: 2,
-      },
-    ],
-    referenceTypes: ["type_one", "type_two"],
-    onSubmit: async (formData) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log(formData);
-          resolve();
-        }, 2000);
-      });
-    },
-  },
-  contentCommitterArgs: {
-    onSubmit: async () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log("Committing changes");
-          resolve();
-        }, 2000);
-      });
-    },
-  },
-  pullRequestCreatorArgs: {
-    onSubmit: async (from, to) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log(`PR request from branch "${from}" to branch "${to}"`);
-          resolve();
-        }, 2000);
-      });
-    },
-  },
+  ...makeSubComponentArgs(),
 };
 
 const Loading = Template.bind({});
