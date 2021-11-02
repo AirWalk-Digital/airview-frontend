@@ -3,6 +3,11 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
+import { setGlobalConfig } from "@storybook/testing-react";
+import * as globalStorybookConfig from "../.storybook/preview";
+
+setGlobalConfig(globalStorybookConfig);
+
 window.console.error = jest.fn();
 window.fetch = require("node-fetch");
 
