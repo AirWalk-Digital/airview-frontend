@@ -92,7 +92,12 @@ export function BranchSwitcher({ onSubmit }) {
             </Typography>
           )}
 
-          <FormControl variant="outlined" fullWidth size="small">
+          <FormControl
+            variant="outlined"
+            fullWidth
+            size="small"
+            disabled={state.working}
+          >
             <InputLabel id="branch-select-label">Working Branch</InputLabel>
             <Select
               labelId="branch-select-label"
