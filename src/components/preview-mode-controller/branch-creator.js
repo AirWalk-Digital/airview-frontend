@@ -30,7 +30,7 @@ export function BranchCreator({ onSubmit }) {
   const regex = new RegExp("^[a-z0-9_-]+$");
 
   const handleOnInputChange = (event) => {
-    const input = event.target.value.trim().replaceAll(" ", "-");
+    const input = event.target.value.trim();
     setState((prevState) => ({
       ...prevState,
       branchName: input,
