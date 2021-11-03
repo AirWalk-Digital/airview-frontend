@@ -129,9 +129,11 @@ describe("BranchSwitcher", () => {
         within(dialog).getByRole("button", { name: /change branch/i })
       );
     }
+
+    return { dialog };
   };
 
-  test("the component allows a user to make a request to switch branch", async () => {
+  test("it allows a user to make a request to switch branch", async () => {
     const onBranchSwitchSpy = jest.spyOn(
       Active.args.branchSwitcherArgs,
       "onSubmit"
@@ -164,7 +166,7 @@ describe("BranchSwitcher", () => {
     );
   });
 
-  test("the component allows a user to cancel a branch switch request", async () => {
+  test("it allows a user to cancel a branch switch request", async () => {
     render(<Active />);
 
     setupBranchSwitcherComponent(Active.args.branches[0].name, false);
@@ -176,7 +178,7 @@ describe("BranchSwitcher", () => {
     );
   });
 
-  test.skip("the component resets the branch selector UI when the dialog is dismissed", async () => {
+  test("it resets the branch selector UI when the dialog is dismissed", async () => {
     render(<Active />);
 
     setupBranchSwitcherComponent(Active.args.branches[0].name);
@@ -185,10 +187,53 @@ describe("BranchSwitcher", () => {
       screen.queryByRole("dialog", { name: /switch working branch/i })
     );
 
-    setupBranchSwitcherComponent(Active.args.branches[0].name, false);
+    userEvent.click(
+      screen.getByRole("button", { name: /switch working branch/i })
+    );
+
+    const dialog = screen.getByRole("dialog", {
+      name: /switch working branch/i,
+    });
+
+    const selectedBranch = within(dialog).getByRole("button", {
+      name: /working branch/i,
+    });
+
+    expect(selectedBranch).toHaveTextContent(Active.args.workingBranch);
   });
 
-  test("the component handles errors correctly", async () => {
+  test("it sets the default selected branch to the current working branch", () => {
+    render(<Active />);
+
+    userEvent.click(
+      screen.getByRole("button", { name: /switch working branch/i })
+    );
+
+    const dialog = screen.getByRole("dialog", {
+      name: /switch working branch/i,
+    });
+
+    const selectedBranch = within(dialog).getByRole("button", {
+      name: /working branch/i,
+    });
+
+    expect(selectedBranch).toHaveTextContent(Active.args.workingBranch);
+  });
+
+  test("it prevents a user requesting a branch switch when the selected branch is equal to the working branch", () => {
+    render(<Active />);
+
+    const { dialog } = setupBranchSwitcherComponent(
+      Active.args.workingBranch,
+      false
+    );
+
+    expect(
+      within(dialog).getByRole("button", { name: /change branch/i })
+    ).toBeDisabled();
+  });
+
+  test("it handles errors correctly", async () => {
     render(<ActiveWithErrors />);
 
     setupBranchSwitcherComponent(ActiveWithErrors.args.branches[0].name);
