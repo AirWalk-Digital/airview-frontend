@@ -267,3 +267,144 @@ describe("BranchSwitcher", () => {
     });
   });
 });
+
+describe("BranchCreator", () => {
+  const setupBranchCreatorComponent = (
+    branchName,
+    submit = false,
+    cancel = false
+  ) => {
+    userEvent.click(screen.getByRole("button", { name: /create branch/i }));
+
+    const dialog = screen.getByRole("dialog", {
+      name: /create branch/i,
+    });
+
+    const branchNameInput = within(dialog).getByRole("textbox", {
+      name: /branch name/i,
+    });
+
+    userEvent.type(branchNameInput, branchName);
+
+    const createButton = within(dialog).getByRole("button", {
+      name: /create/i,
+    });
+
+    const cancelButton = within(dialog).getByRole("button", {
+      name: /cancel/i,
+    });
+
+    if (submit) {
+      userEvent.click(createButton);
+    }
+
+    if (cancel) {
+      userEvent.click(cancelButton);
+    }
+
+    return { dialog, branchNameInput, createButton, cancelButton };
+  };
+
+  test("it allows a user to make a request to create a new branch", async () => {
+    const onBranchCreateSpy = jest.spyOn(
+      Active.args.branchCreatorArgs,
+      "onSubmit"
+    );
+
+    render(<Active />);
+
+    const branchName = faker.git.branch();
+
+    const {
+      dialog,
+      branchNameInput,
+      createButton,
+      cancelButton,
+    } = setupBranchCreatorComponent(branchName, true);
+
+    expect(within(dialog).getByRole("progressbar")).toBeInTheDocument();
+
+    expect(branchNameInput).toBeDisabled();
+
+    expect(cancelButton).toBeDisabled();
+
+    expect(createButton).toBeDisabled();
+
+    expect(createButton).toHaveTextContent(/working/i);
+
+    await waitForElementToBeRemoved(() =>
+      screen.queryByRole("dialog", { name: /create branch/i })
+    );
+
+    expect(onBranchCreateSpy).toHaveBeenCalledWith(
+      expect.stringMatching(branchName)
+    );
+  });
+
+  test("it allows a user to cancel a request to create a branch", async () => {
+    render(<Active />);
+
+    const branchName = faker.git.branch();
+
+    setupBranchCreatorComponent(branchName, false, true);
+
+    await waitForElementToBeRemoved(() =>
+      screen.queryByRole("dialog", { name: /create branch/i })
+    );
+  });
+
+  test("it prevents a user requesting the creation of a branch until they type a valid branch name", () => {
+    render(<Active />);
+
+    const branchName = faker.git.branch();
+
+    const { branchNameInput, createButton } = setupBranchCreatorComponent(
+      `${branchName}+`
+    );
+
+    expect(createButton).toBeDisabled();
+
+    userEvent.clear(branchNameInput);
+
+    expect(branchNameInput).not.toHaveValue();
+
+    userEvent.type(branchNameInput, "{space}");
+
+    expect(createButton).toBeDisabled();
+
+    userEvent.clear(branchNameInput);
+
+    expect(branchNameInput).not.toHaveValue();
+
+    userEvent.type(branchNameInput, branchName);
+
+    expect(createButton).not.toBeDisabled();
+  });
+
+  test("it handles errors correctly", async () => {
+    render(<ActiveWithErrors />);
+
+    const branchName = faker.git.branch();
+
+    const {
+      dialog,
+      branchNameInput,
+      cancelButton,
+      createButton,
+    } = setupBranchCreatorComponent(branchName, true);
+
+    await waitFor(() => {
+      expect(within(dialog).getByRole("alert")).toBeInTheDocument();
+    });
+
+    expect(branchNameInput).toHaveValue(branchName);
+
+    expect(branchNameInput).not.toBeDisabled();
+
+    expect(cancelButton).not.toBeDisabled();
+
+    expect(createButton).not.toBeDisabled();
+
+    expect(createButton).toHaveTextContent(/create/i);
+  });
+});
