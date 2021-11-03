@@ -82,7 +82,7 @@ export function BranchCreator({ onSubmit }) {
       >
         <WidgetDialogContent>
           {state.errorMessage && (
-            <Typography paragraph variant="body2" color="error">
+            <Typography paragraph variant="body2" color="error" role="alert">
               {state.errorMessage}
             </Typography>
           )}
