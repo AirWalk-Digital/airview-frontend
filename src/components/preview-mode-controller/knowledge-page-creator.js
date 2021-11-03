@@ -31,6 +31,7 @@ function KnowledgePageCreatorBase({
   widgetButtonTitle,
   submitButtonLabel,
   disabled = false,
+  id,
 }) {
   const initialState = {
     modalVisible: false,
@@ -207,6 +208,7 @@ function KnowledgePageCreatorBase({
         }}
         title={widgetDialogTitle}
         working={state.working}
+        {...{ id }}
       >
         <WidgetDialogContent>
           <Typography
@@ -242,6 +244,7 @@ function KnowledgePageCreatorBase({
             value={state.formData.title}
             disabled={state.working}
             onChange={handleOnTitleChange}
+            id={`${id}-title`}
             required
           />
 
@@ -278,6 +281,7 @@ function KnowledgePageCreatorBase({
               }}
               required
               disabled={state.working}
+              id={`${id}-review-date`}
             />
           </MuiPickersUtilsProvider>
 
@@ -350,6 +354,7 @@ KnowledgePageCreatorBase.propTypes = {
   submitButtonLabel: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   presentErrorsOnMount: PropTypes.bool,
+  id: PropTypes.string.isRequired,
 };
 
 export function KnowledgePageCreator({ onSubmit }) {
@@ -365,6 +370,7 @@ export function KnowledgePageCreator({ onSubmit }) {
       widgetButtonTitle="Create Knowledge Page"
       widgetButtonIcon={<InsertDriveFileIcon />}
       submitButtonLabel="Create"
+      id="knowledge-page-creator"
       {...{ onSubmit, initialData }}
     />
   );
@@ -385,6 +391,7 @@ export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
       widgetButtonIcon={<ListIcon />}
       submitButtonLabel="Save"
       presentErrorsOnMount={true}
+      id="knowledge-page-meta-editor"
       {...{ onSubmit, initialData, disabled }}
     />
   );
