@@ -31,19 +31,22 @@ const config = {
 };
 
 function makeSubComponentArgs(rejectPromise) {
+  const delay = process.env.NODE_ENV === "test" ? 0 : 1000;
+  const log = process.env.NODE_ENV !== "test";
+
   return {
     branchSwitcherArgs: {
       onSubmit: (branchName) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            //console.log(branchName);
+            log && console.log(branchName);
 
             if (rejectPromise) {
               reject("Error: Unable to switch branch, please try again");
             } else {
               resolve();
             }
-          }, 1000);
+          }, delay);
         });
       },
     },
@@ -51,14 +54,14 @@ function makeSubComponentArgs(rejectPromise) {
       onSubmit: (branchName) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            //console.log(branchName);
+            log && console.log(branchName);
 
             if (rejectPromise) {
               reject("Error: Unable to create branch, please try again");
             } else {
               resolve();
             }
-          }, 1000);
+          }, delay);
         });
       },
     },
@@ -66,7 +69,7 @@ function makeSubComponentArgs(rejectPromise) {
       onSubmit: (formData) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            //console.log(formData);
+            log && console.log(formData);
 
             if (rejectPromise) {
               reject(
@@ -83,7 +86,7 @@ function makeSubComponentArgs(rejectPromise) {
       onSubmit: (formData) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            //console.log(formData);
+            log && console.log(formData);
 
             if (rejectPromise) {
               reject(
@@ -105,7 +108,7 @@ function makeSubComponentArgs(rejectPromise) {
       onSubmit: (sectionName) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            //console.log(sectionName);
+            log && console.log(sectionName);
 
             if (rejectPromise) {
               reject(
@@ -153,7 +156,7 @@ function makeSubComponentArgs(rejectPromise) {
       onSubmit: (formData) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            //console.log(formData);
+            log && console.log(formData);
 
             if (rejectPromise) {
               reject("Error: Unable to create application, please try again");
@@ -168,7 +171,7 @@ function makeSubComponentArgs(rejectPromise) {
       onSubmit: () => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            //console.log("Committing changes");
+            log && console.log("Committing changes");
 
             if (rejectPromise) {
               reject("Error: Unable to commit changes, please try again");
@@ -183,7 +186,8 @@ function makeSubComponentArgs(rejectPromise) {
       onSubmit: (from, to) => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            //console.log(`PR request from branch "${from}" to branch "${to}"`);
+            log &&
+              console.log(`PR request from branch "${from}" to branch "${to}"`);
 
             if (rejectPromise) {
               reject(
