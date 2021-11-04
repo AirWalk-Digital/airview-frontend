@@ -15,6 +15,7 @@ import {
 const initialState = {
   modalVisible: false,
   working: false,
+  errorMessage: null,
   valid: undefined,
   commitMessage: "",
 };
@@ -35,12 +36,21 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
 
   const handleOnSubmit = async () => {
     try {
-      setState((prevState) => ({ ...prevState, working: true }));
+      setState((prevState) => ({
+        ...prevState,
+        working: true,
+        errorMessage: null,
+      }));
+
       await onSubmit(state.commitMessage);
-    } catch (error) {
-      console.warn(error);
-    } finally {
+
       setState((prevState) => ({ ...prevState, modalVisible: false }));
+    } catch (errorMessage) {
+      setState((prevState) => ({
+        ...prevState,
+        working: false,
+        errorMessage,
+      }));
     }
   };
 
@@ -70,8 +80,12 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
         working={state.working}
       >
         <WidgetDialogContent>
-          <Typography paragraph variant="body2">
-            Enter a commit message for your changes
+          <Typography
+            paragraph
+            variant="body2"
+            color={state.errorMessage ? "error" : "initial"}
+          >
+            {state.errorMessage ?? "Enter a commit message for your changes"}
           </Typography>
 
           <TextField
@@ -91,7 +105,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
             autoComplete="off"
             value={state.commitMessage}
             onChange={handleOnInputChange}
-            disabled={state.working ? true : false}
+            disabled={state.working}
             multiline
             rows={3}
           />
@@ -106,7 +120,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
             variant="outlined"
             disableElevation
             size="small"
-            disabled={state.working ? true : false}
+            disabled={state.working}
           >
             Cancel
           </Button>
@@ -118,7 +132,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
             size="small"
             disabled={!state.valid || state.working}
           >
-            Commit
+            {state.working ? "Working, please wait..." : "Commit"}
           </Button>
         </WidgetDialogActions>
       </WidgetDialog>
@@ -137,7 +151,11 @@ const useContentCommitterStyles = makeStyles(() => ({
 
 ContentCommitter.propTypes = {
   /**
-   * Fired when a user requests to save content. **Signature:** `function() => Promise`
+   * Sets the widget disabled state
+   */
+  disabled: PropTypes.bool,
+  /**
+   * Fired when a user requests to commit content. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function() => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };

@@ -9,6 +9,7 @@ import {
   PageSectionCreator,
   ContentCommitter,
   ApplicationCreator,
+  PullRequestCreator,
 } from "../../components/preview-mode-controller";
 
 const config = {
@@ -20,195 +21,321 @@ const config = {
     KnowledgePageCreator,
     KnowledgePageMetaEditor,
     PageSectionCreator,
+    ContentCommitter,
     ApplicationCreator,
+    PullRequestCreator,
   },
   parameters: {
     layout: "padded",
   },
 };
 
-const applicationCreatorProps = {
-  applications: [
-    {
-      name: "Application One",
-      id: 1,
-    },
-    {
-      name: "Application Two",
-      id: 2,
-    },
-  ],
-  applicationTypes: [
-    {
-      name: "Type One",
-      id: 1,
-    },
-    {
-      name: "Type Two",
-      id: 2,
-    },
-  ],
-  environments: [
-    {
-      name: "Environment One",
-      id: 1,
-    },
-    {
-      name: "Environment Two",
-      id: 2,
-    },
-  ],
-  referenceTypes: ["type_one", "type_two"],
-};
+function makeSubComponentArgs(rejectPromise) {
+  const delay = process.env.NODE_ENV === "test" ? 0 : 1000;
+  const log = process.env.NODE_ENV !== "test";
 
-const PageMetaEditorFormData = {
-  title: "My Test Document *",
-  reviewDate: dayjs().subtract(1, "day").toISOString(),
-  userFacing: true,
-};
+  return {
+    branchSwitcherArgs: {
+      onSubmit: (branchName) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            log && console.log(branchName);
 
-function Loading(args) {
-  return <PreviewModeController {...args}></PreviewModeController>;
+            if (rejectPromise) {
+              reject("Error: Unable to switch branch, please try again");
+            } else {
+              resolve();
+            }
+          }, delay);
+        });
+      },
+    },
+    branchCreatorArgs: {
+      onSubmit: (branchName) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            log && console.log(branchName);
+
+            if (rejectPromise) {
+              reject("Error: Unable to create branch, please try again");
+            } else {
+              resolve();
+            }
+          }, delay);
+        });
+      },
+    },
+    knowledgePageCreatorArgs: {
+      onSubmit: (formData) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            log && console.log(formData);
+
+            if (rejectPromise) {
+              reject(
+                "Error: Unable to create a new Knowledge page, please try again"
+              );
+            } else {
+              resolve();
+            }
+          }, delay);
+        });
+      },
+    },
+    knowledgePageMetaEditorArgs: {
+      onSubmit: (formData) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            log && console.log(formData);
+
+            if (rejectPromise) {
+              reject(
+                "Error: Unable to submit page meta changes, please try again"
+              );
+            } else {
+              resolve();
+            }
+          }, delay);
+        });
+      },
+      initialData: {
+        title: "Test document title",
+        reviewDate: dayjs().subtract(1, "day").toISOString(),
+        userFacing: true,
+      },
+    },
+    pageSectionCreatorArgs: {
+      onSubmit: (sectionName) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            log && console.log(sectionName);
+
+            if (rejectPromise) {
+              reject(
+                "Error: Unable to create a page section, please try again"
+              );
+            } else {
+              resolve();
+            }
+          }, delay);
+        });
+      },
+    },
+    applicationCreatorArgs: {
+      applications: [
+        {
+          name: "Application One",
+          id: 1,
+        },
+        {
+          name: "Application Two",
+          id: 2,
+        },
+      ],
+      applicationTypes: [
+        {
+          name: "Type One",
+          id: 1,
+        },
+        {
+          name: "Type Two",
+          id: 2,
+        },
+      ],
+      environments: [
+        {
+          name: "Environment One",
+          id: 1,
+        },
+        {
+          name: "Environment Two",
+          id: 2,
+        },
+      ],
+      referenceTypes: ["type_one", "type_two"],
+      onSubmit: (formData) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            log && console.log(formData);
+
+            if (rejectPromise) {
+              reject("Error: Unable to create application, please try again");
+            } else {
+              resolve();
+            }
+          }, delay);
+        });
+      },
+    },
+    contentCommitterArgs: {
+      onSubmit: () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            log && console.log("Committing changes");
+
+            if (rejectPromise) {
+              reject("Error: Unable to commit changes, please try again");
+            } else {
+              resolve();
+            }
+          }, delay);
+        });
+      },
+    },
+    pullRequestCreatorArgs: {
+      onSubmit: (from, to) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            log &&
+              console.log(`PR request from branch "${from}" to branch "${to}"`);
+
+            if (rejectPromise) {
+              reject(
+                "Error: Unable to create a pull request, please try again"
+              );
+            } else {
+              resolve("https://github.com");
+            }
+          }, delay);
+        });
+      },
+    },
+  };
 }
 
-Loading.args = {
-  loading: true,
-};
-
-function Inactive(args) {
-  return <PreviewModeController {...args}></PreviewModeController>;
-}
-
-Inactive.args = {
-  enabled: false,
-  loading: false,
-};
-
-function ActiveWithNoChanges(args) {
-  const handleOnSubmit = async (data) => {
-    console.log(data);
-
-    return new Promise((resolve) => {
-      setTimeout(resolve, 2000);
-    });
-  };
-
-  const handleOnApplicationCreateSubmit = async (data) => {
-    return new Promise((resolve, reject) => {
-      const invalidApplicationName = applicationCreatorProps.applications.find(
-        (application) => {
-          return application.name === data.name;
-        }
-      );
-
-      if (invalidApplicationName) {
-        setTimeout(
-          () =>
-            reject(
-              "Error: Application name exists, please re-name your application."
-            ),
-          2000
-        );
-
-        return;
-      }
-
-      setTimeout(() => {
-        console.log(data);
-        resolve();
-      }, 2000);
-    });
-  };
+function Template(args) {
+  const {
+    branchSwitcherArgs,
+    branchCreatorArgs,
+    knowledgePageCreatorArgs,
+    knowledgePageMetaEditorArgs,
+    pageSectionCreatorArgs,
+    applicationCreatorArgs,
+    contentCommitterArgs,
+    pullRequestCreatorArgs,
+    ...rest
+  } = args;
 
   return (
-    <PreviewModeController {...args}>
-      <BranchSwitcher onSubmit={handleOnSubmit} />
-      <BranchCreator onSubmit={handleOnSubmit} />
-      <KnowledgePageCreator onSubmit={handleOnSubmit} />
-      <KnowledgePageMetaEditor
-        onSubmit={handleOnSubmit}
-        initialData={PageMetaEditorFormData}
-      />
-      <PageSectionCreator onSubmit={handleOnSubmit} />
-      <ApplicationCreator
-        {...applicationCreatorProps}
-        onSubmit={handleOnApplicationCreateSubmit}
-      />
-      <ContentCommitter disabled onSubmit={handleOnSubmit} />
+    <PreviewModeController {...rest}>
+      <BranchSwitcher {...branchSwitcherArgs} />
+      <BranchCreator {...branchCreatorArgs} />
+      <KnowledgePageCreator {...knowledgePageCreatorArgs} />
+      <KnowledgePageMetaEditor {...knowledgePageMetaEditorArgs} />
+      <PageSectionCreator {...pageSectionCreatorArgs} />
+      <ApplicationCreator {...applicationCreatorArgs} />
+      <ContentCommitter {...contentCommitterArgs} />
+      <PullRequestCreator {...pullRequestCreatorArgs} />
     </PreviewModeController>
   );
 }
 
-ActiveWithNoChanges.args = {
-  enabled: true,
-  loading: false,
+Template.args = {
+  enabled: false,
+  onToggle: () => {},
   branches: [
     { name: "master", protected: true },
     { name: "development", protected: false },
   ],
   workingRepo: "test-org/test-repository",
-  workingBranch: "master",
+  workingBranch: "development",
+  baseBranch: "master",
+  loading: true,
+  ...makeSubComponentArgs(),
 };
 
-function ActiveWithChanges(args) {
-  const handleOnSubmit = async (args) => {
-    console.log(args);
+Template.argTypes = {
+  branchSwitcherArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  branchCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  knowledgePageCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  knowledgePageMetaEditorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  pageSectionCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  applicationCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  contentCommitterArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  pullRequestCreatorArgs: {
+    table: {
+      disable: true,
+    },
+  },
+  children: {
+    control: false,
+  },
+};
 
-    return new Promise((resolve) => {
-      setTimeout(resolve, 2000);
-    });
-  };
+const Loading = Template.bind({});
 
-  const handleOnApplicationCreateSubmit = async (data) => {
-    return new Promise((resolve, reject) => {
-      const invalidApplicationName = applicationCreatorProps.applications.find(
-        (application) => {
-          return application.name === data.name;
-        }
-      );
+Loading.args = {
+  ...Template.args,
+};
 
-      if (invalidApplicationName) {
-        setTimeout(
-          () =>
-            reject(
-              "Error: Application name exists, please re-name your application."
-            ),
-          2000
-        );
+Loading.argTypes = {
+  ...Template.argTypes,
+};
 
-        return;
-      }
+const Inactive = Template.bind({});
 
-      setTimeout(() => {
-        console.log(data);
-        resolve();
-      }, 2000);
-    });
-  };
+Inactive.args = {
+  ...Template.args,
+  enabled: false,
+  loading: false,
+};
 
-  return (
-    <PreviewModeController {...args}>
-      <BranchSwitcher onSubmit={handleOnSubmit} />
-      <BranchCreator onSubmit={handleOnSubmit} />
-      <KnowledgePageCreator onSubmit={handleOnSubmit} />
-      <KnowledgePageMetaEditor
-        onSubmit={handleOnSubmit}
-        initialData={PageMetaEditorFormData}
-        disabled
-      />
-      <PageSectionCreator onSubmit={handleOnSubmit} />
-      <ApplicationCreator
-        {...applicationCreatorProps}
-        onSubmit={handleOnApplicationCreateSubmit}
-      />
-      <ContentCommitter onSubmit={handleOnSubmit} />
-    </PreviewModeController>
-  );
-}
+Inactive.argTypes = {
+  ...Template.argTypes,
+};
 
-ActiveWithChanges.args = {
-  ...ActiveWithNoChanges.args,
+const Active = Template.bind({});
+
+Active.args = {
+  ...Template.args,
+  enabled: true,
+  loading: false,
+};
+
+Active.argTypes = {
+  ...Template.argTypes,
+};
+
+const ActiveWithErrors = Template.bind({});
+
+ActiveWithErrors.args = {
+  ...Template.args,
+  enabled: true,
+  loading: false,
+  ...makeSubComponentArgs(true),
+};
+
+ActiveWithErrors.argTypes = {
+  ...Template.argTypes,
 };
 
 export default config;
-export { Loading, Inactive, ActiveWithNoChanges, ActiveWithChanges };
+export { Loading, Inactive, Active, ActiveWithErrors };

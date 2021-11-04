@@ -31,10 +31,12 @@ function KnowledgePageCreatorBase({
   widgetButtonTitle,
   submitButtonLabel,
   disabled = false,
+  id,
 }) {
   const initialState = {
     modalVisible: false,
     working: false,
+    errorMessage: null,
     formData: {
       title: initialData.title,
       reviewDate: dayjs(initialData.reviewDate),
@@ -161,6 +163,7 @@ function KnowledgePageCreatorBase({
       setState((prevState) => ({
         ...prevState,
         working: true,
+        errorMessage: null,
       }));
 
       await onSubmit({
@@ -172,8 +175,12 @@ function KnowledgePageCreatorBase({
         ...prevState,
         modalVisible: false,
       }));
-    } catch (error) {
-      console.log(error);
+    } catch (errorMessage) {
+      setState((prevState) => ({
+        ...prevState,
+        working: false,
+        errorMessage,
+      }));
     }
   };
 
@@ -201,10 +208,20 @@ function KnowledgePageCreatorBase({
         }}
         title={widgetDialogTitle}
         working={state.working}
+        {...{ id }}
       >
         <WidgetDialogContent>
-          <Typography variant="body2">
-            <strong>Note:</strong> Fields marked with an asterisk are required.
+          <Typography
+            variant="body2"
+            color={state.errorMessage ? "error" : "initial"}
+            role={state.errorMessage ? "alert" : null}
+          >
+            {state.errorMessage ?? (
+              <React.Fragment>
+                <strong>Note:</strong> Fields marked with an asterisk are
+                required.
+              </React.Fragment>
+            )}
           </Typography>
 
           <TextField
@@ -228,6 +245,7 @@ function KnowledgePageCreatorBase({
             value={state.formData.title}
             disabled={state.working}
             onChange={handleOnTitleChange}
+            id={`${id}-title`}
             required
           />
 
@@ -264,6 +282,7 @@ function KnowledgePageCreatorBase({
               }}
               required
               disabled={state.working}
+              id={`${id}-review-date`}
             />
           </MuiPickersUtilsProvider>
 
@@ -336,6 +355,7 @@ KnowledgePageCreatorBase.propTypes = {
   submitButtonLabel: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   presentErrorsOnMount: PropTypes.bool,
+  id: PropTypes.string.isRequired,
 };
 
 export function KnowledgePageCreator({ onSubmit }) {
@@ -351,6 +371,7 @@ export function KnowledgePageCreator({ onSubmit }) {
       widgetButtonTitle="Create Knowledge Page"
       widgetButtonIcon={<InsertDriveFileIcon />}
       submitButtonLabel="Create"
+      id="knowledge-page-creator"
       {...{ onSubmit, initialData }}
     />
   );
@@ -358,7 +379,7 @@ export function KnowledgePageCreator({ onSubmit }) {
 
 KnowledgePageCreator.propTypes = {
   /**
-   * Fired when a user requests to edit page metadata. **Signature:** `async function(formData:object) => Promise`
+   * Fired when a user requests to create a Knowledge Page. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:object) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };
@@ -371,6 +392,7 @@ export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
       widgetButtonIcon={<ListIcon />}
       submitButtonLabel="Save"
       presentErrorsOnMount={true}
+      id="knowledge-page-meta-editor"
       {...{ onSubmit, initialData, disabled }}
     />
   );
@@ -378,7 +400,7 @@ export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
 
 KnowledgePageMetaEditor.propTypes = {
   /**
-   * Fired when a user requests to edit page metadata. **Signature:** `async function(formData:object) => Promise`
+   * Fired when a user requests to edit meta data. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:object) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
   /**

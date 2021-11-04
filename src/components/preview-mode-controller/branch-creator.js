@@ -16,6 +16,7 @@ import { usePreviewModeControllerContext } from "./preview-mode-controller-conte
 const initialState = {
   modalVisible: false,
   working: false,
+  errorMessage: null,
   valid: undefined,
   branchName: "",
 };
@@ -29,7 +30,7 @@ export function BranchCreator({ onSubmit }) {
   const regex = new RegExp("^[a-z0-9_-]+$");
 
   const handleOnInputChange = (event) => {
-    const input = event.target.value.trim().replaceAll(" ", "-");
+    const input = event.target.value.trim();
     setState((prevState) => ({
       ...prevState,
       branchName: input,
@@ -39,12 +40,19 @@ export function BranchCreator({ onSubmit }) {
 
   const handleOnSubmit = async () => {
     try {
-      setState((prevState) => ({ ...prevState, working: true }));
+      setState((prevState) => ({
+        ...prevState,
+        working: true,
+        errorMessage: null,
+      }));
       await onSubmit(state.branchName);
-    } catch (error) {
-      console.warn(error);
-    } finally {
       setState((prevState) => ({ ...prevState, modalVisible: false }));
+    } catch (errorMessage) {
+      setState((prevState) => ({
+        ...prevState,
+        working: false,
+        errorMessage,
+      }));
     }
   };
 
@@ -73,6 +81,12 @@ export function BranchCreator({ onSubmit }) {
         working={state.working}
       >
         <WidgetDialogContent>
+          {state.errorMessage && (
+            <Typography paragraph variant="body2" color="error" role="alert">
+              {state.errorMessage}
+            </Typography>
+          )}
+
           <Typography paragraph variant="body2">
             Branching from <strong>{workingBranch}</strong>
           </Typography>
@@ -118,7 +132,7 @@ export function BranchCreator({ onSubmit }) {
             size="small"
             disabled={!state.valid || state.working}
           >
-            Create
+            {state.working ? "Working, please wait..." : "Create"}
           </Button>
         </WidgetDialogActions>
       </WidgetDialog>
@@ -137,7 +151,7 @@ const useBranchCreatorStyles = makeStyles(() => ({
 
 BranchCreator.propTypes = {
   /**
-   * Fired when a user requests a new branch creation. **Signature:** `function(branchName:string) => Promise`
+   * Fired when a user requests to create a new branch. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(branchName:String) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };
