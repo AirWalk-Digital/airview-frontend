@@ -91,11 +91,16 @@ Template.args = {
   ],
   bodyContent: markdownContent,
   workingRepo: "test-org/test-repo",
-  workingBranch: "master",
+  workingBranch: "development",
+  baseBranch: "master",
   branches: [
     {
       name: "master",
       protected: true,
+    },
+    {
+      name: "development",
+      protected: false,
     },
   ],
   onRequestToSwitchBranch: () => {},
@@ -108,6 +113,11 @@ Template.args = {
   },
   onSave: async (data) => {
     console.log(data);
+  },
+  onRequestToCreatePullRequest: (from, to) => {
+    console.log(`PR request from branch "${from}" to branch "${to}"`);
+
+    return "https://github.com";
   },
   loading: false,
   previewMode: false,
