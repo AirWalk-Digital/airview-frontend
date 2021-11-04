@@ -2,7 +2,6 @@ import React from "react";
 import {
   render,
   screen,
-  cleanup,
   within,
   waitForElementToBeRemoved,
   waitFor,
@@ -10,6 +9,8 @@ import {
 import userEvent from "@testing-library/user-event";
 import { composeStories } from "@storybook/testing-react";
 import faker from "faker";
+import MockDate from "mockdate";
+import dayjs from "dayjs";
 import * as stories from "../stories/preview-mode-controller/preview-mode-controller.stories";
 
 const { Loading, Inactive, Active, ActiveWithErrors } = composeStories(stories);
@@ -178,7 +179,7 @@ describe("BranchSwitcher", () => {
     );
   });
 
-  test("it resets the branch selector UI when the dialog is dismissed", async () => {
+  test("it resets the form inputs to default values when the dialog is dismissed", async () => {
     render(<Active />);
 
     setupBranchSwitcherComponent(Active.args.branches[0].name);
@@ -186,24 +187,6 @@ describe("BranchSwitcher", () => {
     await waitForElementToBeRemoved(() =>
       screen.queryByRole("dialog", { name: /switch working branch/i })
     );
-
-    userEvent.click(
-      screen.getByRole("button", { name: /switch working branch/i })
-    );
-
-    const dialog = screen.getByRole("dialog", {
-      name: /switch working branch/i,
-    });
-
-    const selectedBranch = within(dialog).getByRole("button", {
-      name: /working branch/i,
-    });
-
-    expect(selectedBranch).toHaveTextContent(Active.args.workingBranch);
-  });
-
-  test("it sets the default selected branch to the current working branch", () => {
-    render(<Active />);
 
     userEvent.click(
       screen.getByRole("button", { name: /switch working branch/i })
@@ -353,6 +336,10 @@ describe("BranchCreator", () => {
     );
   });
 
+  test.todo(
+    "it resets the form inputs to default values when the dialog is dismissed"
+  );
+
   test("it prevents a user requesting the creation of a branch until they type a valid branch name", () => {
     render(<Active />);
 
@@ -406,5 +393,308 @@ describe("BranchCreator", () => {
     expect(createButton).not.toBeDisabled();
 
     expect(createButton).toHaveTextContent(/create/i);
+  });
+});
+
+describe("KnowledgePageCreator", () => {
+  const setupKnowledgePageCreatorComponent = (
+    formData,
+    submit = false,
+    cancel = false
+  ) => {
+    const queryOpenDialogBtn = () => {
+      return screen.getByRole("button", {
+        name: /create knowledge page/i,
+      });
+    };
+
+    const queryDialog = () => {
+      return screen.queryByRole("dialog", {
+        name: /create knowledge page/i,
+      });
+    };
+
+    const queryTitleInput = () => {
+      return within(queryDialog()).getByRole("textbox", { name: /title/i });
+    };
+
+    const queryReviewDateInput = () => {
+      return within(queryDialog()).getByRole("textbox", {
+        name: /review date/i,
+      });
+    };
+
+    const queryUserFacingInput = () => {
+      return within(queryDialog()).getByRole("checkbox", {
+        name: /user facing/i,
+      });
+    };
+
+    const queryCancelBtn = () => {
+      return within(queryDialog()).getByRole("button", {
+        name: /cancel/i,
+      });
+    };
+
+    const queryCreateBtn = () => {
+      return within(queryDialog()).queryByRole("button", {
+        name: /create/i,
+      });
+    };
+
+    const queryWorkingBtn = () => {
+      return within(queryDialog()).queryByRole("button", {
+        name: /working/i,
+      });
+    };
+
+    const queryProgressIndicator = () => {
+      return within(queryDialog()).queryByRole("progressbar");
+    };
+
+    const queryErrorMessage = () => {
+      return within(queryDialog()).queryByRole("alert");
+    };
+
+    // Open dialog
+    userEvent.click(queryOpenDialogBtn());
+
+    // Enter title value
+    if (formData?.title) {
+      userEvent.type(queryTitleInput(), formData.title);
+    }
+
+    // Enter review date value
+    if (formData?.reviewDate) {
+      const reviewDateInput = queryReviewDateInput();
+
+      userEvent.clear(reviewDateInput);
+      userEvent.type(reviewDateInput, formData.reviewDate);
+    }
+
+    // Check user facing input
+    if (formData?.userFacing) {
+      userEvent.click(queryUserFacingInput());
+    }
+
+    if (!(submit && cancel)) {
+      if (submit) {
+        userEvent.click(queryCreateBtn());
+      }
+
+      if (cancel) {
+        userEvent.click(queryCancelBtn());
+      }
+    }
+
+    return {
+      queryOpenDialogBtn,
+      queryDialog,
+      queryTitleInput,
+      queryReviewDateInput,
+      queryUserFacingInput,
+      queryCancelBtn,
+      queryCreateBtn,
+      queryWorkingBtn,
+      queryProgressIndicator,
+      queryErrorMessage,
+    };
+  };
+
+  test("a user can create a new knowledge page", async () => {
+    const mockDateValue = "01/01/2021";
+
+    const formData = {
+      title: faker.lorem.words(3),
+      reviewDate: "02/01/2021",
+      userFacing: true,
+    };
+
+    const onKnowledgePageCreatorSpy = jest.spyOn(
+      Active.args.knowledgePageCreatorArgs,
+      "onSubmit"
+    );
+
+    MockDate.set(mockDateValue);
+
+    render(<Active />);
+
+    // Open knowledge creator dialog, complete form and click create
+    const {
+      queryOpenDialogBtn,
+      queryDialog,
+      queryTitleInput,
+      queryReviewDateInput,
+      queryUserFacingInput,
+      queryCancelBtn,
+      queryCreateBtn,
+      queryWorkingBtn,
+      queryProgressIndicator,
+    } = setupKnowledgePageCreatorComponent(formData, true);
+
+    // It sets the dialog UI to a loading state
+    expect(queryProgressIndicator()).toBeInTheDocument();
+
+    expect(queryTitleInput()).toBeDisabled();
+
+    expect(queryReviewDateInput()).toBeDisabled();
+
+    expect(queryUserFacingInput()).toBeDisabled();
+
+    expect(queryCancelBtn()).toBeDisabled();
+
+    expect(queryCreateBtn()).not.toBeInTheDocument();
+
+    expect(queryWorkingBtn()).toBeInTheDocument();
+
+    expect(queryWorkingBtn()).toBeDisabled();
+
+    // it fires callback with form data
+    expect(onKnowledgePageCreatorSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: formData.title,
+        reviewDate: new Date("01/02/2021").toISOString(),
+        userFacing: true,
+      })
+    );
+
+    // it removes dialog from DOM and resets form values to defaults
+    await waitFor(() => {
+      expect(queryDialog()).not.toBeInTheDocument();
+
+      userEvent.click(queryOpenDialogBtn());
+
+      expect(queryTitleInput()).not.toHaveValue();
+
+      expect(queryReviewDateInput()).toHaveValue(
+        dayjs(mockDateValue).add(6, "months").format("DD/MM/YYYY")
+      );
+
+      expect(queryUserFacingInput()).not.toBeChecked();
+    });
+
+    MockDate.reset();
+  });
+
+  test("a user can cancel the creation of a new knowledge page", async () => {
+    const mockDateValue = "01/01/2021";
+
+    const formData = {
+      title: faker.lorem.words(3),
+      reviewDate: "02/01/2021",
+      userFacing: true,
+    };
+
+    MockDate.set(mockDateValue);
+
+    render(<Active />);
+
+    // Open knowledge creator dialog, complete form and click cancel
+    const {
+      queryOpenDialogBtn,
+      queryDialog,
+      queryTitleInput,
+      queryReviewDateInput,
+      queryUserFacingInput,
+    } = setupKnowledgePageCreatorComponent(formData, false, true);
+
+    // it removes dialog from DOM and resets form values to defaults
+    await waitFor(() => {
+      expect(queryDialog()).not.toBeInTheDocument();
+
+      userEvent.click(queryOpenDialogBtn());
+
+      expect(queryTitleInput()).not.toHaveValue();
+
+      expect(queryReviewDateInput()).toHaveValue(
+        dayjs(mockDateValue).add(6, "months").format("DD/MM/YYYY")
+      );
+
+      expect(queryUserFacingInput()).not.toBeChecked();
+    });
+
+    MockDate.reset();
+  });
+
+  test("a user can not request a new page when the form values are invalid", async () => {
+    const mockDateValue = "01/01/2021";
+
+    const formData = {
+      title: `${faker.lorem.words(3)} +`,
+      reviewDate: "31/12/2020",
+      userFacing: true,
+    };
+
+    MockDate.set(mockDateValue);
+
+    render(<Active />);
+
+    // Open knowledge creator dialog, complete form with invalid data
+    const {
+      queryTitleInput,
+      queryReviewDateInput,
+      queryCreateBtn,
+    } = setupKnowledgePageCreatorComponent(formData);
+
+    expect(queryCreateBtn()).toBeDisabled();
+
+    // it prevents requests when required fields have no values
+    userEvent.clear(queryTitleInput());
+    userEvent.clear(queryReviewDateInput());
+
+    expect(queryCreateBtn()).toBeDisabled();
+
+    // it enables the create button with valid required field values
+    userEvent.type(queryTitleInput(), "test");
+    userEvent.type(queryReviewDateInput(), "02/01/2021");
+
+    expect(queryCreateBtn()).not.toBeDisabled();
+
+    MockDate.reset();
+  });
+
+  test("it handles errors correctly", async () => {
+    const mockDateValue = "01/01/2021";
+
+    const formData = {
+      title: faker.lorem.words(3),
+      reviewDate: "02/01/2021",
+      userFacing: true,
+    };
+
+    MockDate.set(mockDateValue);
+
+    render(<ActiveWithErrors />);
+
+    // Open knowledge creator dialog, complete form and click create
+    const {
+      queryTitleInput,
+      queryReviewDateInput,
+      queryUserFacingInput,
+      queryCancelBtn,
+      queryCreateBtn,
+      queryWorkingBtn,
+      queryProgressIndicator,
+      queryErrorMessage,
+    } = setupKnowledgePageCreatorComponent(formData, true);
+
+    // It updates with an error message and persists user entered data, allowing user to cancel or re-try
+    await waitFor(() => {
+      expect(queryProgressIndicator()).not.toBeInTheDocument();
+
+      expect(queryTitleInput()).toHaveValue(formData.title);
+
+      expect(queryReviewDateInput()).toHaveValue(formData.reviewDate);
+
+      expect(queryUserFacingInput()).toBeChecked();
+
+      expect(queryCancelBtn()).not.toBeDisabled();
+
+      expect(queryCreateBtn()).not.toBeDisabled();
+
+      expect(queryWorkingBtn()).not.toBeInTheDocument();
+
+      expect(queryErrorMessage()).toBeInTheDocument();
+    });
   });
 });
