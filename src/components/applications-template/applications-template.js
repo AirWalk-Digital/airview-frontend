@@ -20,9 +20,9 @@ import {
   BranchSwitcher,
   BranchCreator,
   KnowledgePageCreator,
-  KnowledgePageMetaEditor,
   ContentCommitter,
   ApplicationCreator,
+  PullRequestCreator,
 } from "../preview-mode-controller";
 import { LocationProvider } from "../../hooks/use-location";
 
@@ -45,6 +45,7 @@ export function ApplicationsTemplate({
   complianceTableNoDataMessage,
   workingRepo,
   workingBranch,
+  baseBranch,
   branches,
   applicationTypes,
   applications,
@@ -56,6 +57,7 @@ export function ApplicationsTemplate({
   onRequestToSwitchBranch,
   onRequestToCreateBranch,
   onRequestToCreatePage,
+  onRequestToCreatePullRequest,
   onRequestToUploadImage,
   onSave,
   controlOverviewTitle,
@@ -111,7 +113,7 @@ export function ApplicationsTemplate({
         enabled={previewMode}
         loading={loading}
         onToggle={onTogglePreviewMode}
-        {...{ branches, workingRepo, workingBranch }}
+        {...{ branches, workingRepo, workingBranch, baseBranch }}
       >
         <BranchSwitcher onSubmit={onRequestToSwitchBranch} />
         <BranchCreator onSubmit={onRequestToCreateBranch} />
@@ -126,6 +128,7 @@ export function ApplicationsTemplate({
           }}
           onSubmit={onRequestToCreateApplication}
         />
+        <PullRequestCreator onSubmit={onRequestToCreatePullRequest} />
       </PreviewModeController>
 
       <Helmet>
@@ -340,6 +343,10 @@ ApplicationsTemplate.propTypes = {
    */
   workingBranch: PropTypes.string,
   /**
+   * Used to set the base branch for the PreviewModeController
+   */
+  baseBranch: PropTypes.string,
+  /**
    * Used to set the available branches for the PreviewModeController (see [PreviewModeController](/?path=/docs/modules-preview-mode-controller) `branches` prop API for schema)
    */
   branches: PropTypes.array,
@@ -363,6 +370,10 @@ ApplicationsTemplate.propTypes = {
    * Callback when a user requests to create a page using the PreviewModeController, (see [PreviewModeController - PageCreator](/?path=/docs/modules-preview-mode-controller) `onSubmit` prop API for details)
    */
   onRequestToCreatePage: PropTypes.func,
+  /**
+   * Callback when a user requests to create a pull request, (see [PreviewModeController - PullRequestCreator](/?path=/docs/modules-preview-mode-controller) `onSubmit` prop API for details))
+   */
+  onRequestToCreatePullRequest: PropTypes.func,
   /**
    * Callback when Markdown editor has had a user upload an image. **Singnature: `function(file: Blob) : Promise`
    */

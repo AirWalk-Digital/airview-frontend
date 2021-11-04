@@ -189,7 +189,8 @@ Template.args = {
     },
   ],
   workingRepo: "test-org/test-repo",
-  workingBranch: "master",
+  workingBranch: "development",
+  baseBranch: "master",
   branches: [
     {
       name: "master",
@@ -205,6 +206,11 @@ Template.args = {
   onRequestToCreatePage: () => {},
   onSave: async (data) => {
     console.log(data);
+  },
+  onRequestToCreatePullRequest: (from, to) => {
+    console.log(`PR request from branch "${from}" to branch "${to}"`);
+
+    return "https://github.com";
   },
   applications: [
     {
