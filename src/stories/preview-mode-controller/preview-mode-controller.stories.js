@@ -78,7 +78,7 @@ function makeSubComponentArgs(rejectPromise) {
             } else {
               resolve();
             }
-          }, 1000);
+          }, delay);
         });
       },
     },
@@ -95,7 +95,7 @@ function makeSubComponentArgs(rejectPromise) {
             } else {
               resolve();
             }
-          }, 1000);
+          }, delay);
         });
       },
       initialData: {
@@ -117,7 +117,7 @@ function makeSubComponentArgs(rejectPromise) {
             } else {
               resolve();
             }
-          }, 1000);
+          }, delay);
         });
       },
     },
@@ -163,7 +163,7 @@ function makeSubComponentArgs(rejectPromise) {
             } else {
               resolve();
             }
-          }, 1000);
+          }, delay);
         });
       },
     },
@@ -178,7 +178,7 @@ function makeSubComponentArgs(rejectPromise) {
             } else {
               resolve();
             }
-          }, 1000);
+          }, delay);
         });
       },
     },
@@ -196,7 +196,7 @@ function makeSubComponentArgs(rejectPromise) {
             } else {
               resolve("https://github.com");
             }
-          }, 1000);
+          }, delay);
         });
       },
     },
