@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
 import { AccordionMenu } from "../accordion-menu";
 import { pageHeaderStyles } from "./page-header.styles";
-import cn from "classnames";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => {
@@ -34,7 +33,7 @@ export function PageHeader({
     <header className={classes.root} data-testid={testid}>
       <AppBar>
         <Toolbar>
-          <div className={cn(classes.toolBarContainerLeft)}>
+          <div className={classes.toolBarContainerLeft}>
             <IconButton
               className={classes.revealMenuButton}
               edge="start"
@@ -50,7 +49,7 @@ export function PageHeader({
             </Link>
           </div>
 
-          <div className={cn(classes.toolBarContainerRight)}>
+          <div className={classes.toolBarContainerRight}>
             {/*
             <div className={classes.toolbarSearch}>
               <SearchIcon />
