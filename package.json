@@ -75,10 +75,13 @@
     "@testing-library/user-event": "^12.6.3",
     "@types/js-cookie": "^2.2.7",
     "babel-jest": "^26.6.3",
-    "eslint": "^7.18.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^7.2.0",
-    "eslint-plugin-react": "^7.25.2",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-jest": "^24.7.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-testing-library": "^3.10.2",
     "faker": "^5.5.3",
     "git-clone": "^0.1.0",
     "mockdate": "^3.0.2",
@@ -105,13 +108,6 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/tests/__mocks__/fileMock.js",
       "\\.(css|scss|less)$": "identity-obj-proxy"
     }
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "prettier"
-    ]
   },
   "browserslist": [
     "last 2 Chrome major versions",
