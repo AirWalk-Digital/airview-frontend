@@ -49,7 +49,7 @@ const Working = Template.bind({});
 
 Working.args = {
   ...Template.args,
-  query: "integer urna ipsum",
+  query: "mattis dignissim urna",
   working: true,
 };
 
@@ -61,13 +61,13 @@ const SingleResultFound = Template.bind({});
 
 SingleResultFound.args = {
   ...Template.args,
-  query: "integer urna ipsum",
+  query: "mattis dignissim urna",
   working: false,
   results: [
     {
       title: "Integer urna ipsum",
       description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       url: "/",
     },
   ],
@@ -81,61 +81,49 @@ const MultipleResultsFound = Template.bind({});
 
 MultipleResultsFound.args = {
   ...Template.args,
-  query: "integer urna ipsum",
+  query: "mattis dignissim urna",
   working: false,
   results: [
     {
       title: "Integer urna ipsum",
       description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       url: "/",
     },
     {
       title: "Integer urna ipsum",
       description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       url: "/",
     },
     {
       title: "Integer urna ipsum",
       description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       url: "/",
     },
     {
       title: "Integer urna ipsum",
       description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       url: "/",
     },
     {
       title: "Integer urna ipsum",
       description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       url: "/",
     },
     {
       title: "Integer urna ipsum",
       description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       url: "/",
     },
     {
       title: "Integer urna ipsum",
       description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Integer urna ipsum, feugiat ac nulla ac, mattis dignissim risus. Sed feugiat vitae ligula eu pulvinar",
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       url: "/",
     },
   ],
@@ -149,7 +137,7 @@ const NoResultsFound = Template.bind({});
 
 NoResultsFound.args = {
   ...Template.args,
-  query: "integer urna ipsum",
+  query: "mattis dignissim urna",
   working: false,
   results: [],
 };
@@ -162,7 +150,7 @@ const Error = Template.bind({});
 
 Error.args = {
   ...Template.args,
-  query: "integer urna ipsum",
+  query: "",
   working: false,
   error: true,
 };
