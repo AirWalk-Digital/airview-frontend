@@ -424,12 +424,14 @@ export function ApplicationsPage() {
       workingRepo={controller.getWorkingRepoName("application")}
       workingBranch={controller.getWorkingBranchName("application")}
       branches={state.branches}
+      baseBranch={controller.getBaseBranchName("application")}
       onRequestToSwitchBranch={(branchName) =>
         controller.setWorkingBranchName("application", branchName)
       }
       onRequestToCreateBranch={(branchName) =>
         controller.createBranch("application", branchName)
       }
+      onRequestToCreatePullRequest = {async (sourceBranch) => await controller.createPullRequest("application", controller.getBaseBranchName("application"), sourceBranch) }
       onSave={handleOnSave}
       applications={state.applications}
       applicationTypes={state.applicationTypes}

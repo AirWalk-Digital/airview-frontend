@@ -17,6 +17,7 @@ limitations under the License.
 */
 
 import { authenticate } from "./authenticate";
+
 import { b64EncodeUnicode } from "./base64";
 import { GithubClientOptions, Branch, AuthScope } from "../interfaces";
 import mime from "mime-types";
@@ -100,23 +101,26 @@ export class GithubClient {
     });
   }
 
-  createPR(
-    title: string,
-    body: string,
-    repo: string,
-    sourceBranch: string,
-    targetBranch: string
-  ) {
-    return this.req({
-      url: `https://api.github.com/repos/${repo}/pulls`,
-      method: "POST",
-      data: {
-        title: title ? title : this.defaultCommitMessage,
-        body: body ? body : "Please pull these awesome changes in!",
-        head: `${repo.split("/")[0]}:${sourceBranch}`,
-        base: targetBranch,
-      },
-    });
+  async createPR(repo: string, baseBranch: string, sourceBranch: string) {
+    const title = "test pr";
+    const body = "test pr";
+    try {
+      const data = await this.req({
+        url: `https://api.github.com/repos/${repo}/pulls`,
+        method: "POST",
+        data: {
+          title: title,
+          body: body,
+          head: `${repo.split("/")[0]}:${sourceBranch}`,
+          base: baseBranch,
+        },
+      });
+      return data.html_url;
+    } catch (e) {
+      console.log(e.message);
+      throw e;
+      return "";
+    }
   }
   /**
    * @deprecated Call GithubClient#checkout instead
