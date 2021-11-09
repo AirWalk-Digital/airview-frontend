@@ -2,20 +2,33 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import { Typography } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
 import clsx from "clsx";
+import { Link } from "../link";
 
-export function Search({ open, onClose, working }) {
+export function Search({
+  open,
+  onClose,
+  onChange,
+  query,
+  working,
+  results,
+  error,
+  errorMessage,
+}) {
   const styles = useStyles();
 
   const onModalClosed = () => {};
+
+  const handleOnChange = (event) => {
+    const { value } = event.target;
+    onChange(value);
+  };
 
   return (
     <Dialog
@@ -41,6 +54,8 @@ export function Search({ open, onClose, working }) {
             spellCheck={false}
             placeholder="Search..."
             className={styles.searchInput}
+            value={query}
+            onChange={handleOnChange}
           />
 
           <Button
@@ -52,6 +67,45 @@ export function Search({ open, onClose, working }) {
             Close
           </Button>
         </div>
+
+        {error || results?.length < 1 ? (
+          <div className={styles.searchFeedback}>
+            <Typography align="center" color={error ? "error" : "primary"}>
+              {error ? (
+                errorMessage
+              ) : (
+                <>
+                  No results found for <strong>"{query}"</strong>
+                </>
+              )}
+            </Typography>
+          </div>
+        ) : null}
+
+        {!error && results?.length > 0 ? (
+          <ul className={styles.results}>
+            {results.map((result, index) => (
+              <li>
+                <Link
+                  href={result.url}
+                  noLinkStyle
+                  className={styles.resultLink}
+                >
+                  <div className={styles.resultDetail}>
+                    <span className={styles.resultTitle}>{result.title}</span>
+                    {result?.description ? (
+                      <span className={styles.resultDescription}>
+                        {result.description}
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <ChevronRightIcon />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </Dialog>
   );
@@ -87,5 +141,44 @@ const useStyles = makeStyles((theme) => ({
     "&::-webkit-search-decoration, &::-webkit-search-cancel-button, &::-webkit-search-results-button, &::-webkit-search-results-decoration": {
       display: "none",
     },
+  },
+  searchFeedback: {
+    padding: "40px 20px",
+    borderTop: `1px solid ${theme.palette.divider}`,
+  },
+  results: {
+    margin: 0,
+    padding: "0px 20px",
+    borderTop: `1px solid ${theme.palette.divider}`,
+    listStyle: "none",
+    maxHeight: 300,
+    overflow: "auto",
+
+    "& li:not(:last-of-type)": {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+  },
+  resultLink: {
+    display: "flex",
+    alignItems: "center",
+    textDecoration: "none",
+    color: theme.palette.text.primary,
+    padding: "10px 20px",
+    margin: "10px 0",
+
+    "&:hover": {
+      backgroundColor: theme.palette.grey[100],
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
+  resultDetail: {
+    marginRight: 20,
+  },
+  resultTitle: {
+    display: "block",
+    fontWeight: theme.typography.fontWeightBold,
+  },
+  resultDescription: {
+    color: theme.palette.text.secondary,
   },
 }));
