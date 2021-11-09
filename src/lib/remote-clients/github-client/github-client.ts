@@ -102,15 +102,14 @@ export class GithubClient {
   }
 
   async createPR(repo: string, baseBranch: string, sourceBranch: string) {
-    const title = "test pr";
-    const body = "test pr";
+    const info = `Pull ${sourceBranch} into ${baseBranch}`;
     try {
       const data = await this.req({
         url: `https://api.github.com/repos/${repo}/pulls`,
         method: "POST",
         data: {
-          title: title,
-          body: body,
+          title: info,
+          body: info,
           head: `${repo.split("/")[0]}:${sourceBranch}`,
           base: baseBranch,
         },
