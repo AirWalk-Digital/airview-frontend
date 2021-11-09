@@ -103,23 +103,17 @@ export class GithubClient {
 
   async createPR(repo: string, baseBranch: string, sourceBranch: string) {
     const info = `Pull ${sourceBranch} into ${baseBranch}`;
-    try {
-      const data = await this.req({
-        url: `https://api.github.com/repos/${repo}/pulls`,
-        method: "POST",
-        data: {
-          title: info,
-          body: info,
-          head: `${repo.split("/")[0]}:${sourceBranch}`,
-          base: baseBranch,
-        },
-      });
-      return data.html_url;
-    } catch (e) {
-      console.log(e.message);
-      throw e;
-      return "";
-    }
+    const data = await this.req({
+      url: `https://api.github.com/repos/${repo}/pulls`,
+      method: "POST",
+      data: {
+        title: info,
+        body: info,
+        head: `${repo.split("/")[0]}:${sourceBranch}`,
+        base: baseBranch,
+      },
+    });
+    return data.html_url;
   }
   /**
    * @deprecated Call GithubClient#checkout instead

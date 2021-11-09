@@ -114,6 +114,7 @@ export class GithubClient {
         `https://dev.azure.com/${this.organisation}/${this.project}/_apis/git/repositories/` +
         `${repo}/pullrequests?api-version=6.1-preview.1`,
       method: "POST",
+      headers: { "content-type": "application/json" },
       data: {
         sourceRefName: `refs/heads/${sourceBranch}`,
         targetRefName: `refs/heads/${baseBranch}`,
@@ -122,7 +123,7 @@ export class GithubClient {
       },
     });
 
-    return data;
+    return `${data.repository.webUrl}/pullrequest/${data.pullRequestId}`;
   }
   async fetchExistingPR(
     repo: string,
