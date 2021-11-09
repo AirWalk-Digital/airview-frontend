@@ -143,12 +143,12 @@ describe("ComplianceTableRow", () => {
       expect(screen.queryByLabelText("Collapse row")).not.toBeInTheDocument();
     });
 
-    it("should expand the additional content on click of the expand button", () => {
+    it("should expand the additional content on click of the expand button", async () => {
       expect(screen.getByText("Children")).not.toBeVisible();
 
       userEvent.click(screen.getByLabelText("Expand row"));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByText("Children")).toBeVisible();
       });
     });

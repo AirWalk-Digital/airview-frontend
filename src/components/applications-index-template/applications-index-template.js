@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
-import { Container, Grid, Typography, Tooltip } from "@material-ui/core";
+import { Container, Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import WarningIcon from "@material-ui/icons/Warning";
 import { Helmet } from "react-helmet";
@@ -19,7 +19,6 @@ import {
   ApplicationTileCallToActionButton,
   ApplicationTileChip,
 } from "../application-tile";
-import { IconChip } from "../../components/icon-chip";
 import { ProgressBar } from "../../components/progress-bar";
 
 export function ApplicationsIndexTemplate({

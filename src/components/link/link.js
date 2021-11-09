@@ -28,6 +28,7 @@ export const Link = React.forwardRef((props, ref) => {
       return (
         <a
           href={href}
+          ref={ref}
           rel="noreferrer"
           target="_blank"
           className={className}
@@ -41,6 +42,7 @@ export const Link = React.forwardRef((props, ref) => {
     return (
       <MuiLink
         href={href}
+        ref={ref}
         rel="noreferrer"
         target="_blank"
         className={className}
@@ -74,6 +76,8 @@ export const Link = React.forwardRef((props, ref) => {
   );
 });
 
+Link.displayName = "Link";
+
 Link.propTypes = {
   /**
    * Sets the href for the link
@@ -86,7 +90,7 @@ Link.propTypes = {
   /**
    * Applies classnames to the element
    */
-  classNames: PropTypes.string,
+  className: PropTypes.string,
   /**
    * Applies an active classname to the Link (if required)
    */

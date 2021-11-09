@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
 import WarningIcon from "@material-ui/icons/Warning";
-import FlagIcon from "@material-ui/icons/Flag";
 import Typography from "@material-ui/core/Typography";
 import {
   ApplicationTile,
@@ -14,7 +13,6 @@ import {
   ApplicationTileCallToActionButton,
   ApplicationTileChip,
 } from "../../components/application-tile";
-import { IconChip } from "../../components/icon-chip";
 import { ProgressBar } from "../../components/progress-bar";
 import docs from "./application-tile.docs.md";
 
@@ -320,7 +318,7 @@ WithCollapsibleContent.argTypes = {
   ...defaultArgTypes,
 };
 
-function WithNoData(args) {
+function WithNoData() {
   return (
     <ApplicationTile>
       <ApplicationTileHeader

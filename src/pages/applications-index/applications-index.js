@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { ApplicationsIndexTemplate } from "../../components/applications-index-template";
 import siteConfig from "../../site-config.json";
 import { useNav } from "../../hooks/use-nav";
@@ -107,3 +108,9 @@ export function ApplicationsIndex({
     />
   );
 }
+
+ApplicationsIndex.propTypes = {
+  currentRoute: PropTypes.string,
+  pageTitle: PropTypes.string,
+  breadcrumbLinks: PropTypes.array,
+};

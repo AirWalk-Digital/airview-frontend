@@ -58,7 +58,7 @@ export function ControlOverviewResourceManager({
 
     const { controlId, resourceId } = resourceData;
 
-    await onResourceExemptionDelete({
+    await onResourceExemptionSave({
       controlId,
       resourceId,
       revisedExpiryDate: revisedExpiryDate.toISOString(),
@@ -208,6 +208,8 @@ ControlOverviewResourceManager.propTypes = {
     ticket: PropTypes.string.isRequired,
     expires: PropTypes.string.isRequired,
     resources: PropTypes.arrayOf(PropTypes.string).isRequired,
+    controlId: PropTypes.number.isRequired,
+    resourceId: PropTypes.number.isRequired,
   }),
   onResourceExemptionDelete: PropTypes.func.isRequired,
   onResourceExemptionSave: PropTypes.func.isRequired,

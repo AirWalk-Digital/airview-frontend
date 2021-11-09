@@ -53,7 +53,6 @@ export function ApplicationsTemplate({
   referenceTypes,
   onRequestToCreateApplication,
   onTogglePreviewMode,
-  onRequestToEditContent,
   onRequestToSwitchBranch,
   onRequestToCreateBranch,
   onRequestToCreatePage,

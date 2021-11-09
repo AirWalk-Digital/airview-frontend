@@ -114,7 +114,9 @@ export function KnowledgePage() {
           history.push(
             `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
           );
-        } catch (error) {}
+        } catch (error) {
+          console.log(error);
+        }
       }
       // All other errors, do not allow creation of file, possibly throw error here
     }

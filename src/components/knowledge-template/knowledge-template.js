@@ -42,7 +42,6 @@ export function KnowledgeTemplate({
   baseBranch,
   branches,
   onTogglePreviewMode,
-  onRequestToEditContent,
   onRequestToSwitchBranch,
   onRequestToCreateBranch,
   onRequestToCreatePage,

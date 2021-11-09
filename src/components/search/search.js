@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -7,8 +7,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Divider from "@material-ui/core/Divider";
-import clsx from "clsx";
 import { Link } from "../link";
 
 export function Search({
@@ -75,7 +73,7 @@ export function Search({
                 errorMessage
               ) : (
                 <>
-                  No results found for <strong>"{query}"</strong>
+                  No results found for <strong>&quot;{query}&quot;</strong>
                 </>
               )}
             </Typography>
@@ -85,7 +83,7 @@ export function Search({
         {!error && results?.length > 0 ? (
           <ul className={styles.results}>
             {results.map((result, index) => (
-              <li>
+              <li key={index}>
                 <Link
                   href={result.url}
                   noLinkStyle
@@ -111,7 +109,16 @@ export function Search({
   );
 }
 
-Search.propTypes = {};
+Search.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  onChange: PropTypes.func,
+  query: PropTypes.string,
+  working: PropTypes.bool,
+  results: PropTypes.array,
+  error: PropTypes.bool,
+  errorMessage: PropTypes.string,
+};
 
 const useStyles = makeStyles((theme) => ({
   rootContainer: {

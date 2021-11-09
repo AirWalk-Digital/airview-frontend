@@ -2,23 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { PageHeader } from "../page-header";
-//import { siteTitle } from "../../../site-config.json";
 
-function LayoutBase({ pageTitle, pageHeaderProps, children }) {
+function LayoutBase({ pageHeaderProps, children }) {
   const classes = useLayoutBaseStyles();
 
   return (
     <React.Fragment>
-      {/*
-      To do: add head meta
-
-      <Head>
-        <title>
-          {pageTitle && `${pageTitle} - `} {siteTitle}
-        </title>
-      </Head>
-      */}
-
       <PageHeader {...pageHeaderProps} />
 
       <div className={classes.mainContent}>{children}</div>

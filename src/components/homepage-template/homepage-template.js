@@ -31,6 +31,10 @@ export function HomepageTemplate({
 
 HomepageTemplate.propTypes = {
   /**
+   * Presents the component in a loading state (for when fetching data async)
+   */
+  loading: PropTypes.bool,
+  /**
    * Used to set the required context for link active classes
    */
   currentRoute: PropTypes.string.isRequired,
