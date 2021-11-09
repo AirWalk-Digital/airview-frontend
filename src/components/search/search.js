@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -7,6 +7,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ReactHtmlParser from "react-html-parser";
 import { Link } from "../link";
 
 export function Search({
@@ -27,6 +28,21 @@ export function Search({
     const { value } = event.target;
     onChange(value);
   };
+
+  const searchStringForQuery = useCallback(
+    (inputString) => {
+      const keywords = query.split(/\s/);
+
+      const regExp = new RegExp(`(${keywords.join("|")})`, "gi");
+
+      let outputString = inputString.replaceAll(regExp, (match) => {
+        return `<mark>${match}</mark>`;
+      });
+
+      return ReactHtmlParser(outputString);
+    },
+    [query]
+  );
 
   return (
     <Dialog
@@ -57,7 +73,7 @@ export function Search({
           />
 
           <Button
-            variant="contained"
+            variant="outlined"
             disableElevation
             size="small"
             onClick={onClose}
@@ -82,26 +98,32 @@ export function Search({
 
         {!error && results?.length > 0 ? (
           <ul className={styles.results}>
-            {results.map((result, index) => (
-              <li key={index}>
-                <Link
-                  href={result.url}
-                  noLinkStyle
-                  className={styles.resultLink}
-                >
-                  <div className={styles.resultDetail}>
-                    <span className={styles.resultTitle}>{result.title}</span>
-                    {result?.description ? (
-                      <span className={styles.resultDescription}>
-                        {result.description}
-                      </span>
-                    ) : null}
-                  </div>
+            {results.map((result, index) => {
+              searchStringForQuery(result.title);
 
-                  <ChevronRightIcon />
-                </Link>
-              </li>
-            ))}
+              return (
+                <li key={index}>
+                  <Link
+                    href={result.url}
+                    noLinkStyle
+                    className={styles.resultLink}
+                  >
+                    <div className={styles.resultDetail}>
+                      <span className={styles.resultTitle}>
+                        {searchStringForQuery(result.title)}
+                      </span>
+                      {result?.description ? (
+                        <span className={styles.resultDescription}>
+                          {searchStringForQuery(result.description)}
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <ChevronRightIcon />
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         ) : null}
       </div>
@@ -158,7 +180,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 20px",
     borderTop: `1px solid ${theme.palette.divider}`,
     listStyle: "none",
-    maxHeight: 300,
+    maxHeight: 500,
     overflow: "auto",
 
     "& li:not(:last-of-type)": {
@@ -170,8 +192,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     textDecoration: "none",
     color: theme.palette.text.primary,
-    padding: "10px 20px",
+    padding: "10px 10px",
     margin: "10px 0",
+    transition: "background-color 0.2s ease-in-out",
 
     "&:hover": {
       backgroundColor: theme.palette.grey[100],
@@ -180,10 +203,15 @@ const useStyles = makeStyles((theme) => ({
   },
   resultDetail: {
     marginRight: 20,
+
+    "& mark": {
+      backgroundColor: "#e7eff5",
+      color: "#376485",
+      fontWeight: theme.typography.fontWeightBold,
+    },
   },
   resultTitle: {
     display: "block",
-    fontWeight: theme.typography.fontWeightBold,
   },
   resultDescription: {
     color: theme.palette.text.secondary,
