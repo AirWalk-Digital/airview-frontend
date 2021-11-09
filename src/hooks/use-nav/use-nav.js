@@ -6,9 +6,8 @@ export function useNav() {
   const [state, setState] = useState([]);
 
   const toNavItem = (app) => {
-    const ref = app.references.find(
-      (x) => x.type === "_internal_reference"
-    ).reference;
+    const ref = app.references.find((x) => x.type === "_internal_reference")
+      .reference;
     return {
       id: ref,
       _id: app.id,
