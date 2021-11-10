@@ -29,7 +29,7 @@ export function Search({
     onChange(value);
   };
 
-  const searchStringForQuery = useCallback(
+  const highlightQueryWithinString = useCallback(
     (inputString) => {
       const keywords = query.split(/\s/);
 
@@ -84,7 +84,7 @@ export function Search({
 
         {error || results?.length < 1 ? (
           <div className={styles.searchFeedback}>
-            <Typography align="center" color={error ? "error" : "primary"}>
+            <Typography align="center">
               {error ? (
                 errorMessage
               ) : (
@@ -99,8 +99,6 @@ export function Search({
         {!error && results?.length > 0 ? (
           <ul className={styles.results}>
             {results.map((result, index) => {
-              searchStringForQuery(result.title);
-
               return (
                 <li key={index}>
                   <Link
@@ -110,11 +108,11 @@ export function Search({
                   >
                     <div className={styles.resultDetail}>
                       <span className={styles.resultTitle}>
-                        {searchStringForQuery(result.title)}
+                        {highlightQueryWithinString(result.title)}
                       </span>
                       {result?.description ? (
                         <span className={styles.resultDescription}>
-                          {searchStringForQuery(result.description)}
+                          {highlightQueryWithinString(result.description)}
                         </span>
                       ) : null}
                     </div>
