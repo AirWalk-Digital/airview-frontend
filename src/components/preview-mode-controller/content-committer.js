@@ -35,26 +35,22 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
   };
 
   const handleOnSubmit = async () => {
-    setState((prevState) => ({
-      ...prevState,
-      working: true,
-      errorMessage: null,
-    }));
+    try {
+      setState((prevState) => ({
+        ...prevState,
+        working: true,
+        errorMessage: null,
+      }));
 
-    const { status, errorMessage } = await onSubmit(state.commitMessage);
+      await onSubmit(state.commitMessage);
 
-    if (status === "SUCCESS") {
       setState((prevState) => ({ ...prevState, modalVisible: false }));
-    } else if (status === "ERROR") {
+    } catch (errorMessage) {
       setState((prevState) => ({
         ...prevState,
         working: false,
         errorMessage,
       }));
-    } else {
-      throw new Error(
-        "ContentCommitter onSubmit return value is not correctly defined. Please refer to the API for guidance"
-      );
     }
   };
 
@@ -159,7 +155,7 @@ ContentCommitter.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * Fired when a user requests to commit content. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function() => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
+   * Fired when a user requests to commit content. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function() => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };

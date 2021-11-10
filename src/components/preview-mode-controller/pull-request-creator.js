@@ -18,7 +18,7 @@ import { Link } from "../link";
 
 const intialState = {
   modalVisible: false,
-  status: "INITIAL",
+  status: "initial",
   errorMessage: null,
   pullRequestUrl: null,
 };
@@ -42,30 +42,23 @@ export function PullRequestCreator({ onSubmit }) {
   const handleOnCreatePr = async () => {
     setState((prevState) => ({
       ...prevState,
-      status: "WORKING",
+      status: "working",
     }));
 
-    const { status, pullRequestUrl, errorMessage } = await onSubmit(
-      workingBranch,
-      baseBranch
-    );
+    try {
+      const pullRequestUrl = await onSubmit(workingBranch, baseBranch);
 
-    if (status === "SUCCESS") {
       setState((prevState) => ({
         ...prevState,
-        status,
+        status: "success",
         pullRequestUrl,
       }));
-    } else if (status === "ERROR") {
+    } catch (error) {
       setState((prevState) => ({
         ...prevState,
-        status,
-        errorMessage,
+        status: "error",
+        errorMessage: error.message,
       }));
-    } else {
-      throw new Error(
-        "PullRequestCreator onSubmit return value is not correctly defined. Please refer to the API for guidance"
-      );
     }
   };
 
@@ -83,10 +76,10 @@ export function PullRequestCreator({ onSubmit }) {
         id="pull-request-creator"
         title="Create Pull Request"
         onExited={cleanup}
-        working={state.status === "WORKING"}
+        working={state.status === "working"}
       >
         <WidgetDialogContent>
-          {state.status === "ERROR" && (
+          {state.status === "error" && (
             <React.Fragment>
               <Typography paragraph variant="body2" color="error">
                 {state.errorMessage}
@@ -94,7 +87,7 @@ export function PullRequestCreator({ onSubmit }) {
             </React.Fragment>
           )}
 
-          {state.status === "SUCCESS" && (
+          {state.status === "success" && (
             <React.Fragment>
               <Typography paragraph variant="body2">
                 Your pull request has been successfully created, you can view
@@ -103,7 +96,7 @@ export function PullRequestCreator({ onSubmit }) {
             </React.Fragment>
           )}
 
-          {state.status === "SUCCESS" && (
+          {state.status === "success" && (
             <Button
               color="primary"
               variant="contained"
@@ -118,7 +111,7 @@ export function PullRequestCreator({ onSubmit }) {
             </Button>
           )}
 
-          {state.status !== "SUCCESS" ? (
+          {state.status !== "success" ? (
             <React.Fragment>
               <Paper
                 variant="outlined"
@@ -167,21 +160,21 @@ export function PullRequestCreator({ onSubmit }) {
             variant="outlined"
             disableElevation
             size="small"
-            disabled={state.status === "WORKING"}
+            disabled={state.status === "working"}
           >
-            {state.status !== "SUCCESS" ? "Cancel" : "Close"}
+            {state.status !== "success" ? "Cancel" : "Close"}
           </Button>
 
-          {state.status !== "SUCCESS" ? (
+          {state.status !== "success" ? (
             <Button
               onClick={handleOnCreatePr}
               color="primary"
               variant="contained"
               disableElevation
               size="small"
-              disabled={state.status === "WORKING"}
+              disabled={state.status === "working"}
             >
-              {state.status === "WORKING"
+              {state.status === "working"
                 ? "Working, please wait..."
                 : "Create"}
             </Button>
@@ -216,7 +209,7 @@ const useStyles = makeStyles((theme) => ({
 
 PullRequestCreator.propTypes = {
   /**
-   * Fired when a user requests to raise a pull request. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(fromBranch: String, toBranch: String) => {status: "SUCCESS", pullRequestUrl: String} || {status: "ERROR", errorMessage: String}`
+   * Fired when a user requests to raise a pull request. Expectes the return of a resolved or rejected promise, resolve with the URL of the pull request (String) or reject with an error message (String). **Signature:** `function(fromBranch: String, toBranch: String) => Promise.resolve(pullRequestUrl: String) || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };

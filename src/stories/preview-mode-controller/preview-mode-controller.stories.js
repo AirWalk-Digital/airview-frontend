@@ -42,13 +42,9 @@ function makeSubComponentArgs(rejectPromise) {
             log && console.log(branchName);
 
             if (rejectPromise) {
-              resolve({
-                status: "ERROR",
-                errorMessage:
-                  "Error: Unable to switch branch, please try again",
-              });
+              reject("Error: Unable to switch branch, please try again");
             } else {
-              resolve({ status: "SUCCESS" });
+              resolve();
             }
           }, delay);
         });
@@ -61,13 +57,9 @@ function makeSubComponentArgs(rejectPromise) {
             log && console.log(branchName);
 
             if (rejectPromise) {
-              resolve({
-                status: "ERROR",
-                errorMessage:
-                  "Error: Unable to create branch, please try again",
-              });
+              reject("Error: Unable to create branch, please try again");
             } else {
-              resolve({ status: "SUCCESS" });
+              resolve();
             }
           }, delay);
         });
@@ -80,13 +72,11 @@ function makeSubComponentArgs(rejectPromise) {
             log && console.log(formData);
 
             if (rejectPromise) {
-              resolve({
-                status: "ERROR",
-                errorMessage:
-                  "Error: Unable to create a new Knowledge page, please try again",
-              });
+              reject(
+                "Error: Unable to create a new Knowledge page, please try again"
+              );
             } else {
-              resolve({ status: "SUCCESS" });
+              resolve();
             }
           }, delay);
         });
@@ -99,13 +89,11 @@ function makeSubComponentArgs(rejectPromise) {
             log && console.log(formData);
 
             if (rejectPromise) {
-              resolve({
-                status: "ERROR",
-                errorMessage:
-                  "Error: Unable to submit page meta changes, please try again",
-              });
+              reject(
+                "Error: Unable to submit page meta changes, please try again"
+              );
             } else {
-              resolve({ status: "SUCCESS" });
+              resolve();
             }
           }, delay);
         });
@@ -123,13 +111,11 @@ function makeSubComponentArgs(rejectPromise) {
             log && console.log(sectionName);
 
             if (rejectPromise) {
-              resolve({
-                status: "ERROR",
-                errorMessage:
-                  "Error: Unable to create a page section, please try again",
-              });
+              reject(
+                "Error: Unable to create a page section, please try again"
+              );
             } else {
-              resolve({ status: "SUCCESS" });
+              resolve();
             }
           }, delay);
         });
@@ -173,13 +159,9 @@ function makeSubComponentArgs(rejectPromise) {
             log && console.log(formData);
 
             if (rejectPromise) {
-              resolve({
-                status: "ERROR",
-                errorMessage:
-                  "Error: Unable to create application, please try again",
-              });
+              reject("Error: Unable to create application, please try again");
             } else {
-              resolve({ status: "SUCCESS" });
+              resolve();
             }
           }, delay);
         });
@@ -192,13 +174,9 @@ function makeSubComponentArgs(rejectPromise) {
             log && console.log("Committing changes");
 
             if (rejectPromise) {
-              resolve({
-                status: "ERROR",
-                errorMessage:
-                  "Error: Unable to commit changes, please try again",
-              });
+              reject("Error: Unable to commit changes, please try again");
             } else {
-              resolve({ status: "SUCCESS" });
+              resolve();
             }
           }, delay);
         });
@@ -212,16 +190,11 @@ function makeSubComponentArgs(rejectPromise) {
               console.log(`PR request from branch "${from}" to branch "${to}"`);
 
             if (rejectPromise) {
-              resolve({
-                status: "ERROR",
-                errorMessage:
-                  "Error: Unable to create a pull request, please try again",
-              });
+              reject(
+                "Error: Unable to create a pull request, please try again"
+              );
             } else {
-              resolve({
-                status: "SUCCESS",
-                pullRequestUrl: "https://github.com",
-              });
+              resolve("https://github.com");
             }
           }, delay);
         });

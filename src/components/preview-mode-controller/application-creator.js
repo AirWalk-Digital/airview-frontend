@@ -195,41 +195,37 @@ export function ApplicationCreator({
   ]);
 
   const handleOnSubmit = async () => {
-    setState((prevState) => ({
-      ...prevState,
-      working: true,
-      errorMessage: null,
-    }));
+    try {
+      setState((prevState) => ({
+        ...prevState,
+        working: true,
+        errorMessage: null,
+      }));
 
-    const { status, errorMessage } = await onSubmit({
-      applicationTypeId: state.applicationTypeId.value,
-      name: state.name.value,
-      environmentId: state.environmentId.value,
-      references: state.references.map((reference) => ({
-        type: reference.type.value,
-        reference: reference.reference.value,
-      })),
-      parentId:
-        !state.parentId.value || state.parentId.value.length
-          ? null
-          : state.parentId.value,
-    });
+      await onSubmit({
+        applicationTypeId: state.applicationTypeId.value,
+        name: state.name.value,
+        environmentId: state.environmentId.value,
+        references: state.references.map((reference) => ({
+          type: reference.type.value,
+          reference: reference.reference.value,
+        })),
+        parentId:
+          !state.parentId.value || state.parentId.value.length
+            ? null
+            : state.parentId.value,
+      });
 
-    if (status === "SUCCESS") {
       setState((prevState) => ({
         ...prevState,
         modalVisible: false,
       }));
-    } else if (status === "ERROR") {
+    } catch (errorMessage) {
       setState((prevState) => ({
         ...prevState,
         errorMessage,
         working: false,
       }));
-    } else {
-      throw new Error(
-        "ApplicationCreator onSubmit return value is not correctly defined. Please refer to the API for guidance"
-      );
     }
   };
 
@@ -523,7 +519,7 @@ ApplicationCreator.propTypes = {
    */
   referenceTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   /**
-   * Fired when a user requests to create a new application. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(formData:Object) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
+   * Fired when a user requests to create a new application. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:Object) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
 };
