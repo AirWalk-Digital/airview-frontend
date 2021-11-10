@@ -39,32 +39,29 @@ export function BranchSwitcher({ onSubmit }) {
     }));
   };
 
-  /*
-  const handleOnSubmit = async () => {
-    try {
-      setState((prevState) => ({
-        ...prevState,
-        working: true,
-        errorMessage: null,
-      }));
-      await onSubmit(state.selectedBranch);
-      setState((prevState) => ({ ...prevState, modalVisible: false }));
-    } catch (errorMessage) {
-      setState((prevState) => ({
-        ...prevState,
-        working: false,
-        errorMessage,
-      }));
-    }
-  };
-  */
-
   const handleOnSubmit = async () => {
     setState((prevState) => ({
       ...prevState,
       working: true,
       errorMessage: null,
     }));
+
+    const { status, errorMessage } = await onSubmit(state.selectedBranch);
+
+    if (status === "SUCCESS") {
+      setState((prevState) => ({ ...prevState, modalVisible: false }));
+    } else if (status === "ERROR") {
+      setState((prevState) => ({
+        ...prevState,
+        working: false,
+        errorMessage,
+      }));
+    } else {
+      throw new Error(
+        "BranchSwitcher onSubmit return value is not correctly defined. Please refer to the API for guidance"
+      );
+    }
+  };
 
   const cleanup = () => {
     setState(setInitialState(workingBranch));
@@ -176,7 +173,7 @@ const useBranchSwitcherStyles = makeStyles((theme) => ({
 
 BranchSwitcher.propTypes = {
   /**
-   * Fired when a user requests to switch branch. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(branchName:String) => Promise.resolve() || Promise.reject(errorMessage: String)`
+   * Fired when a user requests to switch branch. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(branchName:String) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
    */
   onSubmit: PropTypes.func.isRequired,
 };
