@@ -324,23 +324,25 @@ export function KnowledgePage() {
       mediaPath={`/storage/applications/${application_id}/knowledge/${slug}/`}
       workingRepo={controller.getWorkingRepoName("application")}
       workingBranch={controller.getWorkingBranchName("application")}
-      branches={[
-        {
-          name: "main",
-          protected: true,
-        },
-      ]}
       onRequestToSwitchBranch={(branchName) =>
         controller.setWorkingBranchName("application", branchName)
       }
       onRequestToCreateBranch={(branchName) =>
         controller.createBranch("application", branchName)
       }
+      baseBranch={controller.getBaseBranchName("application")}
       onRequestToCreatePage={handleOnCreatePage}
       onRequestToEditContent={() => {}}
       onRequestToUploadImage={handleOnUploadImage}
       previewMode={controller.getPreviewModeStatus()}
       onTogglePreviewMode={controller.togglePreviewModeStatus}
+      onRequestToCreatePullRequest={async (sourceBranch) =>
+        await controller.createPullRequest(
+          "application",
+          controller.getBaseBranchName("application"),
+          sourceBranch
+        )
+      }
       onSave={async (markdownData) =>
         await onSave(markdownData, pageData.pageMetaData)
       }
