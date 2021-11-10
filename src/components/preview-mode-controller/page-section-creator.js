@@ -45,7 +45,7 @@ export function PageSectionCreator({ onSubmit }) {
       }));
       await onSubmit(state.sectionName);
       setState((prevState) => ({ ...prevState, modalVisible: false }));
-    } catch (errorMessage) {
+    } catch ({ error: errorMessage }) {
       setState((prevState) => ({ ...prevState, working: false, errorMessage }));
     }
   };
