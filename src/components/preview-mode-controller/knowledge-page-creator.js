@@ -404,7 +404,7 @@ export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
 
 KnowledgePageMetaEditor.propTypes = {
   /**
-   * Fired when a user requests to edit meta data. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(formData:object) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
+   * Fired when a user requests to edit meta data. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(formData:object) => Promise.resolve({status: "SUCCESS"} || {status: "ERROR", errorMessage: String})`
    */
   onSubmit: PropTypes.func.isRequired,
   /**

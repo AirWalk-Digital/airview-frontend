@@ -523,7 +523,7 @@ ApplicationCreator.propTypes = {
    */
   referenceTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   /**
-   * Fired when a user requests to create a new application. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(formData:Object) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
+   * Fired when a user requests to create a new application. Expects the return of an object indicating if the request was a success or failure. **Signature:** `function(formData:Object) => Promise.resolve({status: "SUCCESS"} || {status: "ERROR", errorMessage: String})`
    */
   onSubmit: PropTypes.func.isRequired,
 };

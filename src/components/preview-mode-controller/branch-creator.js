@@ -157,7 +157,7 @@ const useBranchCreatorStyles = makeStyles(() => ({
 
 BranchCreator.propTypes = {
   /**
-   * Fired when a user requests to create a new branch. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(branchName:String) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
+   * Fired when a user requests to create a new branch. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(branchName:String) => Promise.resolve({status: "SUCCESS"} || {status: "ERROR", errorMessage: String})`
    */
   onSubmit: PropTypes.func.isRequired,
 };

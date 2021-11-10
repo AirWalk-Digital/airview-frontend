@@ -216,7 +216,7 @@ const useStyles = makeStyles((theme) => ({
 
 PullRequestCreator.propTypes = {
   /**
-   * Fired when a user requests to raise a pull request. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(fromBranch: String, toBranch: String) => {status: "SUCCESS", pullRequestUrl: String} || {status: "ERROR", errorMessage: String}`
+   * Fired when a user requests to raise a pull request. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(fromBranch: String, toBranch: String) => Promise.resolve({status: "SUCCESS", pullRequestUrl: String} || {status: "ERROR", errorMessage: String})`
    */
   onSubmit: PropTypes.func.isRequired,
 };
