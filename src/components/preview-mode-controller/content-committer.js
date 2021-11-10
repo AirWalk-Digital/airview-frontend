@@ -159,7 +159,7 @@ ContentCommitter.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * Fired when a user requests to commit content. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function() => Promise.resolve({status: "SUCCESS"} || {status: "ERROR", errorMessage: String})`
+   * Fired when a user requests to commit content. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function() => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
    */
   onSubmit: PropTypes.func.isRequired,
 };

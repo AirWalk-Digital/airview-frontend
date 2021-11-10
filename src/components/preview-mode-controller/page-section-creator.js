@@ -152,7 +152,7 @@ const usePageSectionCreatorStyles = makeStyles(() => ({
 
 PageSectionCreator.propTypes = {
   /**
-   * Fired when a user requests to create a new page section. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(sectionName:String) => Promise.resolve({status: "SUCCESS"} || {status: "ERROR", errorMessage: String})`
+   * Fired when a user requests to create a new page section. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(sectionName:String) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
    */
   onSubmit: PropTypes.func.isRequired,
 };
