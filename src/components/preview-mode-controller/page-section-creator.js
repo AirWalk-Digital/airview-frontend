@@ -37,16 +37,26 @@ export function PageSectionCreator({ onSubmit }) {
   };
 
   const handleOnSubmit = async () => {
-    try {
+    setState((prevState) => ({
+      ...prevState,
+      working: true,
+      errorMessage: null,
+    }));
+
+    const { status, errorMessage } = await onSubmit(state.sectionName);
+
+    if (status === "SUCCESS") {
+      setState((prevState) => ({ ...prevState, modalVisible: false }));
+    } else if (status === "ERROR") {
       setState((prevState) => ({
         ...prevState,
-        working: true,
-        errorMessage: null,
+        working: false,
+        errorMessage,
       }));
-      await onSubmit(state.sectionName);
-      setState((prevState) => ({ ...prevState, modalVisible: false }));
-    } catch (errorMessage) {
-      setState((prevState) => ({ ...prevState, working: false, errorMessage }));
+    } else {
+      throw new Error(
+        "PageSectionCreator onSubmit return value is not correctly defined. Please refer to the API for guidance"
+      );
     }
   };
 
@@ -142,7 +152,7 @@ const usePageSectionCreatorStyles = makeStyles(() => ({
 
 PageSectionCreator.propTypes = {
   /**
-   * Fired when a user requests to create a new page section. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(sectionName:String) => Promise.resolve() || Promise.reject(errorMessage: String)`
+   * Fired when a user requests to create a new page section. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(sectionName:String) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
    */
   onSubmit: PropTypes.func.isRequired,
 };

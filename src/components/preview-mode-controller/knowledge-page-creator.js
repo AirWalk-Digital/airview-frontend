@@ -159,28 +159,32 @@ function KnowledgePageCreatorBase({
   };
 
   const handleOnSubmit = async () => {
-    try {
-      setState((prevState) => ({
-        ...prevState,
-        working: true,
-        errorMessage: null,
-      }));
+    setState((prevState) => ({
+      ...prevState,
+      working: true,
+      errorMessage: null,
+    }));
 
-      await onSubmit({
-        ...state.formData,
-        reviewDate: state.formData.reviewDate.toISOString(),
-      });
+    const { status, errorMessage } = await onSubmit({
+      ...state.formData,
+      reviewDate: state.formData.reviewDate.toISOString(),
+    });
 
+    if (status === "SUCCESS") {
       setState((prevState) => ({
         ...prevState,
         modalVisible: false,
       }));
-    } catch (errorMessage) {
+    } else if (status === "ERROR") {
       setState((prevState) => ({
         ...prevState,
         working: false,
         errorMessage,
       }));
+    } else {
+      throw new Error(
+        "KnowledgePageCreator/Editor onSubmit return value is not correctly defined. Please refer to the API for guidance"
+      );
     }
   };
 
@@ -379,7 +383,7 @@ export function KnowledgePageCreator({ onSubmit }) {
 
 KnowledgePageCreator.propTypes = {
   /**
-   * Fired when a user requests to create a Knowledge Page. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:object) => Promise.resolve() || Promise.reject(errorMessage: String)`
+   * Fired when a user requests to create a Knowledge Page. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(formData:object) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
    */
   onSubmit: PropTypes.func.isRequired,
 };
@@ -400,7 +404,7 @@ export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
 
 KnowledgePageMetaEditor.propTypes = {
   /**
-   * Fired when a user requests to edit meta data. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:object) => Promise.resolve() || Promise.reject(errorMessage: String)`
+   * Fired when a user requests to edit meta data. Expects the return of an object indicating if the request was a success or failure. **Signature:** `async function(formData:object) => {status: "SUCCESS"} || {status: "ERROR", errorMessage: String}`
    */
   onSubmit: PropTypes.func.isRequired,
   /**

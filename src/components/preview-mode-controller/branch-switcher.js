@@ -39,6 +39,7 @@ export function BranchSwitcher({ onSubmit }) {
     }));
   };
 
+  /*
   const handleOnSubmit = async () => {
     try {
       setState((prevState) => ({
@@ -56,6 +57,14 @@ export function BranchSwitcher({ onSubmit }) {
       }));
     }
   };
+  */
+
+  const handleOnSubmit = async () => {
+    setState((prevState) => ({
+      ...prevState,
+      working: true,
+      errorMessage: null,
+    }));
 
   const cleanup = () => {
     setState(setInitialState(workingBranch));
