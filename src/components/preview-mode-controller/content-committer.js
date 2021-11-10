@@ -45,7 +45,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
       await onSubmit(state.commitMessage);
 
       setState((prevState) => ({ ...prevState, modalVisible: false }));
-    } catch (errorMessage) {
+    } catch ({ error: errorMessage }) {
       setState((prevState) => ({
         ...prevState,
         working: false,

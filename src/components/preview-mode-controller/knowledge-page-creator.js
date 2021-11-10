@@ -175,7 +175,7 @@ function KnowledgePageCreatorBase({
         ...prevState,
         modalVisible: false,
       }));
-    } catch (errorMessage) {
+    } catch ({ error: errorMessage }) {
       setState((prevState) => ({
         ...prevState,
         working: false,

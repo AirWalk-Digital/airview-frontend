@@ -53,11 +53,11 @@ export function PullRequestCreator({ onSubmit }) {
         status: "success",
         pullRequestUrl,
       }));
-    } catch (error) {
+    } catch ({ error: errorMessage }) {
       setState((prevState) => ({
         ...prevState,
         status: "error",
-        errorMessage: error.message,
+        errorMessage,
       }));
     }
   };
