@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, {
+  useCallback,
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+} from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -31,6 +37,7 @@ const intialState = {
 };
 
 export function Search({ open, onRequestToClose, onQueryChange }) {
+  // Cancel getting results when modal is closed
   const [state, setState] = useState({ ...intialState });
   const styles = useStyles();
 
@@ -82,10 +89,12 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 
   const handleOnChange = (event) => {
     event.persist();
+
     const query = event.target.value.trimStart();
 
     if (!query.length) {
       setState((prevState) => ({ ...prevState, query, results: null }));
+
       debouncedGetResults.cancel();
     } else {
       setState((prevState) => ({ ...prevState, query }));
@@ -94,11 +103,19 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
     }
   };
 
+  const handleOnRequestToClose = () => onRequestToClose();
+
+  useEffect(() => {
+    return debouncedGetResults.cancel();
+  }, []);
+
+  console.log(state.results);
+
   return (
     <Dialog
       open={open}
       maxWidth="sm"
-      onClose={onRequestToClose}
+      onClose={handleOnRequestToClose}
       TransitionProps={{
         onExited: onModalClosed,
       }}
@@ -126,7 +143,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
             variant="outlined"
             disableElevation
             size="small"
-            onClick={onRequestToClose}
+            onClick={handleOnRequestToClose}
           >
             Close
           </Button>
