@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import Dialog from "@material-ui/core/Dialog";
@@ -8,47 +8,97 @@ import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ReactHtmlParser from "react-html-parser";
+import { debounce } from "lodash-es";
 import { Link } from "../link";
 
-export function Search({
-  open,
-  onClose,
-  onChange,
-  query,
-  working,
-  results,
-  error,
-  errorMessage,
-}) {
+function highlightQueryWithinString(inputString, query) {
+  const keywords = query.split(/\s/);
+
+  const regExp = new RegExp(`(${keywords.join("|")})`, "gi");
+
+  let outputString = inputString.replaceAll(regExp, (match) => {
+    return `<mark>${match}</mark>`;
+  });
+
+  return outputString;
+}
+
+const intialState = {
+  query: "",
+  working: false,
+  results: null,
+  errorMessage: null,
+};
+
+export function Search({ open, onRequestToClose, onQueryChange }) {
+  const [state, setState] = useState({ ...intialState });
   const styles = useStyles();
 
-  const onModalClosed = () => {};
-
-  const handleOnChange = (event) => {
-    const { value } = event.target;
-    onChange(value);
+  const onModalClosed = () => {
+    setState({ ...intialState });
   };
 
-  const highlightQueryWithinString = useCallback(
-    (inputString) => {
-      const keywords = query.split(/\s/);
+  const getResults = useCallback(
+    async (query) => {
+      try {
+        setState((prevState) => ({
+          ...prevState,
+          working: true,
+        }));
 
-      const regExp = new RegExp(`(${keywords.join("|")})`, "gi");
+        const results = await onQueryChange(query);
 
-      let outputString = inputString.replaceAll(regExp, (match) => {
-        return `<mark>${match}</mark>`;
-      });
+        const highlightedResults = results.map((result) => {
+          return {
+            ...result,
+            title: highlightQueryWithinString(result.title, query),
+            description: result?.description
+              ? highlightQueryWithinString(result.description, query)
+              : null,
+          };
+        });
 
-      return ReactHtmlParser(outputString);
+        setState((prevState) => ({
+          ...prevState,
+          working: false,
+          results: highlightedResults,
+          errorMessage: null,
+        }));
+      } catch (error) {
+        setState((prevState) => ({
+          ...prevState,
+          working: false,
+          results: null,
+          errorMessage: error.message,
+        }));
+      }
     },
-    [query]
+    [onQueryChange]
   );
+
+  const debouncedGetResults = useMemo(() => {
+    return debounce((query) => getResults(query), 500);
+  }, [getResults]);
+
+  const handleOnChange = (event) => {
+    event.persist();
+    const query = event.target.value.trimStart();
+
+    if (!query.length) {
+      setState((prevState) => ({ ...prevState, query, results: null }));
+      debouncedGetResults.cancel();
+    } else {
+      setState((prevState) => ({ ...prevState, query }));
+
+      debouncedGetResults(query);
+    }
+  };
 
   return (
     <Dialog
       open={open}
       maxWidth="sm"
-      onClose={onClose}
+      onClose={onRequestToClose}
       TransitionProps={{
         onExited: onModalClosed,
       }}
@@ -56,7 +106,7 @@ export function Search({
     >
       <div>
         <div className={styles.searchInputContainer}>
-          {working ? (
+          {state.working ? (
             <CircularProgress size={28} />
           ) : (
             <SearchIcon className={styles.icon} />
@@ -68,7 +118,7 @@ export function Search({
             spellCheck={false}
             placeholder="Search..."
             className={styles.searchInput}
-            value={query}
+            value={state.query}
             onChange={handleOnChange}
           />
 
@@ -76,29 +126,28 @@ export function Search({
             variant="outlined"
             disableElevation
             size="small"
-            onClick={onClose}
+            onClick={onRequestToClose}
           >
             Close
           </Button>
         </div>
 
-        {error || results?.length < 1 ? (
+        {state.errorMessage || state.results?.length < 1 ? (
           <div className={styles.searchFeedback}>
             <Typography align="center">
-              {error ? (
-                errorMessage
-              ) : (
+              {state.errorMessage ?? (
                 <>
-                  No results found for <strong>&quot;{query}&quot;</strong>
+                  No results found for{" "}
+                  <strong>&quot;{state.query}&quot;</strong>
                 </>
               )}
             </Typography>
           </div>
         ) : null}
 
-        {!error && results?.length > 0 ? (
+        {!state.errorMessage && state.results?.length >= 1 ? (
           <ul className={styles.results}>
-            {results.map((result, index) => {
+            {state.results.map((result, index) => {
               return (
                 <li key={index}>
                   <Link
@@ -108,16 +157,16 @@ export function Search({
                   >
                     <div className={styles.resultDetail}>
                       <span className={styles.resultTitle}>
-                        {highlightQueryWithinString(result.title)}
+                        {ReactHtmlParser(result.title)}
                       </span>
                       {result?.description ? (
                         <span className={styles.resultDescription}>
-                          {highlightQueryWithinString(result.description)}
+                          {ReactHtmlParser(result.description)}
                         </span>
                       ) : null}
                     </div>
 
-                    <ChevronRightIcon />
+                    <ChevronRightIcon className={styles.resultIcon} />
                   </Link>
                 </li>
               );
@@ -131,13 +180,8 @@ export function Search({
 
 Search.propTypes = {
   open: PropTypes.bool,
-  onClose: PropTypes.func,
-  onChange: PropTypes.func,
-  query: PropTypes.string,
-  working: PropTypes.bool,
-  results: PropTypes.array,
-  error: PropTypes.bool,
-  errorMessage: PropTypes.string,
+  onRequestToClose: PropTypes.func,
+  onQueryChange: PropTypes.func,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -213,5 +257,8 @@ const useStyles = makeStyles((theme) => ({
   },
   resultDescription: {
     color: theme.palette.text.secondary,
+  },
+  resultIcon: {
+    marginLeft: "auto",
   },
 }));
