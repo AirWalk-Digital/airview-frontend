@@ -41,8 +41,6 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
   const styles = useStyles();
   const queryIdRef = useRef(0);
 
-  console.log(queryIdRef.current);
-
   const onModalClosed = () => {
     queryIdRef.current++;
     setState({ ...initialState });
@@ -50,8 +48,6 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 
   const getResults = useCallback(
     async (query, queryId) => {
-      console.log("preTry", queryId === queryIdRef.current);
-
       try {
         if (queryId === queryIdRef.current) {
           setState((prevState) => ({
@@ -62,8 +58,6 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 
         const results = await onQueryChange(query);
 
-        console.log(results);
-
         const highlightedResults = results.map((result) => {
           return {
             ...result,
@@ -73,8 +67,6 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
               : null,
           };
         });
-
-        console.log("post await", queryId === queryIdRef.current);
 
         if (queryId === queryIdRef.current) {
           setState((prevState) => ({
@@ -107,7 +99,6 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 
     const query = event.target.value.trimStart();
 
-    // Reset to initialState if input has no value
     if (!query.length) {
       setState({ ...initialState });
       queryIdRef.current++;
