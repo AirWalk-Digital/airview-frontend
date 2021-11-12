@@ -23,9 +23,7 @@ import { Link } from "../link";
 
 /*
 To do:
-- add a clear input button
 - Move highlighting of results from get results to memo within body of component
-- Look to move business logic to hook
 - Add play functions to Stories
 - hide component on docs pages
 - Document Props API
@@ -43,25 +41,21 @@ function highlightQueryWithinString(inputString, query) {
   return outputString;
 }
 
-const initialState = {
-  query: "",
-  working: false,
-  results: null,
-  errorMessage: null,
-};
+function useSearch(fetchResults) {
+  const initialState = {
+    query: "",
+    working: false,
+    results: null,
+    errorMessage: null,
+  };
 
-export function Search({ open, onRequestToClose, onQueryChange }) {
   const [state, setState] = useState({ ...initialState });
-  const styles = useStyles({});
+
   const queryIdRef = useRef(0);
 
   const reset = () => {
     queryIdRef.current++;
     setState({ ...initialState });
-  };
-
-  const onModalClosed = () => {
-    reset();
   };
 
   const getResults = useCallback(
@@ -74,7 +68,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
           }));
         }
 
-        const results = await onQueryChange(query);
+        const results = await fetchResults(query);
 
         const highlightedResults = results.map((result) => {
           return {
@@ -105,7 +99,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
         }
       }
     },
-    [onQueryChange]
+    [fetchResults]
   );
 
   const debouncedGetResults = useMemo(() => {
@@ -114,8 +108,6 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 
   const handleOnChange = (event) => {
     event.persist();
-
-    console.log("on change");
 
     const query = event.target.value.trimStart();
 
@@ -128,12 +120,24 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
     }
   };
 
-  const handleOnRequestToClose = () => onRequestToClose();
-
   useEffect(() => {
     const currentQueryRefId = queryIdRef.current;
     return () => (queryIdRef.current = currentQueryRefId + 1);
   }, []);
+
+  return {
+    state,
+    reset,
+    handleOnChange,
+  };
+}
+
+export function Search({ open, onRequestToClose, onQueryChange }) {
+  const { state, reset, handleOnChange } = useSearch(onQueryChange);
+
+  const styles = useStyles({});
+
+  const handleOnRequestToClose = () => onRequestToClose();
 
   return (
     <Dialog
@@ -141,7 +145,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
       maxWidth="sm"
       onClose={handleOnRequestToClose}
       TransitionProps={{
-        onExited: onModalClosed,
+        onExited: reset,
       }}
       classes={{ container: styles.rootContainer, paper: styles.rootPaper }}
       disableEscapeKeyDown
