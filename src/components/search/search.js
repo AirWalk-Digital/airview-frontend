@@ -17,6 +17,17 @@ import ReactHtmlParser from "react-html-parser";
 import { debounce } from "lodash-es";
 import { Link } from "../link";
 
+/*
+To do:
+- add a clear input button
+- Allow modal to adjust height to match viewport height
+- Move highlighting of results from get results to memo within body of component
+- Look to move business logic to hook
+- Add play functions to Stories
+- hide component on docs pages
+- Document Props API
+*/
+
 function highlightQueryWithinString(inputString, query) {
   const keywords = query.split(/\s/);
 
@@ -110,10 +121,6 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
   };
 
   const handleOnRequestToClose = () => onRequestToClose();
-
-  useEffect(() => {
-    return debouncedGetResults.cancel();
-  }, []);
 
   useEffect(() => {
     const currentQueryRefId = queryIdRef.current;
