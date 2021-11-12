@@ -9,10 +9,12 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import Dialog from "@material-ui/core/Dialog";
 import { Typography } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import CloseIcon from "@material-ui/icons/Close";
 import ReactHtmlParser from "react-html-parser";
 import { debounce } from "lodash-es";
 import { Link } from "../link";
@@ -25,6 +27,7 @@ To do:
 - Add play functions to Stories
 - hide component on docs pages
 - Document Props API
+- make MUI imports consistent
 */
 
 function highlightQueryWithinString(inputString, query) {
@@ -51,9 +54,13 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
   const styles = useStyles({});
   const queryIdRef = useRef(0);
 
-  const onModalClosed = () => {
+  const reset = () => {
     queryIdRef.current++;
     setState({ ...initialState });
+  };
+
+  const onModalClosed = () => {
+    reset();
   };
 
   const getResults = useCallback(
@@ -107,11 +114,12 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
   const handleOnChange = (event) => {
     event.persist();
 
+    console.log("on change");
+
     const query = event.target.value.trimStart();
 
     if (!query.length) {
-      setState({ ...initialState });
-      queryIdRef.current++;
+      reset();
     } else {
       setState((prevState) => ({ ...prevState, query }));
 
@@ -152,6 +160,17 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
           value={state.query}
           onChange={handleOnChange}
         />
+
+        {state.query.length > 0 && (
+          <IconButton
+            aria-label="clear query"
+            size="small"
+            className={styles.clearQueryBtn}
+            onClick={reset}
+          >
+            <CloseIcon />
+          </IconButton>
+        )}
 
         <Button
           variant="outlined"
@@ -248,6 +267,9 @@ const useStyles = makeStyles((theme) => ({
     "&::-webkit-search-decoration, &::-webkit-search-cancel-button, &::-webkit-search-results-button, &::-webkit-search-results-decoration": {
       display: "none",
     },
+  },
+  clearQueryBtn: {
+    marginRight: theme.spacing(2),
   },
   searchBody: {
     overflow: "auto",
