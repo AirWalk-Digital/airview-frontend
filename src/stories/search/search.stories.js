@@ -1,4 +1,5 @@
 import React from "react";
+import { Title, ArgsTable } from "@storybook/addon-docs";
 import { action } from "@storybook/addon-actions";
 import { Search } from "../../components/search";
 
@@ -7,6 +8,14 @@ const config = {
   component: Search,
   parameters: {
     layout: "fullscreen",
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <ArgsTable />
+        </>
+      ),
+    },
   },
 };
 

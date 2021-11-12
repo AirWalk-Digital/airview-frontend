@@ -18,7 +18,6 @@ import { Link } from "../link";
 /*
 To do:
 - Add play functions to Stories
-- hide component on docs pages
 - Document Props API
 */
 
