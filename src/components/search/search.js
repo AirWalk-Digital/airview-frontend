@@ -7,11 +7,13 @@ import React, {
 } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
-import Dialog from "@material-ui/core/Dialog";
-import { Typography } from "@material-ui/core";
+import {
+  Dialog,
+  Typography,
+  CircularProgress,
+  Button,
+} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CloseIcon from "@material-ui/icons/Close";
@@ -27,7 +29,6 @@ To do:
 - Add play functions to Stories
 - hide component on docs pages
 - Document Props API
-- make MUI imports consistent
 */
 
 function highlightQueryWithinString(inputString, query) {
