@@ -18,7 +18,6 @@ import { Link } from "../link";
 /*
 To do:
 - Add play functions to Stories
-- Document Props API
 */
 
 export function Search({ open, onRequestToClose, onQueryChange }) {
@@ -127,8 +126,17 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 }
 
 Search.propTypes = {
+  /**
+   * Toggles the visibility of the search UI modal
+   */
   open: PropTypes.bool,
+  /**
+   * Callback fired when the modal requests to close **Signature:** `function() => void`
+   */
   onRequestToClose: PropTypes.func,
+  /**
+   * Callback fired when the user has changed the query input value, expects the return of a resolved or rejected promise. **Signature:** `function(query:String) => Promise.resolve([{title:String, description?:String, url:String }]) || Promise.reject({message:String})`
+   */
   onQueryChange: PropTypes.func,
 };
 
