@@ -23,23 +23,10 @@ import { Link } from "../link";
 
 /*
 To do:
-- Move highlighting of results from get results to memo within body of component
 - Add play functions to Stories
 - hide component on docs pages
 - Document Props API
 */
-
-function highlightQueryWithinString(inputString, query) {
-  const keywords = query.split(/\s/);
-
-  const regExp = new RegExp(`(${keywords.join("|")})`, "gi");
-
-  let outputString = inputString.replaceAll(regExp, (match) => {
-    return `<mark>${match}</mark>`;
-  });
-
-  return outputString;
-}
 
 function useSearch(fetchResults) {
   const initialState = {
@@ -52,6 +39,18 @@ function useSearch(fetchResults) {
   const [state, setState] = useState({ ...initialState });
 
   const queryIdRef = useRef(0);
+
+  const highlightQueryWithinString = useCallback((inputString, query) => {
+    const keywords = query.split(/\s/);
+
+    const regExp = new RegExp(`(${keywords.join("|")})`, "gi");
+
+    let outputString = inputString.replaceAll(regExp, (match) => {
+      return `<mark>${match}</mark>`;
+    });
+
+    return outputString;
+  }, []);
 
   const reset = () => {
     queryIdRef.current++;
@@ -99,7 +98,7 @@ function useSearch(fetchResults) {
         }
       }
     },
-    [fetchResults]
+    [fetchResults, highlightQueryWithinString]
   );
 
   const debouncedGetResults = useMemo(() => {
