@@ -1,0 +1,106 @@
+import { useCallback, useState, useMemo, useEffect, useRef } from "react";
+
+import { debounce } from "lodash-es";
+
+export function useSearch(fetchResults) {
+  const initialState = {
+    query: "",
+    working: false,
+    results: null,
+    errorMessage: null,
+  };
+
+  const [state, setState] = useState({ ...initialState });
+
+  const queryIdRef = useRef(0);
+
+  const highlightQueryWithinString = useCallback((inputString, query) => {
+    const keywords = query.split(/\s/);
+
+    const regExp = new RegExp(`(${keywords.join("|")})`, "gi");
+
+    let outputString = inputString.replaceAll(regExp, (match) => {
+      return `<mark>${match}</mark>`;
+    });
+
+    return outputString;
+  }, []);
+
+  const reset = () => {
+    queryIdRef.current++;
+    setState({ ...initialState });
+  };
+
+  const getResults = useCallback(
+    async (query, queryId) => {
+      try {
+        if (queryId === queryIdRef.current) {
+          setState((prevState) => ({
+            ...prevState,
+            working: true,
+          }));
+        }
+
+        const results = await fetchResults(query);
+
+        const highlightedResults = results.map((result) => {
+          return {
+            ...result,
+            title: highlightQueryWithinString(result.title, query),
+            description: result?.description
+              ? highlightQueryWithinString(result.description, query)
+              : null,
+          };
+        });
+
+        if (queryId === queryIdRef.current) {
+          setState((prevState) => ({
+            ...prevState,
+            working: false,
+            results: highlightedResults,
+            errorMessage: null,
+          }));
+        }
+      } catch (error) {
+        if (queryId === queryIdRef.current) {
+          setState((prevState) => ({
+            ...prevState,
+            working: false,
+            results: null,
+            errorMessage: error.message,
+          }));
+        }
+      }
+    },
+    [fetchResults, highlightQueryWithinString]
+  );
+
+  const debouncedGetResults = useMemo(() => {
+    return debounce((query, queryId) => getResults(query, queryId), 500);
+  }, [getResults]);
+
+  const handleOnChange = (event) => {
+    event.persist();
+
+    const query = event.target.value.trimStart();
+
+    if (!query.length) {
+      reset();
+    } else {
+      setState((prevState) => ({ ...prevState, query }));
+
+      debouncedGetResults(query, queryIdRef.current);
+    }
+  };
+
+  useEffect(() => {
+    const currentQueryRefId = queryIdRef.current;
+    return () => (queryIdRef.current = currentQueryRefId + 1);
+  }, []);
+
+  return {
+    state,
+    reset,
+    handleOnChange,
+  };
+}
