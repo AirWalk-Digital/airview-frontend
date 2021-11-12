@@ -17,7 +17,8 @@ import { Link } from "../link";
 
 /*
 To do:
-- Add play functions to Stories
+- tests
+- integrate with header and page templates
 */
 
 export function Search({ open, onRequestToClose, onQueryChange }) {
