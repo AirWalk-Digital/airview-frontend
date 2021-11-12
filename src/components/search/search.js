@@ -20,7 +20,6 @@ import { Link } from "../link";
 /*
 To do:
 - add a clear input button
-- Allow modal to adjust height to match viewport height
 - Move highlighting of results from get results to memo within body of component
 - Look to move business logic to hook
 - Add play functions to Stories
@@ -49,7 +48,7 @@ const initialState = {
 
 export function Search({ open, onRequestToClose, onQueryChange }) {
   const [state, setState] = useState({ ...initialState });
-  const styles = useStyles();
+  const styles = useStyles({});
   const queryIdRef = useRef(0);
 
   const onModalClosed = () => {
@@ -137,76 +136,78 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
       }}
       classes={{ container: styles.rootContainer, paper: styles.rootPaper }}
     >
-      <div>
-        <div className={styles.searchInputContainer}>
-          {state.working ? (
-            <CircularProgress size={28} />
-          ) : (
-            <SearchIcon className={styles.icon} />
-          )}
+      <div className={styles.searchInputContainer}>
+        {state.working ? (
+          <CircularProgress size={28} />
+        ) : (
+          <SearchIcon className={styles.icon} />
+        )}
 
-          <input
-            type="search"
-            autoCapitalize="off"
-            spellCheck={false}
-            placeholder="Search..."
-            className={styles.searchInput}
-            value={state.query}
-            onChange={handleOnChange}
-          />
+        <input
+          type="search"
+          autoCapitalize="off"
+          spellCheck={false}
+          placeholder="Search..."
+          className={styles.searchInput}
+          value={state.query}
+          onChange={handleOnChange}
+        />
 
-          <Button
-            variant="outlined"
-            disableElevation
-            size="small"
-            onClick={handleOnRequestToClose}
-          >
-            Close
-          </Button>
-        </div>
-
-        {state.errorMessage || state.results?.length < 1 ? (
-          <div className={styles.searchFeedback}>
-            <Typography align="center">
-              {state.errorMessage ?? (
-                <>
-                  No results found for{" "}
-                  <strong>&quot;{state.query}&quot;</strong>
-                </>
-              )}
-            </Typography>
-          </div>
-        ) : null}
-
-        {!state.errorMessage && state.results?.length >= 1 ? (
-          <ul className={styles.results}>
-            {state.results.map((result, index) => {
-              return (
-                <li key={index}>
-                  <Link
-                    href={result.url}
-                    noLinkStyle
-                    className={styles.resultLink}
-                  >
-                    <div className={styles.resultDetail}>
-                      <span className={styles.resultTitle}>
-                        {ReactHtmlParser(result.title)}
-                      </span>
-                      {result?.description ? (
-                        <span className={styles.resultDescription}>
-                          {ReactHtmlParser(result.description)}
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <ChevronRightIcon className={styles.resultIcon} />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        ) : null}
+        <Button
+          variant="outlined"
+          disableElevation
+          size="small"
+          onClick={handleOnRequestToClose}
+        >
+          Close
+        </Button>
       </div>
+
+      {state.errorMessage || state.results ? (
+        <div className={styles.searchBody}>
+          {state.errorMessage || state.results.length < 1 ? (
+            <div className={styles.searchFeedback}>
+              <Typography align="center">
+                {state.errorMessage ?? (
+                  <>
+                    No results found for{" "}
+                    <strong>&quot;{state.query}&quot;</strong>
+                  </>
+                )}
+              </Typography>
+            </div>
+          ) : null}
+
+          {!state.errorMessage && state.results?.length >= 1 ? (
+            <ul className={styles.results}>
+              {state.results.map((result, index) => {
+                return (
+                  <li key={index}>
+                    <Link
+                      href={result.url}
+                      noLinkStyle
+                      className={styles.resultLink}
+                    >
+                      <div className={styles.resultDetail}>
+                        <span className={styles.resultTitle}>
+                          {ReactHtmlParser(result.title)}
+                        </span>
+                        {result?.description ? (
+                          <span className={styles.resultDescription}>
+                            {ReactHtmlParser(result.description)}
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <ChevronRightIcon className={styles.resultIcon} />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+        </div>
+      ) : null}
     </Dialog>
   );
 }
@@ -219,10 +220,12 @@ Search.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   rootContainer: {
-    height: "auto",
+    alignItems: "flex-start",
+    maxHeight: 600,
   },
   rootPaper: {
     width: "100%",
+    overflow: "hidden",
   },
   searchInputContainer: {
     display: "flex",
@@ -246,17 +249,17 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  searchBody: {
+    overflow: "auto",
+    borderTop: `1px solid ${theme.palette.divider}`,
+  },
   searchFeedback: {
     padding: "40px 20px",
-    borderTop: `1px solid ${theme.palette.divider}`,
   },
   results: {
     margin: 0,
     padding: "0px 20px",
-    borderTop: `1px solid ${theme.palette.divider}`,
     listStyle: "none",
-    maxHeight: 500,
-    overflow: "auto",
 
     "& li:not(:last-of-type)": {
       borderBottom: `1px solid ${theme.palette.divider}`,
