@@ -1,4 +1,5 @@
 import React from "react";
+import { action } from "@storybook/addon-actions";
 import { Search } from "../../components/search";
 
 const config = {
@@ -9,61 +10,40 @@ const config = {
   },
 };
 
-function Template(args) {
-  return <Search {...args} />;
-}
+const delay = process.env.NODE_ENV === "test" ? 0 : 1000;
 
-Template.args = {
-  results: null,
-  error: false,
-  errorMessage:
-    "Sorry, there was an error running the search. Please try again",
-  open: true,
-  working: false,
-  query: "",
-};
-
-Template.argTypes = {
-  onClose: {
-    //action: "Modal request to close",
-  },
-  onExited: {
-    //action: "Modal closed",
-  },
-  onChange: {
-    // action: "Query changed",
-  },
-};
-
-const Initial = Template.bind({});
-
-Initial.args = {
-  ...Template.args,
-};
-
-Initial.argTypes = {
-  ...Template.argTypes,
-};
-
-const Working = Template.bind({});
-
-Working.args = {
-  ...Template.args,
-  query: "mattis dignissim urna",
-  working: true,
-};
-
-Working.argTypes = {
-  ...Template.argTypes,
-};
-
-const SingleResultFound = Template.bind({});
-
-SingleResultFound.args = {
-  ...Template.args,
-  query: "mattis dignissim urna",
-  working: false,
-  results: [
+const responses = {
+  resolved: [
+    {
+      title: "Integer urna ipsum",
+      description:
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
+      url: "/",
+    },
+    {
+      title: "Integer urna ipsum",
+      description:
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
+      url: "/",
+    },
+    {
+      title: "Integer urna ipsum",
+      description:
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
+      url: "/",
+    },
+    {
+      title: "Integer urna ipsum",
+      description:
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
+      url: "/",
+    },
+    {
+      title: "Integer urna ipsum",
+      description:
+        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
+      url: "/",
+    },
     {
       title: "Integer urna ipsum",
       description:
@@ -71,6 +51,32 @@ SingleResultFound.args = {
       url: "/",
     },
   ],
+  rejected: { message: "There was an error" },
+};
+
+function Template(args) {
+  return <Search {...args} />;
+}
+
+Template.args = {
+  open: true,
+};
+
+Template.argTypes = {};
+
+const SingleResultFound = Template.bind({});
+
+SingleResultFound.args = {
+  ...Template.args,
+  onQueryChange: async (query) => {
+    action("onQueryChange")(query);
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([responses.resolved[0]]);
+      }, delay);
+    });
+  },
 };
 
 SingleResultFound.argTypes = {
@@ -81,52 +87,15 @@ const MultipleResultsFound = Template.bind({});
 
 MultipleResultsFound.args = {
   ...Template.args,
-  query: "mattis dignissim urna",
-  working: false,
-  results: [
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      description:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
-    },
-  ],
+  onQueryChange: async (query) => {
+    action("onQueryChange")(query);
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(responses.resolved);
+      }, delay);
+    });
+  },
 };
 
 MultipleResultsFound.argTypes = {
@@ -137,9 +106,15 @@ const NoResultsFound = Template.bind({});
 
 NoResultsFound.args = {
   ...Template.args,
-  query: "mattis dignissim urna",
-  working: false,
-  results: [],
+  onQueryChange: async (query) => {
+    action("onQueryChange")(query);
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([]);
+      }, delay);
+    });
+  },
 };
 
 NoResultsFound.argTypes = {
@@ -150,9 +125,15 @@ const Error = Template.bind({});
 
 Error.args = {
   ...Template.args,
-  query: "",
-  working: false,
-  error: true,
+  onQueryChange: async (query) => {
+    action("onQueryChange")(query);
+
+    return new Promise((_, reject) => {
+      setTimeout(() => {
+        reject({ message: "There was an error" });
+      }, delay);
+    });
+  },
 };
 
 Error.argTypes = {
@@ -160,11 +141,4 @@ Error.argTypes = {
 };
 
 export default config;
-export {
-  Initial,
-  Working,
-  SingleResultFound,
-  MultipleResultsFound,
-  NoResultsFound,
-  Error,
-};
+export { SingleResultFound, MultipleResultsFound, NoResultsFound, Error };
