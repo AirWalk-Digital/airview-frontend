@@ -1,6 +1,17 @@
 import { useCallback, useState, useMemo, useEffect, useRef } from "react";
-
 import { debounce } from "lodash-es";
+
+function highlightQueryWithinString(inputString, query) {
+  const keywords = query.split(/\s/);
+
+  const regExp = new RegExp(`(${keywords.join("|")})`, "gi");
+
+  let outputString = inputString.replaceAll(regExp, (match) => {
+    return `<mark>${match}</mark>`;
+  });
+
+  return outputString;
+}
 
 export function useSearch(fetchResults) {
   const initialState = {
@@ -13,18 +24,6 @@ export function useSearch(fetchResults) {
   const [state, setState] = useState({ ...initialState });
 
   const queryIdRef = useRef(0);
-
-  const highlightQueryWithinString = useCallback((inputString, query) => {
-    const keywords = query.split(/\s/);
-
-    const regExp = new RegExp(`(${keywords.join("|")})`, "gi");
-
-    let outputString = inputString.replaceAll(regExp, (match) => {
-      return `<mark>${match}</mark>`;
-    });
-
-    return outputString;
-  }, []);
 
   const reset = () => {
     queryIdRef.current++;
@@ -72,7 +71,7 @@ export function useSearch(fetchResults) {
         }
       }
     },
-    [fetchResults, highlightQueryWithinString]
+    [fetchResults]
   );
 
   const debouncedGetResults = useMemo(() => {
