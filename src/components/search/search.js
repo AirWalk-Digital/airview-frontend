@@ -29,7 +29,7 @@ function highlightQueryWithinString(inputString, query) {
   return outputString;
 }
 
-const intialState = {
+const initialState = {
   query: "",
   working: false,
   results: null,
@@ -37,23 +37,32 @@ const intialState = {
 };
 
 export function Search({ open, onRequestToClose, onQueryChange }) {
-  // Cancel getting results when modal is closed
-  const [state, setState] = useState({ ...intialState });
+  const [state, setState] = useState({ ...initialState });
   const styles = useStyles();
+  const queryIdRef = useRef(0);
+
+  console.log(queryIdRef.current);
 
   const onModalClosed = () => {
-    setState({ ...intialState });
+    queryIdRef.current++;
+    setState({ ...initialState });
   };
 
   const getResults = useCallback(
-    async (query) => {
+    async (query, queryId) => {
+      console.log("preTry", queryId === queryIdRef.current);
+
       try {
-        setState((prevState) => ({
-          ...prevState,
-          working: true,
-        }));
+        if (queryId === queryIdRef.current) {
+          setState((prevState) => ({
+            ...prevState,
+            working: true,
+          }));
+        }
 
         const results = await onQueryChange(query);
+
+        console.log(results);
 
         const highlightedResults = results.map((result) => {
           return {
@@ -65,26 +74,32 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
           };
         });
 
-        setState((prevState) => ({
-          ...prevState,
-          working: false,
-          results: highlightedResults,
-          errorMessage: null,
-        }));
+        console.log("post await", queryId === queryIdRef.current);
+
+        if (queryId === queryIdRef.current) {
+          setState((prevState) => ({
+            ...prevState,
+            working: false,
+            results: highlightedResults,
+            errorMessage: null,
+          }));
+        }
       } catch (error) {
-        setState((prevState) => ({
-          ...prevState,
-          working: false,
-          results: null,
-          errorMessage: error.message,
-        }));
+        if (queryId === queryIdRef.current) {
+          setState((prevState) => ({
+            ...prevState,
+            working: false,
+            results: null,
+            errorMessage: error.message,
+          }));
+        }
       }
     },
     [onQueryChange]
   );
 
   const debouncedGetResults = useMemo(() => {
-    return debounce((query) => getResults(query), 500);
+    return debounce((query, queryId) => getResults(query, queryId), 500);
   }, [getResults]);
 
   const handleOnChange = (event) => {
@@ -92,14 +107,14 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 
     const query = event.target.value.trimStart();
 
+    // Reset to initialState if input has no value
     if (!query.length) {
-      setState((prevState) => ({ ...prevState, query, results: null }));
-
-      debouncedGetResults.cancel();
+      setState({ ...initialState });
+      queryIdRef.current++;
     } else {
       setState((prevState) => ({ ...prevState, query }));
 
-      debouncedGetResults(query);
+      debouncedGetResults(query, queryIdRef.current);
     }
   };
 
@@ -109,7 +124,10 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
     return debouncedGetResults.cancel();
   }, []);
 
-  console.log(state.results);
+  useEffect(() => {
+    const currentQueryRefId = queryIdRef.current;
+    return () => (queryIdRef.current = currentQueryRefId + 1);
+  }, []);
 
   return (
     <Dialog
