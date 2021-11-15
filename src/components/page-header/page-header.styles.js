@@ -58,10 +58,13 @@ export function pageHeaderStyles(theme) {
       fontWeight: theme.typography.fontWeightMedium,
       fontSize: theme.typography.pxToRem(14),
       transition: theme.transitions.create("background-color"),
-      cursor: "pointer",
 
-      "&:hover": {
-        backgroundColor: darken(theme.palette.common.white, 0.1),
+      "&:not(:disabled)": {
+        cursor: "pointer",
+
+        "&:hover": {
+          backgroundColor: darken(theme.palette.common.white, 0.1),
+        },
       },
     },
 

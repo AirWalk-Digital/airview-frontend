@@ -32,13 +32,24 @@ export function PageHeader({
   const [searchOpen, setSearchOpen] = useState(false);
   const searchOpenRef = useRef();
 
+  const handleOnInvokeSearchClick = () => {
+    if (searchOpen || loading) return;
+
+    setSearchOpen(true);
+  };
+
   useEffect(() => {
     searchOpenRef.current = searchOpen;
   });
 
   useEffect(() => {
     const handleOnKeyPress = (event) => {
-      if (event.key === "k" && event.metaKey && !searchOpenRef.current) {
+      if (
+        event.key === "k" &&
+        event.metaKey &&
+        !searchOpenRef.current &&
+        !loading
+      ) {
         setSearchOpen(true);
       }
     };
@@ -71,8 +82,8 @@ export function PageHeader({
           <div className={classes.toolBarContainerRight}>
             <button
               className={classes.invokeSearchBtn}
-              onClick={() => setSearchOpen(true)}
-              disabled={searchOpen}
+              onClick={handleOnInvokeSearchClick}
+              disabled={searchOpen || loading}
             >
               <SearchIcon
                 fontSize="small"
