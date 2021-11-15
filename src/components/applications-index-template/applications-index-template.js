@@ -34,6 +34,7 @@ export function ApplicationsIndexTemplate({
   noDataMessage,
   progressBarColorResolver,
   loading,
+  onQueryChange,
 }) {
   const styles = useStyles();
   const theme = useTheme();
@@ -171,7 +172,9 @@ export function ApplicationsIndexTemplate({
         <title>{`${pageTitle} | ${siteTitle}`}</title>
       </Helmet>
 
-      <PageHeader {...{ siteTitle, version, logoSrc, navItems, loading }} />
+      <PageHeader
+        {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
+      />
 
       <Container>
         <Breadcrumb
@@ -308,4 +311,8 @@ ApplicationsIndexTemplate.propTypes = {
    * Presents the template in a loading state (for when fetching data async)
    */
   loading: PropTypes.bool.isRequired,
+  /**
+   * Callback fired when the user has changed the query input value of the search UI. see [Search](/?path=/docs/modules-search--single-result-found) `onQueryChange` API for details
+   */
+  onQueryChange: PropTypes.func,
 };
