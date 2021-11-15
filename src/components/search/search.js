@@ -37,7 +37,6 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
         onExited: reset,
       }}
       classes={{ container: styles.rootContainer, paper: styles.rootPaper }}
-      disableEscapeKeyDown
     >
       <div className={styles.searchInputContainer}>
         {state.working ? (
