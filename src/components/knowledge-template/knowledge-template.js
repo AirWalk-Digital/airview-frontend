@@ -49,6 +49,7 @@ export function KnowledgeTemplate({
   onRequestToCreatePullRequest,
   onRequestToUploadImage,
   onSave,
+  onQueryChange,
 }) {
   const styles = useStyles();
   const [canSave, setCanSave] = useState(false);
@@ -114,7 +115,9 @@ export function KnowledgeTemplate({
         <title>{`${pageTitle} | ${siteTitle}`}</title>
       </Helmet>
 
-      <PageHeader {...{ siteTitle, version, logoSrc, navItems, loading }} />
+      <PageHeader
+        {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
+      />
 
       <Container>
         <Breadcrumb
@@ -302,4 +305,8 @@ KnowledgeTemplate.propTypes = {
    * Used to populate the pageMetaEditor UI, (see [PreviewModeController - PageMetaEditor](/?path=/docs/modules-preview-mode-controller) `initialData` prop API for details))
    */
   pageMetaData: PropTypes.object,
+  /**
+   * Callback fired when the user has changed the query input value of the search UI. see [Search](/?path=/docs/modules-search--single-result-found) `onQueryChange` API for details
+   */
+  onQueryChange: PropTypes.func,
 };
