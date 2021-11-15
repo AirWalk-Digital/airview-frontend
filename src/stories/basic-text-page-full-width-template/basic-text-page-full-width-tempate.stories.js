@@ -1,5 +1,7 @@
 import React from "react";
+import { Title, ArgsTable } from "@storybook/addon-docs";
 import { makeStyles } from "@material-ui/core/styles";
+import * as PageHeaderStories from "../page-header/page-header.stories";
 import { BasicTextPageFullWidthTemplate } from "../../components/basic-text-page-full-width-template";
 import exampleMarkdownContent from "./example-markdown-content.md";
 
@@ -8,6 +10,14 @@ const config = {
   component: BasicTextPageFullWidthTemplate,
   parameters: {
     layout: "fullscreen",
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <ArgsTable />
+        </>
+      ),
+    },
   },
   decorators: [
     (story) => {
@@ -30,29 +40,9 @@ function Template(args) {
 }
 
 Template.args = {
+  ...PageHeaderStories.Default.args,
   currentRoute: "/basic-text-page",
   pageTitle: "Basic Text Page",
-  siteTitle: "AirView",
-  version: "1.0",
-  logoSrc: "/logo-airwalk-reply.svg",
-  navItems: [
-    {
-      id: "1",
-      name: "Home",
-      url: "/",
-    },
-    {
-      id: "2",
-      name: "Applications",
-      children: [
-        {
-          id: "3",
-          name: "Application Template",
-          url: "/applications/application-template",
-        },
-      ],
-    },
-  ],
   breadcrumbLinks: [
     {
       label: "Home",
