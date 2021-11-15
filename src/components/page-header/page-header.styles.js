@@ -51,7 +51,7 @@ export function pageHeaderStyles(theme) {
       display: "flex",
       alignItems: "center",
       height: 30,
-      padding: theme.spacing(2, 1),
+      padding: theme.spacing(1, 1),
       borderRadius: theme.shape.borderRadius,
       backgroundColor: theme.palette.common.white,
       color: theme.palette.text.primary,
