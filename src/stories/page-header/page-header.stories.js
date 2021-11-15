@@ -1,7 +1,10 @@
 import React from "react";
+import { Title, ArgsTable } from "@storybook/addon-docs";
 import { makeStyles } from "@material-ui/core/styles";
+import { MultipleResultsFound } from "../search/search.stories";
 import { PageHeader } from "../../components/page-header";
 import { AccordionMenu } from "../../components/accordion-menu";
+import { Search } from "../../components/search";
 import { LocationProvider } from "../../hooks/use-location";
 import logo from "../__resources/logo-airwalk-reply.svg";
 
@@ -10,7 +13,15 @@ const config = {
   component: PageHeader,
   parameters: {
     layout: "fullscreen",
-    subcomponents: { AccordionMenu },
+    subcomponents: { AccordionMenu, Search },
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <ArgsTable />
+        </>
+      ),
+    },
   },
   decorators: [
     (story) => {
@@ -96,18 +107,22 @@ function Template(args) {
   );
 }
 
-const Default = Template.bind({});
-Default.args = {
+Template.args = {
   siteTitle: "AirView",
   version: "1.0",
   logoSrc: logo,
   navItems: [...testNavItems],
+  onQueryChange: MultipleResultsFound.args.onQueryChange,
+};
+
+const Default = Template.bind({});
+Default.args = {
+  ...Template.args,
 };
 
 const Loading = Template.bind({});
 Loading.args = {
-  ...Default.args,
-  navItems: null,
+  ...Template.args,
   loading: true,
 };
 
