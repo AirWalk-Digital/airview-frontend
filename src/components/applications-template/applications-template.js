@@ -65,6 +65,7 @@ export function ApplicationsTemplate({
   onRequestOfResourcesData,
   onResourceExemptionDelete,
   onResourceExemptionSave,
+  onQueryChange,
 }) {
   const styles = useStyles();
   const [canSave, setCanSave] = useState(false);
@@ -134,7 +135,9 @@ export function ApplicationsTemplate({
         <title>{`${pageTitle} | ${siteTitle}`}</title>
       </Helmet>
 
-      <PageHeader {...{ siteTitle, version, logoSrc, navItems, loading }} />
+      <PageHeader
+        {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
+      />
 
       <Container>
         <Breadcrumb
@@ -425,4 +428,8 @@ ApplicationsTemplate.propTypes = {
    * Callback when a user requests to change the date of a specific resource exemption within the ControlOverview component (see [ControlOverview](/?path=/docs/modules-control-overview--default) `onResourceExemptionSave` prop API for details)
    */
   onResourceExemptionSave: PropTypes.func,
+  /**
+   * Callback fired when the user has changed the query input value of the search UI. see [Search](/?path=/docs/modules-search--single-result-found) `onQueryChange` API for details
+   */
+  onQueryChange: PropTypes.func,
 };

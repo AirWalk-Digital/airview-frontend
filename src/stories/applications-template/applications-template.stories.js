@@ -1,16 +1,7 @@
 import React from "react";
+import { Title, ArgsTable } from "@storybook/addon-docs";
 import { makeStyles } from "@material-ui/core/styles";
-import { AccordionMenu } from "../../components/accordion-menu";
-import { Menu } from "../../components/menu";
-import { ComplianceTable } from "../../components/compliance-table";
-import { PreviewModeController } from "../../components/preview-mode-controller";
-import {
-  BranchSwitcher,
-  BranchCreator,
-  PageCreator,
-  ContentCommitter,
-  ApplicationCreator,
-} from "../../components/preview-mode-controller";
+import * as PageHeaderStories from "../page-header/page-header.stories";
 import { ApplicationsTemplate } from "../../components/applications-template";
 import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
 import {
@@ -19,25 +10,22 @@ import {
   useComplianceTableDemoController,
 } from "../compliance-table/compliance-table-demo-controller";
 import markdownContent from "../__resources/markdown-content.md";
-import logo from "../__resources/logo-airwalk-reply.svg";
 
 const config = {
   title: "Templates/Applications Template",
   component: ApplicationsTemplate,
   parameters: {
     layout: "fullscreen",
-    subcomponents: {
-      AccordionMenu,
-      Menu,
-      ComplianceTable,
-      PreviewModeController,
-      BranchSwitcher,
-      BranchCreator,
-      PageCreator,
-      ContentCommitter,
-      ApplicationCreator,
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <ArgsTable />
+        </>
+      ),
     },
   },
+
   decorators: [
     (story) => {
       const classes = makeStyles(() => ({
@@ -153,24 +141,8 @@ const Template = (args) => {
 };
 
 Template.args = {
+  ...PageHeaderStories.Default.args,
   currentRoute: "/applications/application-template",
-  siteTitle: "AirView",
-  pageTitle: "Application Template",
-  version: "1.0",
-  logoSrc: logo,
-  navItems: [
-    {
-      id: "1",
-      name: "Applications",
-      children: [
-        {
-          id: "2",
-          name: "Application Template",
-          url: "/applications/application-template",
-        },
-      ],
-    },
-  ],
   breadcrumbLinks: [
     {
       label: "Home",
