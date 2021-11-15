@@ -1,4 +1,4 @@
-import { alpha } from "@material-ui/core/styles";
+import { darken } from "@material-ui/core/styles";
 
 export function pageHeaderStyles(theme) {
   const drawerWidth = 425;
@@ -45,31 +45,39 @@ export function pageHeaderStyles(theme) {
     },
 
     // Search
-    toolbarSearch: {
+    invokeSearchBtn: {
+      border: 0,
+      outline: 0,
       display: "flex",
-      flex: "0 1 200px",
-      justifyContent: "flex-start",
       alignItems: "center",
-      padding: theme.spacing(0.25, 1, 0.25, 1),
+      height: 30,
+      padding: theme.spacing(2, 1),
       borderRadius: theme.shape.borderRadius,
-      transition: theme.transitions.create(["background-color", "flex-basis"]),
-      backgroundColor: alpha(theme.palette.common.white, 0.15),
-      border: `1px solid ${alpha(theme.palette.common.white, 0.1)}`,
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.text.primary,
+      fontWeight: theme.typography.fontWeightMedium,
+      fontSize: theme.typography.pxToRem(14),
+      transition: theme.transitions.create("background-color"),
+      cursor: "pointer",
 
       "&:hover": {
-        backgroundColor: alpha(theme.palette.common.white, 0.2),
-      },
-      "&:focus-within": {
-        flexBasis: "400px",
+        backgroundColor: darken(theme.palette.common.white, 0.1),
       },
     },
 
-    toolbarSearchInputRoot: {
-      color: "inherit",
+    invokeSearchIcon: {
+      marginRight: theme.spacing(1),
     },
-    toolbarSearchInput: {
-      paddingLeft: theme.spacing(1),
-      fontSize: theme.typography.pxToRem(14),
+
+    invokeSearchShortcut: {
+      backgroundColor: theme.palette.grey[100],
+      display: "inline-block",
+      padding: "2px 4px",
+      fontWeight: theme.typography.fontWeightBold,
+      fontSize: theme.typography.pxToRem(12),
+      border: `1px solid ${theme.palette.divider}`,
+      borderRadius: theme.shape.borderRadius,
+      marginLeft: theme.spacing(4),
     },
 
     // Actions

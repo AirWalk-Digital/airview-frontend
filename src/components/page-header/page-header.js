@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
 import MenuIcon from "@material-ui/icons/Menu";
 //import SearchIcon from "@material-ui/icons/Search";
 //import InputBase from "@material-ui/core/InputBase";
@@ -12,6 +13,7 @@ import Drawer from "@material-ui/core/Drawer";
 import { AccordionMenu } from "../accordion-menu";
 import { pageHeaderStyles } from "./page-header.styles";
 import { Link } from "react-router-dom";
+import { Search } from "../search";
 
 const useStyles = makeStyles((theme) => {
   return pageHeaderStyles(theme);
@@ -50,21 +52,15 @@ export function PageHeader({
           </div>
 
           <div className={classes.toolBarContainerRight}>
-            {/*
-            <div className={classes.toolbarSearch}>
-              <SearchIcon />
-              <InputBase
-                placeholder="Search..."
-                classes={{
-                  root: classes.toolbarSearchInputRoot,
-                  input: classes.toolbarSearchInput,
-                }}
-                inputProps={{ "aria-label": "Search site" }}
+            <button className={classes.invokeSearchBtn}>
+              <SearchIcon
+                fontSize="small"
+                color="primary"
+                className={classes.invokeSearchIcon}
               />
-            </div>
-            */}
-
-            <div className={classes.toolbarActions}></div>
+              Search site...
+              <span className={classes.invokeSearchShortcut}>&#8984;K</span>
+            </button>
           </div>
         </Toolbar>
       </AppBar>
