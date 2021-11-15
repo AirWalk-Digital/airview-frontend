@@ -58,7 +58,7 @@ export function PageHeader({
                 color="primary"
                 className={classes.invokeSearchIcon}
               />
-              Search site...
+              Search site&hellip;
               <span className={classes.invokeSearchShortcut}>&#8984;K</span>
             </button>
           </div>
