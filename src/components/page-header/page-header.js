@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -6,8 +6,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import MenuIcon from "@material-ui/icons/Menu";
-//import SearchIcon from "@material-ui/icons/Search";
-//import InputBase from "@material-ui/core/InputBase";
 import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
 import { AccordionMenu } from "../accordion-menu";
@@ -26,10 +24,29 @@ export function PageHeader({
   navItems,
   loading,
   testid,
+  onQueryChange,
 }) {
   const classes = useStyles();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchOpenRef = useRef();
+
+  useEffect(() => {
+    searchOpenRef.current = searchOpen;
+  });
+
+  useEffect(() => {
+    const handleOnKeyPress = (event) => {
+      if (event.key === "k" && event.metaKey && !searchOpenRef.current) {
+        setSearchOpen(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleOnKeyPress);
+
+    return () => window.removeEventListener("keydown", handleOnKeyPress);
+  }, []);
 
   return (
     <header className={classes.root} data-testid={testid}>
@@ -52,7 +69,11 @@ export function PageHeader({
           </div>
 
           <div className={classes.toolBarContainerRight}>
-            <button className={classes.invokeSearchBtn}>
+            <button
+              className={classes.invokeSearchBtn}
+              onClick={() => setSearchOpen(true)}
+              disabled={searchOpen}
+            >
               <SearchIcon
                 fontSize="small"
                 color="primary"
@@ -86,6 +107,11 @@ export function PageHeader({
         />
       </Drawer>
       <div className={classes.offset} />
+      <Search
+        open={searchOpen}
+        onQueryChange={onQueryChange}
+        onRequestToClose={() => setSearchOpen(false)}
+      />
     </header>
   );
 }
@@ -115,4 +141,8 @@ PageHeader.propTypes = {
    * Sets a test id on the parent node of the component, for testing purposes
    */
   testid: PropTypes.string,
+  /**
+   * Callback fired when the user has changed the query input value of the search UI. see [Search](/?path=/docs/modules-search--single-result-found) `onQueryChange` API for details
+   */
+  onQueryChange: PropTypes.func,
 };
