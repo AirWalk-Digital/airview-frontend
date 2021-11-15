@@ -118,6 +118,7 @@ Template.args = {
 const Default = Template.bind({});
 Default.args = {
   ...Template.args,
+  loading: false,
 };
 
 const Loading = Template.bind({});
