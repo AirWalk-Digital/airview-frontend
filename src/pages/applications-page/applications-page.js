@@ -12,6 +12,8 @@ import { useIsMounted } from "../../hooks/use-is-mounted";
 import { useResolveMarkdown } from "../../hooks/use-resolve-markdown";
 import { useApiService } from "../../hooks/use-api-service/use-api-service";
 import { useQuery } from "../../hooks/use-query";
+import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
+import { controls, resources } from "../../__mocks__/data.js";
 
 export function ApplicationsPage() {
   const [state, setState] = useState({
@@ -126,6 +128,22 @@ export function ApplicationsPage() {
     } catch (error) {
       console.error(error);
     }
+  };
+  const [controlOverviewState, setControlsData, setResourcesData] =
+    useControlOverviewController(async () => {
+      return [{ id: 1, title: "All Quality Models" }];
+    });
+
+  const handleOnRequestOfControlsData = (id) => {
+    setControlsData(id, async () => {
+      return controls[1];
+    });
+  };
+
+  const handleOnRequestOfResourcesData = (id) => {
+    setResourcesData(id, async () => {
+      return resources[1];
+    });
   };
 
   const handleOnRequestToCreateApplication = async (formData) => {
@@ -431,7 +449,13 @@ export function ApplicationsPage() {
       onRequestToCreateBranch={(branchName) =>
         controller.createBranch("application", branchName)
       }
-      onRequestToCreatePullRequest = {async (sourceBranch) => await controller.createPullRequest("application", controller.getBaseBranchName("application"), sourceBranch) }
+      onRequestToCreatePullRequest={async (sourceBranch) =>
+        await controller.createPullRequest(
+          "application",
+          controller.getBaseBranchName("application"),
+          sourceBranch
+        )
+      }
       onSave={handleOnSave}
       applications={state.applications}
       applicationTypes={state.applicationTypes}
@@ -444,13 +468,9 @@ export function ApplicationsPage() {
       onRequestToUploadImage={handleOnUploadImage}
       onRequestToCreatePage={handleOnCreatePage}
       controlOverviewTitle="Control Overview"
-      controlOverviewData={{
-        groups: [],
-        controls: undefined,
-        resources: undefined,
-      }}
-      onRequestOfControlsData={() => {}}
-      onRequestOfResourcesData={() => {}}
+      controlOverviewData={controlOverviewState}
+      onRequestOfControlsData={handleOnRequestOfControlsData}
+      onRequestOfResourcesData={handleOnRequestOfResourcesData}
       onResourceExemptionDelete={() => {}}
       onResourceExemptionSave={() => {}}
     />
