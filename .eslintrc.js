@@ -22,6 +22,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "react-hooks", "jest", "jsx-a11y", "testing-library"],
+  ignorePatterns: ["ado-client.ts", "github-client.ts"],
   rules: {},
   settings: {
     react: {
