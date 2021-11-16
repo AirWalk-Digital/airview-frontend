@@ -31,6 +31,7 @@ export function PageHeader({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const searchOpenRef = useRef();
+  const loadingRef = useRef();
 
   const handleOnInvokeSearchClick = () => {
     if (searchOpen || loading) return;
@@ -40,6 +41,7 @@ export function PageHeader({
 
   useEffect(() => {
     searchOpenRef.current = searchOpen;
+    loadingRef.current = loading;
   });
 
   useEffect(() => {
@@ -48,7 +50,7 @@ export function PageHeader({
         event.key === "k" &&
         event.metaKey &&
         !searchOpenRef.current &&
-        !loading
+        !loadingRef.current
       ) {
         setSearchOpen(true);
       }
