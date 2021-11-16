@@ -12,6 +12,7 @@ import { useIsMounted } from "../../hooks/use-is-mounted";
 import { useResolveMarkdown } from "../../hooks/use-resolve-markdown";
 import { useApiService } from "../../hooks/use-api-service/use-api-service";
 import { useQuery } from "../../hooks/use-query";
+import { useSearch } from "../../hooks/use-search";
 
 export function ApplicationsPage() {
   const [state, setState] = useState({
@@ -37,6 +38,7 @@ export function ApplicationsPage() {
   const workingBranchName = controller.getWorkingBranchName("application");
   const isMounted = useIsMounted();
   const apiService = useApiService();
+  const onQueryChange = useSearch();
 
   const complianceTableNoDataMessage = {
     title: "No issues",
@@ -453,6 +455,7 @@ export function ApplicationsPage() {
       onRequestOfResourcesData={() => {}}
       onResourceExemptionDelete={() => {}}
       onResourceExemptionSave={() => {}}
+      onQueryChange={onQueryChange}
     />
   );
 }

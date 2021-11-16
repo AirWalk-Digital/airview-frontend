@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { useSearch } from "../../hooks/use-search";
 import { ApplicationsIndex } from "../applications-index";
 
 export function ApplicationsIndexPage() {
@@ -14,7 +15,11 @@ export function ApplicationsIndexPage() {
 
   const { pathname: currentRoute } = useLocation();
 
+  const onQueryChange = useSearch();
+
   return (
-    <ApplicationsIndex {...{ currentRoute, pageTitle, breadcrumbLinks }} />
+    <ApplicationsIndex
+      {...{ currentRoute, pageTitle, breadcrumbLinks, onQueryChange }}
+    />
   );
 }

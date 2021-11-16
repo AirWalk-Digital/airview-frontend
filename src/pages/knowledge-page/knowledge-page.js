@@ -12,6 +12,7 @@ import { useNav } from "../../hooks/use-nav";
 import { useResolveMarkdown } from "../../hooks/use-resolve-markdown";
 import { useQuery } from "../../hooks/use-query";
 import { useIsMounted } from "../../hooks/use-is-mounted";
+import { useSearch } from "../../hooks/use-search";
 
 export function KnowledgePage() {
   const { application_id, slug } = useParams();
@@ -27,6 +28,7 @@ export function KnowledgePage() {
   const previewStatus = controller.getPreviewModeStatus();
   const workingBranchName = controller.getWorkingBranchName("application");
   const isMounted = useIsMounted();
+  const onQueryChange = useSearch();
 
   useResetScroll(`${application_id}_${slug}`);
 
@@ -347,6 +349,7 @@ export function KnowledgePage() {
         await onSave(markdownData, pageData.pageMetaData)
       }
       onRequestToEditPageMetaData={handleOnRequestToEditMetaData}
+      onQueryChange={onQueryChange}
       {...pageData}
     />
   );

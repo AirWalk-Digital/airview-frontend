@@ -10,6 +10,7 @@ export function ApplicationsIndex({
   currentRoute,
   pageTitle,
   breadcrumbLinks,
+  onQueryChange,
 }) {
   const navItems = useNav();
   const apiService = useApiService();
@@ -104,6 +105,7 @@ export function ApplicationsIndex({
         noDataMessage,
         applications,
         loading,
+        onQueryChange,
       }}
     />
   );
@@ -113,4 +115,5 @@ ApplicationsIndex.propTypes = {
   currentRoute: PropTypes.string,
   pageTitle: PropTypes.string,
   breadcrumbLinks: PropTypes.array,
+  onQueryChange: PropTypes.func,
 };
