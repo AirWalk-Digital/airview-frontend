@@ -165,6 +165,8 @@ describe("BranchSwitcher", () => {
     expect(onBranchSwitchSpy).toHaveBeenCalledWith(
       expect.stringMatching(Active.args.branches[0].name)
     );
+
+    onBranchSwitchSpy.mockRestore();
   });
 
   test("it allows a user to cancel a branch switch request", async () => {
@@ -322,6 +324,8 @@ describe("BranchCreator", () => {
     expect(onBranchCreateSpy).toHaveBeenCalledWith(
       expect.stringMatching(branchName)
     );
+
+    onBranchCreateSpy.mockRestore();
   });
 
   test("it allows a user to cancel a request to create a branch", async () => {
@@ -574,6 +578,7 @@ describe("KnowledgePageCreator", () => {
     });
 
     MockDate.reset();
+    onKnowledgePageCreatorSpy.mockRestore();
   });
 
   test("a user can cancel the creation of a new knowledge page", async () => {

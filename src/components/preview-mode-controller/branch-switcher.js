@@ -48,7 +48,7 @@ export function BranchSwitcher({ onSubmit }) {
       }));
       await onSubmit(state.selectedBranch);
       setState((prevState) => ({ ...prevState, modalVisible: false }));
-    } catch (errorMessage) {
+    } catch ({ error: errorMessage }) {
       setState((prevState) => ({
         ...prevState,
         working: false,

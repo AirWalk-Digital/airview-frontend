@@ -17,6 +17,7 @@ export function ControllerProvider({ initialState, children, client }) {
     resetWorkingBranchName,
   } = useStore(initialState);
 
+
   const apiService = useApiService();
 
   const getErrorStatus = () => {
@@ -63,6 +64,17 @@ export function ControllerProvider({ initialState, children, client }) {
     return state.routeRepoData[route].workingBranchName;
   };
 
+  const getBaseBranchName = (route) => {
+    return initialState.routeRepoData[route].workingBranchName
+  }
+
+  const createPullRequest = async (route, baseBranch, sourceBranch) => {
+    const repo = getWorkingRepoName(route);
+    const url = await client.createPR(repo,baseBranch, sourceBranch) 
+    return url;
+    
+  }
+  
   const commitContent = async (route, filePath, content) => {
     for (let item of content) {
       await commitFile(
@@ -198,12 +210,14 @@ export function ControllerProvider({ initialState, children, client }) {
         getWorkingRepoName,
         getWorkingBranchName,
         setWorkingBranchName,
+	getBaseBranchName,
         resetWorkingBranchName,
         getFile,
         getMedia,
         getBranches,
         getListing,
         createBranch,
+	createPullRequest,
         commitContent,
         commitFile, // Temp addition to allow commiting of content for new page creation
       }}

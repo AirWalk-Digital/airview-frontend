@@ -107,25 +107,23 @@ export class GithubClient {
     });
   }
 
-  createPR(
-    title: string,
-    body: string,
-    repo: string,
-    sourceBranch: string,
-    targetBranch: string
-  ) {
-    return this.req({
+  async createPR(repo: string, baseBranch: string, sourceBranch: string) {
+    const info = `Pull ${sourceBranch} into ${baseBranch}`;
+    const data = await this.req({
       url:
         `https://dev.azure.com/${this.organisation}/${this.project}/_apis/git/repositories/` +
         `${repo}/pullrequests?api-version=6.1-preview.1`,
       method: "POST",
+      headers: { "content-type": "application/json" },
       data: {
         sourceRefName: `refs/heads/${sourceBranch}`,
-        targetRefName: `refs/heads/${targetBranch}`,
-        title: title,
-        description: body,
+        targetRefName: `refs/heads/${baseBranch}`,
+        title: info,
+        description: info,
       },
     });
+
+    return `${data.repository.webUrl}/pullrequest/${data.pullRequestId}`;
   }
   async fetchExistingPR(
     repo: string,

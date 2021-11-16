@@ -220,7 +220,7 @@ export function ApplicationCreator({
         ...prevState,
         modalVisible: false,
       }));
-    } catch (errorMessage) {
+    } catch ({ error: errorMessage }) {
       setState((prevState) => ({
         ...prevState,
         errorMessage,
