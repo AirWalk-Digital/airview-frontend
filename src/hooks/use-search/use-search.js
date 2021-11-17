@@ -5,7 +5,7 @@ export function useSearch() {
 
   return async function (query) {
     try {
-      const response = await apiService(`/search/?q=${query}`);
+      const response = await apiService(`/api/search/?q=${query}`);
 
       console.log(response);
 
