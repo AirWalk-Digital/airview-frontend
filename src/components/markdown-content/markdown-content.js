@@ -34,7 +34,7 @@ export const MarkdownContent = React.forwardRef(
       onChange({ markdown, images: uploadedImages.current });
     };
 
-    const handleOnLinkClick = (href, event) => {
+    const handleOnLinkClick = (href) => {
       if (isExternalLink(href)) {
         window.open(href);
       } else {

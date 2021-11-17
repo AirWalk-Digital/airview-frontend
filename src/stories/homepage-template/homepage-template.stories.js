@@ -1,4 +1,6 @@
 import React from "react";
+import { Title, ArgsTable } from "@storybook/addon-docs";
+import * as PageHeaderStories from "../page-header/page-header.stories";
 import { makeStyles } from "@material-ui/core/styles";
 import { HomepageTemplate } from "../../components/homepage-template/";
 
@@ -7,6 +9,14 @@ const config = {
   component: HomepageTemplate,
   parameters: {
     layout: "fullscreen",
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <ArgsTable />
+        </>
+      ),
+    },
   },
   decorators: [
     (story) => {
@@ -29,29 +39,9 @@ function Template(args) {
 }
 
 Template.args = {
+  ...PageHeaderStories.Default.args,
   currentRoute: "/",
-  siteTitle: "AirView",
   pageTitle: "Application Template",
-  version: "1.0",
-  logoSrc: "/logo-airwalk-reply.svg",
-  navItems: [
-    {
-      id: "1",
-      name: "Home",
-      url: "/",
-    },
-    {
-      id: "2",
-      name: "Applications",
-      children: [
-        {
-          id: "3",
-          name: "Application Template",
-          url: "/applications/application-template",
-        },
-      ],
-    },
-  ],
   loading: false,
 };
 

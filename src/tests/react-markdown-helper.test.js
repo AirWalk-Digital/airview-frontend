@@ -36,7 +36,7 @@ describe.skip("ReactMarkdownHelper - images", () => {
         );
       });
 
-      it("it should output the correct alt value", () => {
+      it("should output the correct alt value", () => {
         expect(screen.getByRole("img")).toHaveAttribute("alt", "Test alt text");
       });
     });
@@ -73,7 +73,7 @@ describe.skip("ReactMarkdownHelper - images", () => {
         );
       });
 
-      it("it should output the correct alt value", () => {
+      it("should output the correct alt value two", () => {
         expect(screen.getByRole("img")).toHaveAttribute("alt", "Test alt text");
       });
     });

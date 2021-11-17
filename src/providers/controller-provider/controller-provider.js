@@ -1,3 +1,4 @@
+/* eslint react/prop-types: 0 */
 import React from "react";
 import { useStore } from "../../store/store";
 import { useApiService } from "../../hooks/use-api-service";
@@ -7,7 +8,7 @@ import path from "path";
 
 export const ControllerProviderContext = React.createContext();
 
-export function ControllerProvider({ initialState, config, children, client }) {
+export function ControllerProvider({ initialState, children, client }) {
   const {
     state,
     setErrorStatus,
@@ -111,6 +112,7 @@ export function ControllerProvider({ initialState, config, children, client }) {
       const markdown = await response.content.text();
       return matter(markdown);
     } catch (error) {
+      console.log(error);
       // Eventually set error state to present error boundry UI
       throw error;
     }
@@ -121,6 +123,7 @@ export function ControllerProvider({ initialState, config, children, client }) {
       const response = await getRemoteFile(route, fileName);
       return response.content;
     } catch (error) {
+      console.log(error);
       // Eventually set error state to present error boundry UI
       throw error;
     }

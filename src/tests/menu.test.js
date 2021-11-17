@@ -122,7 +122,7 @@ describe("Menu", () => {
 
         userEvent.click(screen.getByRole("button", { name: "Collapse menu" }));
 
-        expect(await screen.queryByRole("list")).not.toBeInTheDocument();
+        expect(screen.queryByRole("list")).not.toBeInTheDocument();
       });
 
       it("should indicate to the user that the menu items can be expanded", async () => {
@@ -132,7 +132,9 @@ describe("Menu", () => {
 
         userEvent.click(screen.getByRole("button", { name: "Collapse menu" }));
 
-        expect(await screen.getByRole("button", { name: "Expand menu" }));
+        expect(
+          screen.getByRole("button", { name: "Expand menu" })
+        ).toBeInTheDocument();
       });
     });
 
@@ -153,7 +155,7 @@ describe("Menu", () => {
 
         userEvent.click(screen.getByRole("button", { name: "Expand menu" }));
 
-        expect(await screen.getByRole("list")).toBeInTheDocument();
+        expect(screen.getByRole("list")).toBeInTheDocument();
       });
 
       it("should indicate to the user that the menu items can be collapsed", async () => {
@@ -163,7 +165,9 @@ describe("Menu", () => {
 
         userEvent.click(screen.getByRole("button", { name: "Expand menu" }));
 
-        expect(await screen.getByRole("button", { name: "Collapse menu" }));
+        expect(
+          screen.getByRole("button", { name: "Collapse menu" })
+        ).toBeInTheDocument();
       });
     });
   });

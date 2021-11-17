@@ -1,4 +1,11 @@
 import React from "react";
+import { Title, ArgsTable } from "@storybook/addon-docs";
+
+import {
+  Default as DefaultPageHeader,
+  Loading as LoadingPageHeader,
+} from "../page-header/page-header.stories";
+
 import { makeStyles } from "@material-ui/core/styles";
 import { ApplicationsIndexTemplate } from "../../components/applications-index-template";
 
@@ -7,7 +14,14 @@ const config = {
   component: ApplicationsIndexTemplate,
   parameters: {
     layout: "fullscreen",
-    subcomponents: {},
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <ArgsTable />
+        </>
+      ),
+    },
   },
   decorators: [
     (story) => {
@@ -30,31 +44,15 @@ const Template = (args) => {
 };
 
 Template.args = {
+  ...DefaultPageHeader.args,
   currentRoute: "/applications",
   pageTitle: "Applications Template",
-  siteTitle: "AirView",
-  version: "1.0",
-  logoSrc: "/logo-airwalk-reply.svg",
-  navItems: [
-    {
-      id: "1",
-      name: "Applications",
-      children: [
-        {
-          id: "2",
-          name: "Applications Template",
-          url: "/applications/applications-template",
-        },
-      ],
-    },
-  ],
   breadcrumbLinks: [
     {
       label: "Home",
       url: "/",
     },
   ],
-  loading: false,
   permissionsInvalidMessage:
     "You do not have the required permissions to view the data for this application",
   noDataMessage: "There is no data to display for this application",
@@ -264,6 +262,7 @@ WithoutRequiredPermissions.args = {
 const Loading = Template.bind({});
 Loading.args = {
   ...Template.args,
+  ...LoadingPageHeader.args,
   loading: true,
 };
 

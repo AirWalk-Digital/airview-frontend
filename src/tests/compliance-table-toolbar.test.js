@@ -51,16 +51,16 @@ describe("ComplianceTableToolbar", () => {
         expect(screen.getByLabelText("Filters")).toBeVisible();
       });
 
-      it("should hide an open filter list on click of the show filters button", async () => {
-        expect(await screen.getByLabelText("Filters")).not.toBeVisible();
+      it("should hide an open filter list on click of the show filters button", () => {
+        expect(screen.getByLabelText("Filters")).not.toBeVisible();
 
         userEvent.click(screen.getByLabelText("Show filters"));
 
-        expect(await screen.getByLabelText("Filters")).toBeVisible();
+        expect(screen.getByLabelText("Filters")).toBeVisible();
 
         userEvent.click(screen.getByRole("presentation").firstChild);
 
-        expect(await screen.getByLabelText("Filters")).not.toBeVisible();
+        expect(screen.getByLabelText("Filters")).not.toBeVisible();
       });
 
       it("should display the filters, equal to the values passed", () => {

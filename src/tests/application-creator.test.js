@@ -80,7 +80,7 @@ function setupComponent(overrides) {
 
 function checkForEmptyFormValues() {
   const parentApplicationInput = screen.getByRole("button", {
-    name: /parent application ​/i,
+    name: /parent application /i,
   });
 
   const applicationNameInput = screen.getByRole("textbox", {
@@ -88,11 +88,11 @@ function checkForEmptyFormValues() {
   });
 
   const applicationTypeInput = screen.getByRole("button", {
-    name: /application type ​/i,
+    name: /application type /i,
   });
 
   const environmentInput = screen.getByRole("button", {
-    name: /environment ​/i,
+    name: /environment /i,
   });
 
   const referenceTypeInputs = screen
@@ -109,7 +109,7 @@ function checkForEmptyFormValues() {
 async function enterFormData(afterFieldEntry) {
   // Complete parent application field
   const parentApplicationInput = screen.getByRole("button", {
-    name: /parent application ​/i,
+    name: /parent application /i,
   });
 
   userEvent.click(parentApplicationInput);
@@ -131,7 +131,7 @@ async function enterFormData(afterFieldEntry) {
 
   // Complete application type input
   const applicationTypeInput = screen.getByRole("button", {
-    name: /application type ​/i,
+    name: /application type /i,
   });
 
   userEvent.click(applicationTypeInput);
@@ -144,7 +144,7 @@ async function enterFormData(afterFieldEntry) {
 
   // Complete environment input
   const environmentInput = screen.getByRole("button", {
-    name: /environment ​/i,
+    name: /environment /i,
   });
 
   userEvent.click(environmentInput);

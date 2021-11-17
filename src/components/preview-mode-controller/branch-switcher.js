@@ -136,7 +136,6 @@ export function BranchSwitcher({ onSubmit }) {
             Cancel
           </Button>
           <Button
-            autoFocus
             onClick={handleOnSubmit}
             color="primary"
             variant="contained"
