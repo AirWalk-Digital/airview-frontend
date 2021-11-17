@@ -1,6 +1,17 @@
+import { useApiService } from "../use-api-service";
+
 export function useSearch() {
-  return async function () {
-    // Throwing for now as not complete
-    throw new Error("Sorry, search is disabled at this time");
+  const apiService = useApiService();
+
+  return async function (query) {
+    try {
+      const response = await apiService(`/search/?q=${query}`);
+
+      console.log(response);
+
+      return [];
+    } catch (error) {
+      throw new Error(error.message);
+    }
   };
 }
