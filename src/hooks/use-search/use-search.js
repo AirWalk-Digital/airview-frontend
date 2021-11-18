@@ -7,9 +7,13 @@ export function useSearch() {
     try {
       const response = await apiService(`/api/search/?q=${query}`);
 
-      console.log(response);
+      if (!response.statusText === "OK") {
+        throw new Error("Sorry, something has gone wrong. Please try again");
+      }
 
-      return [];
+      const results = await response.data.text();
+
+      return JSON.parse(results);
     } catch (error) {
       throw new Error(error.message);
     }

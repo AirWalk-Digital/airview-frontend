@@ -97,7 +97,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
                 return (
                   <li key={index}>
                     <Link
-                      href={result.url}
+                      href={result.path}
                       noLinkStyle
                       className={styles.resultLink}
                     >
@@ -105,9 +105,9 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
                         <span className={styles.resultTitle}>
                           {ReactHtmlParser(result.title)}
                         </span>
-                        {result?.description ? (
-                          <span className={styles.resultDescription}>
-                            {ReactHtmlParser(result.description)}
+                        {result?.summary ? (
+                          <span className={styles.resultSummary}>
+                            {ReactHtmlParser(result.summary)}
                           </span>
                         ) : null}
                       </div>
@@ -135,7 +135,7 @@ Search.propTypes = {
    */
   onRequestToClose: PropTypes.func,
   /**
-   * Callback fired when the user has changed the query input value, expects the return of a resolved or rejected promise. **Signature:** `function(query:String) => Promise.resolve([{title:String, description?:String, url:String }]) || Promise.reject({message:String})`
+   * Callback fired when the user has changed the query input value, expects the return of a resolved or rejected promise. **Signature:** `function(query:String) => Promise.resolve([{title:String, summary?:String, path:String }]) || Promise.reject({message:String})`
    */
   onQueryChange: PropTypes.func,
 };
@@ -216,7 +216,7 @@ const useStyles = makeStyles((theme) => ({
   resultTitle: {
     display: "block",
   },
-  resultDescription: {
+  resultSummary: {
     color: theme.palette.text.secondary,
   },
   resultIcon: {
