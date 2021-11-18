@@ -5,20 +5,13 @@ import {
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import { rest } from "msw";
-import { setupServer } from "msw/node";
-import { handlers } from "../__mocks__/handlers";
-import * as data from "../__mocks__/data";
+import * as data from "../api-mock/data";
 import {
   ControlOverview,
   useControlOverviewController,
 } from "../components/control-overview";
 import userEvent from "@testing-library/user-event";
-
-const server = setupServer(...handlers);
-
-beforeAll(() => server.listen());
-afterAll(() => server.close());
-afterEach(() => server.resetHandlers());
+import { server } from "../api-mock/server";
 
 function Component() {
   const [
