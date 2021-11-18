@@ -6,8 +6,8 @@ import {
 } from "@testing-library/react";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { handlers } from "../stories/control-overview/mocks/handlers";
-import * as data from "../stories/control-overview/mocks/data";
+import { handlers } from "../__mocks__/handlers";
+import * as data from "../__mocks__/data";
 import {
   ControlOverview,
   useControlOverviewController,
@@ -21,22 +21,58 @@ afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
 
 function Component() {
-  const [state, setControlData, setInstanceData] = useControlOverviewController(
-    "https://testapi.dev/quality-models"
-  );
+  const [
+    state,
+    setControlData,
+    setResourcesData,
+  ] = useControlOverviewController(async () => {
+    try {
+      const response = await fetch(`https://testapi.dev/quality-models`);
 
-  const handleOnRequestOfControlsData = async (id) => {
-    setControlData(
-      id,
-      `https://testapi.dev/applications/1/control-overviews?qualityModelId=${id}`
-    );
+      if (response.ok) {
+        return await response.json();
+      }
+
+      throw new Error();
+    } catch (error) {
+      return "error";
+    }
+  });
+
+  const handleOnRequestOfControlsData = (id) => {
+    setControlData(id, async () => {
+      try {
+        const response = await fetch(
+          `https://testapi.dev/applications/1/control-overviews?qualityModelId=${id}`
+        );
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        throw new Error();
+      } catch (error) {
+        return "error";
+      }
+    });
   };
 
-  const handleOnRequestOfInstancesData = async (id) => {
-    setInstanceData(
-      id,
-      `https://testapi.dev/applications/1/monitored-resources?technicalControlId=${id}`
-    );
+  const handleOnRequestOfResourcesData = (id) => {
+    setResourcesData(id, async () => {
+      try {
+        const response = await fetch(
+          `https://testapi.dev/applications/1/monitored-resources?technicalControlId=${id}`
+        );
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        throw new Error();
+      } catch (error) {
+        return "error";
+      }
+    });
   };
 
   return (
@@ -44,14 +80,14 @@ function Component() {
       title="Control Overview"
       data={state}
       onRequestOfControlsData={handleOnRequestOfControlsData}
-      onRequestOfInstancesData={handleOnRequestOfInstancesData}
+      onRequestOfResourcesData={handleOnRequestOfResourcesData}
     />
   );
 }
 
 describe("ControlOverview - loading group data", () => {
-  describe("with no issues", () => {
-    it("should display a message indicating no issues", async () => {
+  describe("with no controls", () => {
+    it("should display a message indicating no controls", async () => {
       server.use(
         rest.get("https://testapi.dev/quality-models", (req, res, ctx) => {
           return res(ctx.json([]));
@@ -62,7 +98,7 @@ describe("ControlOverview - loading group data", () => {
 
       await waitForElementToBeRemoved(() => screen.getByRole("progressbar"));
 
-      expect(screen.getByText(/^no issues$/i)).toBeInTheDocument();
+      expect(screen.getByText(/^no controls$/i)).toBeInTheDocument();
     });
   });
 
@@ -129,7 +165,7 @@ describe("ControlOverview - when expanding a control group", () => {
     });
 
     it("should display a no issues message to the user", async () => {
-      expect(screen.getByText(/^no issues$/i)).toBeInTheDocument();
+      expect(screen.getByText(/^no controls$/i)).toBeInTheDocument();
     });
 
     it("should not re-fetch data on subsequent expansions of the resolved control group", async () => {
@@ -141,7 +177,7 @@ describe("ControlOverview - when expanding a control group", () => {
       userEvent.click(groupButton);
 
       expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
-      expect(screen.getByText(/^no issues$/i)).toBeInTheDocument();
+      expect(screen.getByText(/^no controls$/i)).toBeInTheDocument();
     });
   });
 
@@ -281,7 +317,7 @@ describe("ControlOverview - when expanding a control item", () => {
     });
 
     it("should display a no issues message to the user", async () => {
-      expect(screen.getByText(/^no issues$/i)).toBeInTheDocument();
+      expect(screen.getByText(/^no resources$/i)).toBeInTheDocument();
     });
 
     it("should not re-fetch data on subsequent expansions of the resolved control item", async () => {
@@ -291,7 +327,7 @@ describe("ControlOverview - when expanding a control item", () => {
       userEvent.click(controlButton);
 
       expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
-      expect(screen.getByText(/^no issues$/i)).toBeInTheDocument();
+      expect(screen.getByText(/^no resources$/i)).toBeInTheDocument();
     });
   });
 
@@ -415,16 +451,20 @@ describe("ControlOverview - instance table", () => {
     });
 
     const getTestTableData = () => {
-      return document.querySelectorAll("tbody > tr > td:first-of-type");
+      return document.querySelector(
+        "tbody > tr:first-of-type > td:first-of-type"
+      );
     };
 
     const initialData = getTestTableData();
+
+    expect(initialData).toHaveTextContent(data.resources[1][0].type);
 
     userEvent.click(sortButton);
 
     const sortedData = getTestTableData();
 
-    expect(initialData[initialData.length - 1]).toEqual(sortedData[0]);
+    expect(sortedData).toHaveTextContent(data.resources[1][4].type);
   });
 
   it("should allow a user to filter data", async () => {
