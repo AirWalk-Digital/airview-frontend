@@ -25,39 +25,39 @@ const responses = {
   resolved: [
     {
       title: "Integer urna ipsum",
-      description:
+      summary:
         "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
+      path: "/",
     },
     {
       title: "Integer urna ipsum",
-      description:
+      summary:
         "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
+      path: "/",
     },
     {
       title: "Integer urna ipsum",
-      description:
+      summary:
         "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
+      path: "/",
     },
     {
       title: "Integer urna ipsum",
-      description:
+      summary:
         "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
+      path: "/",
     },
     {
       title: "Integer urna ipsum",
-      description:
+      summary:
         "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
+      path: "/",
     },
     {
       title: "Integer urna ipsum",
-      description:
+      summary:
         "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      url: "/",
+      path: "/",
     },
   ],
   rejected: { message: "There was an error" },

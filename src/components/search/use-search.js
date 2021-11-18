@@ -46,8 +46,8 @@ export function useSearch(fetchResults) {
           return {
             ...result,
             title: highlightQueryWithinString(result.title, query),
-            description: result?.description
-              ? highlightQueryWithinString(result.description, query)
+            summary: result?.summary
+              ? highlightQueryWithinString(result.summary, query)
               : null,
           };
         });
