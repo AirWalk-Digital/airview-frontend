@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  render,
-  screen,
-  within,
-  waitFor,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/accordion-menu/accordion-menu.stories";
