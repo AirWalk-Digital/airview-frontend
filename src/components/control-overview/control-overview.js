@@ -238,6 +238,10 @@ export function ControlOverview({
 
 ControlOverview.propTypes = {
   /**
+   * Sets the component to render in a loading state
+   */
+  loading: PropTypes.bool,
+  /**
    * Sets the title for the component
    */
   title: PropTypes.string,

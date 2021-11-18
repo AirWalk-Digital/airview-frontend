@@ -470,7 +470,6 @@ export function ApplicationCreator({
             Cancel
           </Button>
           <Button
-            autoFocus
             onClick={handleOnSubmit}
             color="primary"
             variant="contained"

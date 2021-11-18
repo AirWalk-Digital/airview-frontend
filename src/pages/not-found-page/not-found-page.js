@@ -2,11 +2,13 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import siteConfig from "../../site-config.json";
 import { useNav } from "../../hooks/use-nav";
+import { useSearch } from "../../hooks/use-search";
 import { BasicTextPageFullWidthTemplate } from "../../components/basic-text-page-full-width-template";
 
 export function NotFoundPage() {
   const location = useLocation();
   const requestedUrl = location.state?.location.pathname ?? location.pathname;
+  const onQueryChange = useSearch();
 
   return (
     <BasicTextPageFullWidthTemplate
@@ -24,6 +26,7 @@ export function NotFoundPage() {
       ]}
       bodyContent={`The requested page at path **${requestedUrl}** was not found. Please check you have requested the correct URL, alternatively head back to the [homepage](/).`}
       loading={false}
+      onQueryChange={onQueryChange}
     />
   );
 }

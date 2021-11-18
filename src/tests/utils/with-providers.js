@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { render } from "@testing-library/react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { materialUiTheme } from "../../lib/material-ui-theme";
@@ -11,6 +12,10 @@ function TestProviders({ children }) {
     </BrowserRouter>
   );
 }
+
+TestProviders.propTypes = {
+  children: PropTypes.node,
+};
 
 export function renderWithProviders(ui, { route = "/" } = {}) {
   window.history.pushState({}, "Test page", route);

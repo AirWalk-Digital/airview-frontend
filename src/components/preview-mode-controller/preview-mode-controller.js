@@ -68,6 +68,10 @@ const usePreviewModeControllerStyles = makeStyles({
 
 PreviewModeController.propTypes = {
   /**
+   * Enables or disables the preview mode controller
+   */
+  enabled: PropTypes.bool,
+  /**
    * Presents the component in a loading state (for when fetching data async)
    */
   loading: PropTypes.bool,

@@ -1,5 +1,7 @@
 /* eslint react/display-name: 0 */
 /* eslint react/prop-types: 0 */
+/* eslint jsx-a11y/anchor-has-content: 0 */
+/* eslint jsx-a11y/anchor-is-valid: 0 */
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";

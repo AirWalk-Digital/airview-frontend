@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { theme } from "rich-markdown-editor";
 
 export function WorkingOverlay({ open, color, ...rest }) {
   const styles = useWorkingOverlayStyles({ color });

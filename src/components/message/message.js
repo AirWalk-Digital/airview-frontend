@@ -15,6 +15,7 @@ const Message = React.forwardRef(
       <Paper
         className={clsx(classes.root, className)}
         variant="outlined"
+        ref={ref}
         {...otherProps}
       >
         {title && (

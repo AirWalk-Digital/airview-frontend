@@ -13,7 +13,7 @@ import { useResolveMarkdown } from "../../hooks/use-resolve-markdown";
 import { useApiService } from "../../hooks/use-api-service/use-api-service";
 import { useQuery } from "../../hooks/use-query";
 import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
-import { controls, resources } from "../../__mocks__/data.js";
+import { useSearch } from "../../hooks/use-search";
 
 export function ApplicationsPage() {
   const [state, setState] = useState({
@@ -39,6 +39,7 @@ export function ApplicationsPage() {
   const workingBranchName = controller.getWorkingBranchName("application");
   const isMounted = useIsMounted();
   const apiService = useApiService();
+  const onQueryChange = useSearch();
 
   const complianceTableNoDataMessage = {
     title: "No issues",
@@ -112,7 +113,7 @@ export function ApplicationsPage() {
     }
   };
 
-  const handleOnSave = async ({ markdown, images, commitMessage }) => {
+  const handleOnSave = async ({ markdown }) => {
     try {
       const content = await resolveOutbound({
         markdown: markdown,
@@ -131,18 +132,20 @@ export function ApplicationsPage() {
   };
   const [controlOverviewState, setControlsData, setResourcesData] =
     useControlOverviewController(async () => {
-      return [{ id: 1, title: "All Quality Models" }];
+      return [{ id: 1, title: "Security" }];
     });
 
   const handleOnRequestOfControlsData = (id) => {
     setControlsData(id, async () => {
-      return controls[1];
+      return [];
+      //return controls[1];
     });
   };
 
   const handleOnRequestOfResourcesData = (id) => {
     setResourcesData(id, async () => {
-      return resources[1];
+      return [];
+      /* return resources[1]; */
     });
   };
 
@@ -216,7 +219,9 @@ export function ApplicationsPage() {
           history.push(
             `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
           );
-        } catch (error) {}
+        } catch (error) {
+          console.log(error);
+        }
       }
       //All other errors, do not allow creation of file, possibly throw error here
     }
@@ -250,7 +255,7 @@ export function ApplicationsPage() {
         environment: data.environment,
         assignmentGroup: "-",
         assignee: "-",
-        systemSource: data.systemSource,
+        systemSource: data.systemName,
         systemStage: data.systemStage,
       },
     }));
@@ -473,6 +478,7 @@ export function ApplicationsPage() {
       onRequestOfResourcesData={handleOnRequestOfResourcesData}
       onResourceExemptionDelete={() => {}}
       onResourceExemptionSave={() => {}}
+      onQueryChange={onQueryChange}
     />
   );
 }

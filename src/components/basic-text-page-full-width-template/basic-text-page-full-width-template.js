@@ -18,6 +18,7 @@ function BasicTextPageFullWidthTemplate({
   loading,
   breadcrumbLinks,
   bodyContent,
+  onQueryChange,
 }) {
   const styles = useStyles();
 
@@ -28,7 +29,9 @@ function BasicTextPageFullWidthTemplate({
           <title>{`${pageTitle} | ${siteTitle}`}</title>
         </Helmet>
 
-        <PageHeader {...{ siteTitle, version, logoSrc, navItems, loading }} />
+        <PageHeader
+          {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
+        />
 
         <Container>
           <Breadcrumb
@@ -111,6 +114,10 @@ BasicTextPageFullWidthTemplate.propTypes = {
    * Used to indicate to the user that the page content is loading (for when fetching data async)
    */
   loading: PropTypes.bool,
+  /**
+   * Callback fired when the user has changed the query input value of the search UI. see [Search](/?path=/docs/modules-search--single-result-found) `onQueryChange` API for details
+   */
+  onQueryChange: PropTypes.func,
 };
 
 export { BasicTextPageFullWidthTemplate };

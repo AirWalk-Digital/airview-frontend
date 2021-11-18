@@ -73,10 +73,10 @@ describe("ApplicationTileContent - with collapsible content prop set to true", (
       ).toBeInTheDocument();
     });
 
-    it("should allow a user to expand the collapsed content on click of the expand UI", async () => {
+    it("should allow a user to expand the collapsed content on click of the expand UI", () => {
       userEvent.click(screen.getByRole("button", { name: "Expand content" }));
 
-      expect(await screen.getByText("Test Content")).toBeVisible();
+      expect(screen.getByText("Test Content")).toBeVisible();
     });
   });
 
@@ -99,11 +99,11 @@ describe("ApplicationTileContent - with collapsible content prop set to true", (
       ).toBeInTheDocument();
     });
 
-    it("should allow a user to collapse the expanded content on click of the collapse UI", async () => {
+    it("should allow a user to collapse the expanded content on click of the collapse UI", () => {
       userEvent.click(screen.getByRole("button", { name: "Collapse content" }));
 
       expect(
-        await screen.getByRole("button", { name: "Expand content" })
+        screen.getByRole("button", { name: "Expand content" })
       ).toBeInTheDocument();
     });
   });

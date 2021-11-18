@@ -13,6 +13,7 @@ export function HomepageTemplate({
   logoSrc,
   navItems,
   loading,
+  onQueryChange,
 }) {
   const ref = useRef(1);
   return (
@@ -22,7 +23,9 @@ export function HomepageTemplate({
           <title>{`${pageTitle} | ${siteTitle}`}</title>
         </Helmet>
 
-        <PageHeader {...{ siteTitle, version, logoSrc, navItems, loading }} />
+        <PageHeader
+          {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
+        />
       </LocationProvider>
       <Main ref={ref}></Main>
     </React.Fragment>
@@ -30,6 +33,10 @@ export function HomepageTemplate({
 }
 
 HomepageTemplate.propTypes = {
+  /**
+   * Presents the component in a loading state (for when fetching data async)
+   */
+  loading: PropTypes.bool,
   /**
    * Used to set the required context for link active classes
    */
@@ -54,4 +61,8 @@ HomepageTemplate.propTypes = {
    * Used to render the main navigation in the main header (see [AccordionMenu](/?path=/docs/modules-accordion-menu) `navItems` prop API for schema)
    */
   navItems: PropTypes.array,
+  /**
+   * Callback fired when the user has changed the query input value of the search UI. see [Search](/?path=/docs/modules-search--single-result-found) `onQueryChange` API for details
+   */
+  onQueryChange: PropTypes.func,
 };

@@ -15,8 +15,7 @@ export function useResolveMarkdown() {
   };
 
   const searchMarkdownStringForImages = function (markdownString) {
-    const regexp =
-      /!\[[^\]]*\]\((?<filename>.*?)(?=\s|"|\))(?<optionalpart>"|\s.*")?\)/g;
+    const regexp = /!\[[^\]]*\]\((?<filename>.*?)(?=\s|"|\))(?<optionalpart>"|\s.*")?\)/g;
 
     const images = [...markdownString.matchAll(regexp)];
 

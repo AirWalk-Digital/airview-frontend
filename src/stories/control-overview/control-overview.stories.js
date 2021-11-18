@@ -133,8 +133,8 @@ function WithNoControls() {
     <ControlOverview
       title="Control Overview"
       data={data}
-      onRequestOfControlsData={(id) => {}}
-      onRequestOfResourcesData={(id) => {}}
+      onRequestOfControlsData={() => {}}
+      onRequestOfResourcesData={() => {}}
     />
   );
 }
@@ -150,8 +150,8 @@ function WithError() {
     <ControlOverview
       title="Control Overview"
       data={data}
-      onRequestOfControlsData={(id) => {}}
-      onRequestOfResourcesData={(id) => {}}
+      onRequestOfControlsData={() => {}}
+      onRequestOfResourcesData={() => {}}
     />
   );
 }
@@ -167,8 +167,8 @@ function WithoutRequiredPermissions() {
     <ControlOverview
       title="Control Overview"
       data={data}
-      onRequestOfControlsData={(id) => {}}
-      onRequestOfResourcesData={(id) => {}}
+      onRequestOfControlsData={() => {}}
+      onRequestOfResourcesData={() => {}}
     />
   );
 }
@@ -185,8 +185,8 @@ function Loading() {
       title="Control Overview"
       data={data}
       loading={true}
-      onRequestOfControlsData={(id) => {}}
-      onRequestOfResourcesData={(id) => {}}
+      onRequestOfControlsData={() => {}}
+      onRequestOfResourcesData={() => {}}
     />
   );
 }

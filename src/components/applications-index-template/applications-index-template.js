@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
-import { Container, Grid, Typography, Tooltip } from "@material-ui/core";
+import { Container, Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import WarningIcon from "@material-ui/icons/Warning";
 import { Helmet } from "react-helmet";
@@ -19,7 +19,6 @@ import {
   ApplicationTileCallToActionButton,
   ApplicationTileChip,
 } from "../application-tile";
-import { IconChip } from "../../components/icon-chip";
 import { ProgressBar } from "../../components/progress-bar";
 
 export function ApplicationsIndexTemplate({
@@ -35,6 +34,7 @@ export function ApplicationsIndexTemplate({
   noDataMessage,
   progressBarColorResolver,
   loading,
+  onQueryChange,
 }) {
   const styles = useStyles();
   const theme = useTheme();
@@ -172,7 +172,9 @@ export function ApplicationsIndexTemplate({
         <title>{`${pageTitle} | ${siteTitle}`}</title>
       </Helmet>
 
-      <PageHeader {...{ siteTitle, version, logoSrc, navItems, loading }} />
+      <PageHeader
+        {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
+      />
 
       <Container>
         <Breadcrumb
@@ -309,4 +311,8 @@ ApplicationsIndexTemplate.propTypes = {
    * Presents the template in a loading state (for when fetching data async)
    */
   loading: PropTypes.bool.isRequired,
+  /**
+   * Callback fired when the user has changed the query input value of the search UI. see [Search](/?path=/docs/modules-search--single-result-found) `onQueryChange` API for details
+   */
+  onQueryChange: PropTypes.func,
 };

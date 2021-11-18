@@ -1,14 +1,8 @@
 import React from "react";
+import { Title, ArgsTable } from "@storybook/addon-docs";
+import * as PageHeaderStories from "../page-header/page-header.stories";
 import { makeStyles } from "@material-ui/core/styles";
 import dayjs from "dayjs";
-import { AccordionMenu } from "../../components/accordion-menu";
-import { Menu } from "../../components/menu";
-import { PreviewModeController } from "../../components/preview-mode-controller";
-import {
-  BranchSwitcher,
-  BranchCreator,
-  PageCreator,
-} from "../../components/preview-mode-controller";
 import { KnowledgeTemplate } from "../../components/knowledge-template";
 import markdownContent from "../__resources/markdown-content.md";
 
@@ -17,13 +11,13 @@ const config = {
   component: KnowledgeTemplate,
   parameters: {
     layout: "fullscreen",
-    subcomponents: {
-      AccordionMenu,
-      Menu,
-      PreviewModeController,
-      BranchSwitcher,
-      BranchCreator,
-      PageCreator,
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <ArgsTable />
+        </>
+      ),
     },
   },
   decorators: [
@@ -47,24 +41,9 @@ const Template = (args) => {
 };
 
 Template.args = {
+  ...PageHeaderStories.Default.args,
   currentRoute: "/knowledge/knowledge-template",
-  siteTitle: "AirView",
   pageTitle: "Knowledge Template",
-  version: "1.0",
-  logoSrc: "/logo-airwalk-reply.svg",
-  navItems: [
-    {
-      id: "1",
-      name: "Knowledge",
-      children: [
-        {
-          id: "2",
-          name: "Knowledge Template",
-          url: "/knowledge/knowledge-template",
-        },
-      ],
-    },
-  ],
   breadcrumbLinks: [
     {
       label: "Home",

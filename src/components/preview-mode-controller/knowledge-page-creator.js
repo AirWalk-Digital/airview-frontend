@@ -113,11 +113,11 @@ function KnowledgePageCreatorBase({
       : state.formErrors[fieldName];
   };
 
-  const validateTitle = (value) => {
+  const validateTitle = () => {
     return new RegExp("^([A-z0-9 _-])+$").test(state.formData.title);
   };
 
-  const validateReviewDate = (value) => {
+  const validateReviewDate = () => {
     if (!state.formData.reviewDate) return false;
 
     const date = dayjs(state.formData.reviewDate);
@@ -129,7 +129,7 @@ function KnowledgePageCreatorBase({
       : true;
   };
 
-  const validateUserFacing = (value) => {
+  const validateUserFacing = () => {
     return typeof state.formData.userFacing === "undefined" ||
       state.formData.userFacing === null
       ? false
@@ -399,6 +399,10 @@ export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
 }
 
 KnowledgePageMetaEditor.propTypes = {
+  /**
+   * Sets the widget to a disabled state
+   */
+  disabled: PropTypes.bool,
   /**
    * Fired when a user requests to edit meta data. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:object) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
