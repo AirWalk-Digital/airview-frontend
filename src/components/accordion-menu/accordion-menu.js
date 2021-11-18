@@ -11,13 +11,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Link } from "../link";
 
-export function AccordionMenu({
-  menuTitle,
-  navItems,
-  classNames,
-  loading,
-  testid,
-}) {
+export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
   const classes = useStyles();
 
   const [expanded, setExpanded] = useState([]);
@@ -106,17 +100,21 @@ export function AccordionMenu({
 
   return (
     <List
-      className={classNames}
       component="nav"
+      aria-labelledby={`${id}-list-subheader`}
       dense
       subheader={
         menuTitle && (
-          <ListSubheader component="span" disableSticky aria-label="Menu title">
+          <ListSubheader
+            component="span"
+            disableSticky
+            id={`${id}-list-subheader`}
+          >
             {menuTitle}
           </ListSubheader>
         )
       }
-      data-testid={testid}
+      {...rest}
     >
       {loading ? makeLoadingNavTree() : makeNavTree(navItems)}
     </List>
@@ -159,13 +157,9 @@ AccordionMenu.propTypes = {
     ),
   ]),
   /**
-   * Sets a test id on the parent node of the component, for testing purposes
+   * A unique ID required for accessibility requirements
    */
-  testid: PropTypes.string,
-  /**
-   * Allows the passing of additional style classes
-   */
-  classNames: PropTypes.string,
+  id: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
