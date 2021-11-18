@@ -51,7 +51,6 @@ export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
               onClick={() => handleOnExpandClick(node.id)}
             >
               <ListItemText
-                aria-label="Sub-menu"
                 classes={{
                   root: classes.subMenuParentLabelRoot,
                   primary: classes.subMenuParentLabelPrimary,
@@ -83,7 +82,7 @@ export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
             component="div"
             key={node.id}
           >
-            <ListItemText aria-label="Menu item label">
+            <ListItemText>
               <Link
                 href={node.url}
                 activeClassName={classes.activeLink}
@@ -114,6 +113,8 @@ export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
           </ListSubheader>
         )
       }
+      aria-live="polite"
+      aria-busy={loading}
       {...rest}
     >
       {loading ? makeLoadingNavTree() : makeNavTree(navItems)}

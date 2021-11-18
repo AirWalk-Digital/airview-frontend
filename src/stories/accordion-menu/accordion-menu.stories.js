@@ -31,7 +31,7 @@ const testNavItems = [
   },
   {
     id: "2",
-    name: "Navigation Item Parent",
+    name: "Navigation Item Parent 1",
     children: [
       {
         id: "3",
@@ -45,7 +45,7 @@ const testNavItems = [
       },
       {
         id: "5",
-        name: "Navigation Item Parent",
+        name: "Navigation Item Parent 2",
         children: [
           {
             id: "6",
