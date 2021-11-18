@@ -97,26 +97,27 @@ Template.args = {
   navItems: [...testNavItems],
 };
 
-const Default = Template.bind({});
-Default.args = {
-  ...Template.args,
-};
-
-const WithoutTitle = Template.bind({});
-
-WithoutTitle.args = {
-  ...Template.args,
-  menuTitle: null,
-};
-
 const Loading = Template.bind({});
 
 Loading.args = {
   ...Template.args,
   loading: true,
-  navItems: null,
 };
 
-export { Default, WithoutTitle, Loading };
+const LoadedWithTitle = Template.bind({});
+LoadedWithTitle.args = {
+  ...Template.args,
+  loading: false,
+};
+
+const LoadedWithoutTitle = Template.bind({});
+
+LoadedWithoutTitle.args = {
+  ...Template.args,
+  menuTitle: null,
+  loading: false,
+};
+
+export { Loading, LoadedWithTitle, LoadedWithoutTitle };
 
 export default config;
