@@ -2,22 +2,28 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { ApplicationTileHeader } from "../components/application-tile";
 
-describe("ApplicationTileHeader - default render", () => {
-  it("should pass through values passed to the children prop", () => {
-    render(<ApplicationTileHeader>Test Content</ApplicationTileHeader>);
+test("it should output content passed to the leftContent prop", () => {
+  render(
+    <ApplicationTileHeader leftContent={<span>test left content</span>} />
+  );
 
-    expect(screen.getByText("Test Content")).toBeInTheDocument();
-  });
+  expect(screen.getByText(/test left content/i)).toBeInTheDocument();
 });
 
-describe("ApplicationTileHeader - with a value passed to the classNames prop", () => {
-  it("should output the passed classnames to the root node", () => {
-    const { container } = render(
-      <ApplicationTileHeader classNames="test-css-classname">
-        Test Content
-      </ApplicationTileHeader>
-    );
+test("it should output content passed to the rightContent prop", () => {
+  render(
+    <ApplicationTileHeader rightContent={<span>test right content</span>} />
+  );
 
-    expect(container.firstChild).toHaveClass("test-css-classname");
-  });
+  expect(screen.getByText(/test right content/i)).toBeInTheDocument();
+});
+
+test("it should output the passed classnames to the root node", () => {
+  const { container } = render(
+    <ApplicationTileHeader classNames="test-css-classname">
+      Test Content
+    </ApplicationTileHeader>
+  );
+
+  expect(container.firstChild).toHaveClass("test-css-classname");
 });
