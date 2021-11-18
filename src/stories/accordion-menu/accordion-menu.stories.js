@@ -86,7 +86,7 @@ const testNavItems = [
 function Template(args) {
   return (
     <LocationProvider location="/seven">
-      <AccordionMenu {...args} data-testid="accordion-menu" />
+      <AccordionMenu {...args} />
     </LocationProvider>
   );
 }

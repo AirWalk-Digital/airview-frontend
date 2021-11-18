@@ -112,4 +112,14 @@ describe("AccordionMenu", () => {
       })
     );
   });
+
+  test("it should spread other props to the component root DOM node", () => {
+    const testId = "accordion-menu";
+    render(<Loading data-testid={testId} />);
+
+    expect(screen.getByRole("navigation")).toHaveAttribute(
+      "data-testid",
+      testId
+    );
+  });
 });
