@@ -454,16 +454,25 @@ describe("ComplianceTable - with one issue", () => {
 
 describe("ComplianceTable - with no issues", () => {
   it("should display a feedback message to the user", () => {
-    render(<ComplianceTable applications={[]} />);
+    const noDataMessage = {
+      title: "No Issues",
+      message: "Compliance Table no issues feedback",
+    };
 
-    expect(
-      screen.getByLabelText("Compliance Table no issues feedback")
-    ).toBeInTheDocument();
+    render(<ComplianceTable applications={[]} {...{ noDataMessage }} />);
+
+    expect(screen.getByText(noDataMessage.title)).toBeInTheDocument();
+    expect(screen.getByText(noDataMessage.message)).toBeInTheDocument();
   });
 
   it("should not display the compliance table", () => {
-    render(<ComplianceTable applications={[]} />);
+    const noDataMessage = {
+      title: "No Issues",
+      message: "Compliance Table no issues feedback",
+    };
 
-    expect(screen.queryByLabelText("Compliance table")).not.toBeInTheDocument();
+    render(<ComplianceTable applications={[]} {...{ noDataMessage }} />);
+
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 });
