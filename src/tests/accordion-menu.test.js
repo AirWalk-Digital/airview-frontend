@@ -3,6 +3,7 @@ import {
   render,
   screen,
   within,
+  waitFor,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -106,9 +107,9 @@ describe("AccordionMenu", () => {
     // It should remove all sub level links
     await Promise.all(
       subNavigationLinks.map(async ({ name }) => {
-        await waitForElementToBeRemoved(() =>
-          screen.queryByRole("link", { name })
-        );
+        await waitFor(() => {
+          expect(screen.queryByRole("link", { name })).not.toBeInTheDocument();
+        });
       })
     );
   });
