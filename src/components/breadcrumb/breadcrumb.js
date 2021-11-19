@@ -24,7 +24,7 @@ export function Breadcrumb({
       aria-busy={loading}
     >
       {loading
-        ? [...Array(4)].map((item, index) => (
+        ? [...Array(5)].map((item, index) => (
             <Skeleton key={index} className={classes.loadingBreadCrumbItem} />
           ))
         : links?.map((link) => (
