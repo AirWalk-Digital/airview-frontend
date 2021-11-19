@@ -19,9 +19,9 @@ export function Breadcrumb({
     <Breadcrumbs
       maxItems={maxItems}
       aria-label="breadcrumb"
-      {...rest}
       aria-live="polite"
       aria-busy={loading}
+      {...rest}
     >
       {loading
         ? [...Array(5)].map((item, index) => (
@@ -47,7 +47,7 @@ Breadcrumb.propTypes = {
   /**
    * Presents the breadcrumbs in a lodaing state (for when fetching data async)
    */
-  loading: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
   /**
    * Sets the available interactive link items
    */
@@ -56,11 +56,11 @@ Breadcrumb.propTypes = {
       label: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
     })
-  ),
+  ).isRequired,
   /**
    * Sets the active route (the current page)
    */
-  activeRoute: PropTypes.string,
+  activeRoute: PropTypes.string.isRequired,
   /**
    * Set the maximum number of breadcrumbs to display. When the value is exceeded an ellipsis in rendered inbetween
    */
