@@ -10,8 +10,8 @@ export function Breadcrumb({
   links,
   activeRoute,
   maxItems = 5,
-  classNames,
   loading,
+  ...rest
 }) {
   const classes = useStyles();
 
@@ -19,7 +19,9 @@ export function Breadcrumb({
     <Breadcrumbs
       maxItems={maxItems}
       aria-label="breadcrumb"
-      className={classNames}
+      {...rest}
+      aria-live="polite"
+      aria-busy={loading}
     >
       {loading
         ? [...Array(4)].map((item, index) => (
@@ -63,8 +65,4 @@ Breadcrumb.propTypes = {
    * Set the maximum number of breadcrumbs to display. When the value is exceeded an ellipsis in rendered inbetween
    */
   maxItems: PropTypes.number,
-  /**
-   * Apply any required classNames to the root container
-   */
-  classNames: PropTypes.string,
 };
