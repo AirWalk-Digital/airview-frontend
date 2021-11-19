@@ -132,7 +132,7 @@ export function KnowledgeTemplate({
           links={breadcrumbLinks}
           loading={loading}
           activeRoute={pageTitle}
-          classNames={styles.breadcrumb}
+          className={styles.breadcrumb}
         />
       </Container>
 

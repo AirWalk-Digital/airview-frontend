@@ -152,7 +152,7 @@ export function ApplicationsTemplate({
           links={breadcrumbLinks}
           loading={loading}
           activeRoute={pageTitle}
-          classNames={styles.breadcrumb}
+          className={styles.breadcrumb}
         />
       </Container>
 
