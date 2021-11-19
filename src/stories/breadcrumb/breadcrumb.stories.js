@@ -16,6 +16,14 @@ function Template(args) {
 }
 
 Template.args = {
+  activeRoute: "Activity Feed Guide",
+  maxItems: 5,
+};
+
+const Loaded = Template.bind({});
+
+Loaded.args = {
+  ...Template.args,
   loading: false,
   links: [
     {
@@ -35,23 +43,15 @@ Template.args = {
       url: "/applications/microsoft_teams/knowledge",
     },
   ],
-  activeRoute: "Activity Feed Guide",
-  maxItems: 5,
-};
-
-const Default = Template.bind({});
-
-Default.args = {
-  ...Template.args,
 };
 
 const Loading = Template.bind({});
 
 Loading.args = {
   ...Template.args,
-  links: null,
   loading: true,
+  links: [],
 };
 
 export default config;
-export { Default, Loading };
+export { Loaded, Loading };
