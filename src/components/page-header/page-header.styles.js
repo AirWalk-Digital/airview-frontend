@@ -66,6 +66,10 @@ export function pageHeaderStyles(theme) {
           backgroundColor: darken(theme.palette.common.white, 0.1),
         },
       },
+
+      "&:disabled": {
+        cursor: "not-allowed",
+      },
     },
 
     invokeSearchIcon: {
