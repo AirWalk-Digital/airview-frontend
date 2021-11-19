@@ -137,13 +137,44 @@ export function ApplicationsPage() {
 
   const handleOnRequestOfControlsData = (id) => {
     setControlsData(id, async () => {
-      return [];
-      //return controls[1];
+      const controls = JSON.parse(
+        await (
+          await apiService(
+            `/api/applications/${state.applicationId}/control-overviews?qualityModel=SECURITY`
+          )
+        ).data.text()
+      );
+
+      return controls.map((item) => {
+        return {
+          ...item,
+          control: { name: item.name, url: "/" },
+          frameworks: [],
+          controlType:
+            item.controlType.charAt(0).toUpperCase() +
+            item.controlType.slice(1).toLowerCase(),
+          lifecycle: item.systemStage,
+        };
+      });
     });
   };
 
   const handleOnRequestOfResourcesData = (id) => {
     setResourcesData(id, async () => {
+      const resources = JSON.parse(
+        await (
+          await apiService(
+            `/api/applications/${state.applicationId}/monitored-resources?technicalControlId=${id}`
+          )
+        ).data.text()
+      );
+      console.log(resources);
+      return resources.map((item) => {
+        const status =
+          item.state === "FLAGGED" ? "Non-Compliant" : "Monitoring";
+        return { ...item, type: "Server", status: status };
+      });
+
       return [];
       /* return resources[1]; */
     });
