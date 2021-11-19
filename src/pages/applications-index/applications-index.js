@@ -55,6 +55,7 @@ export function ApplicationsIndex({
 
       const appResp = await apiService("/api/applications/");
       const apps = JSON.parse(await appResp.data.text())
+        .filter((f) => f.parentId === null)
         .map((m) => {
           // app needs mapping to template data. Build slug from _internal_reference
           const app = {
