@@ -115,18 +115,27 @@ Template.args = {
   onQueryChange: MultipleResultsFound.args.onQueryChange,
 };
 
-const Default = Template.bind({});
-Default.args = {
+const PreviewDisabled = Template.bind({});
+PreviewDisabled.args = {
   ...Template.args,
   loading: false,
+  previewMode: false,
 };
 
 const Loading = Template.bind({});
 Loading.args = {
   ...Template.args,
   loading: true,
+  previewMode: false,
 };
 
-export { Default, Loading };
+const PreviewEnabled = Template.bind({});
+PreviewEnabled.args = {
+  ...Template.args,
+  loading: false,
+  previewMode: true,
+};
+
+export { PreviewDisabled, Loading, PreviewEnabled };
 
 export default config;

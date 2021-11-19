@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import {
@@ -15,18 +15,22 @@ import ReactHtmlParser from "react-html-parser";
 import { useSearch } from "./use-search";
 import { Link } from "../link";
 
-/*
-To do:
-- tests
-- integrate with header and page templates
-*/
-
 export function Search({ open, onRequestToClose, onQueryChange }) {
-  const { state, reset, handleOnChange } = useSearch(onQueryChange);
+  const inputRef = useRef();
+
+  const { state, reset, handleOnChange, handleOnReady } = useSearch(
+    onQueryChange
+  );
 
   const styles = useStyles({});
 
   const handleOnRequestToClose = () => onRequestToClose();
+
+  useEffect(() => {
+    if (state.ready) {
+      inputRef.current.focus();
+    }
+  }, [state.ready]);
 
   return (
     <Dialog
@@ -35,6 +39,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
       onClose={handleOnRequestToClose}
       TransitionProps={{
         onExited: reset,
+        onEntered: handleOnReady,
       }}
       classes={{ container: styles.rootContainer, paper: styles.rootPaper }}
     >
@@ -53,6 +58,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
           className={styles.searchInput}
           value={state.query}
           onChange={handleOnChange}
+          ref={inputRef}
         />
 
         {state.query.length > 0 && (

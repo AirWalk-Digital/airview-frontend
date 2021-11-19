@@ -19,6 +19,7 @@ export function useSearch(fetchResults) {
     working: false,
     results: null,
     errorMessage: null,
+    ready: false,
   };
 
   const [state, setState] = useState({ ...initialState });
@@ -92,6 +93,10 @@ export function useSearch(fetchResults) {
     }
   };
 
+  const handleOnReady = () => {
+    setState((prevState) => ({ ...prevState, ready: true }));
+  };
+
   useEffect(() => {
     const currentQueryRefId = queryIdRef.current;
     return () => (queryIdRef.current = currentQueryRefId + 1);
@@ -101,5 +106,6 @@ export function useSearch(fetchResults) {
     state,
     reset,
     handleOnChange,
+    handleOnReady,
   };
 }
