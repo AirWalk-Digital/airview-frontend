@@ -25,6 +25,7 @@ export function PageHeader({
   loading,
   testid,
   onQueryChange,
+  previewMode,
 }) {
   const classes = useStyles();
 
@@ -32,16 +33,12 @@ export function PageHeader({
   const [searchOpen, setSearchOpen] = useState(false);
   const searchOpenRef = useRef();
   const loadingRef = useRef();
-
-  const handleOnInvokeSearchClick = () => {
-    if (searchOpen || loading) return;
-
-    setSearchOpen(true);
-  };
+  const previewModeRef = useRef();
 
   useEffect(() => {
     searchOpenRef.current = searchOpen;
     loadingRef.current = loading;
+    previewModeRef.current = previewMode;
   });
 
   useEffect(() => {
@@ -50,7 +47,8 @@ export function PageHeader({
         event.key === "k" &&
         event.metaKey &&
         !searchOpenRef.current &&
-        !loadingRef.current
+        !loadingRef.current &&
+        !previewModeRef.current
       ) {
         setSearchOpen(true);
       }
@@ -60,6 +58,12 @@ export function PageHeader({
 
     return () => window.removeEventListener("keydown", handleOnKeyPress);
   }, []);
+
+  useEffect(() => {
+    if (loading || (previewMode && searchOpen)) {
+      setSearchOpen(false);
+    }
+  }, [loading, previewMode, searchOpen]);
 
   return (
     <header className={classes.root} data-testid={testid}>
@@ -84,8 +88,8 @@ export function PageHeader({
           <div className={classes.toolBarContainerRight}>
             <button
               className={classes.invokeSearchBtn}
-              onClick={handleOnInvokeSearchClick}
-              disabled={searchOpen || loading}
+              onClick={() => setSearchOpen(true)}
+              disabled={loading || previewMode || searchOpen}
             >
               <SearchIcon
                 fontSize="small"
@@ -134,6 +138,10 @@ PageHeader.propTypes = {
    * Presents the component in a loading state (for when fetching data async)
    */
   loading: PropTypes.bool,
+  /**
+   * Sets the state of the preview mode
+   */
+  previewMode: PropTypes.bool.isRequired,
   /**
    * Sets the site title in the off canvas draw
    */

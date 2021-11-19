@@ -116,7 +116,15 @@ export function KnowledgeTemplate({
       </Helmet>
 
       <PageHeader
-        {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
+        {...{
+          siteTitle,
+          version,
+          logoSrc,
+          navItems,
+          loading,
+          onQueryChange,
+          previewMode,
+        }}
       />
 
       <Container>
