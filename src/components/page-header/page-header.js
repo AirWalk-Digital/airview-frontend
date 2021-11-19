@@ -44,8 +44,7 @@ export function PageHeader({
   useEffect(() => {
     const handleOnKeyPress = (event) => {
       if (
-        event.key === "k" &&
-        event.metaKey &&
+        event.key === "/" &&
         !searchOpenRef.current &&
         !loadingRef.current &&
         !previewModeRef.current
@@ -97,7 +96,7 @@ export function PageHeader({
                 className={classes.invokeSearchIcon}
               />
               Search site&hellip;
-              <span className={classes.invokeSearchShortcut}>&#8984;K</span>
+              <span className={classes.invokeSearchShortcut}>&#47;</span>
             </button>
           </div>
         </Toolbar>

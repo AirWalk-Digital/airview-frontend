@@ -79,7 +79,7 @@ export function pageHeaderStyles(theme) {
     invokeSearchShortcut: {
       backgroundColor: theme.palette.grey[100],
       display: "inline-block",
-      padding: "2px 4px",
+      padding: "2px 8px",
       fontWeight: theme.typography.fontWeightBold,
       fontSize: theme.typography.pxToRem(12),
       border: `1px solid ${theme.palette.divider}`,
