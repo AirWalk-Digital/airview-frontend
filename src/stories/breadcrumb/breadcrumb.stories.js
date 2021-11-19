@@ -20,6 +20,14 @@ Template.args = {
   maxItems: 5,
 };
 
+const Loading = Template.bind({});
+
+Loading.args = {
+  ...Template.args,
+  loading: true,
+  links: [],
+};
+
 const Loaded = Template.bind({});
 
 Loaded.args = {
@@ -45,13 +53,12 @@ Loaded.args = {
   ],
 };
 
-const Loading = Template.bind({});
+const LoadedWithCollapsedBreadCrumbs = Template.bind({});
 
-Loading.args = {
-  ...Template.args,
-  loading: true,
-  links: [],
+LoadedWithCollapsedBreadCrumbs.args = {
+  ...Loaded.args,
+  maxItems: Loaded.args.links.length,
 };
 
 export default config;
-export { Loaded, Loading };
+export { Loading, Loaded, LoadedWithCollapsedBreadCrumbs };
