@@ -39,25 +39,40 @@ function Template(args) {
 }
 
 Template.args = {
-  ...PageHeaderStories.Default.args,
   currentRoute: "/",
   pageTitle: "Application Template",
   loading: false,
 };
 
-const Default = Template.bind({});
-Default.args = {
+Template.argTypes = {
+  previewMode: {
+    table: {
+      disable: true,
+    },
+  },
+};
+
+const Loaded = Template.bind({});
+Loaded.args = {
   ...Template.args,
+  ...PageHeaderStories.PreviewDisabled.args,
+};
+
+Loaded.argTypes = {
+  ...Template.argTypes,
 };
 
 const Loading = Template.bind({});
 
 Loading.args = {
   ...Template.args,
-  navItems: null,
-  loading: true,
+  ...PageHeaderStories.Loading.args,
 };
 
-export { Default, Loading };
+Loading.argTypes = {
+  ...Template.argTypes,
+};
+
+export { Loaded, Loading };
 
 export default config;

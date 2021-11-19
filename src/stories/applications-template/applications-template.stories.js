@@ -141,7 +141,6 @@ const Template = (args) => {
 };
 
 Template.args = {
-  ...PageHeaderStories.Default.args,
   currentRoute: "/applications/application-template",
   breadcrumbLinks: [
     {
@@ -218,28 +217,27 @@ Template.args = {
   onRequestToCreateApplication: (data) => {
     console.log(data);
   },
-  previewMode: false,
-  loading: false,
 };
 
 const PreviewDisabled = Template.bind({});
 
 PreviewDisabled.args = {
   ...Template.args,
+  ...PageHeaderStories.PreviewDisabled.args,
 };
 
 const Loading = Template.bind({});
 
 Loading.args = {
   ...Template.args,
-  loading: true,
+  ...PageHeaderStories.Loading.args,
 };
 
 const PreviewEnabled = Template.bind({});
 
 PreviewEnabled.args = {
   ...Template.args,
-  previewMode: true,
+  ...PageHeaderStories.PreviewEnabled.args,
 };
 
 export { PreviewDisabled, Loading, PreviewEnabled };

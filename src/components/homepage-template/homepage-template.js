@@ -24,6 +24,7 @@ export function HomepageTemplate({
         </Helmet>
 
         <PageHeader
+          previewMode={false}
           {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
         />
       </LocationProvider>

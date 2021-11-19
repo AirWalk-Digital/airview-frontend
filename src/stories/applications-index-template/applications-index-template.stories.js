@@ -2,7 +2,7 @@ import React from "react";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 
 import {
-  Default as DefaultPageHeader,
+  PreviewDisabled as PreviewDisabledPageHeader,
   Loading as LoadingPageHeader,
 } from "../page-header/page-header.stories";
 
@@ -44,7 +44,6 @@ const Template = (args) => {
 };
 
 Template.args = {
-  ...DefaultPageHeader.args,
   currentRoute: "/applications",
   pageTitle: "Applications Template",
   breadcrumbLinks: [
@@ -63,10 +62,19 @@ Template.args = {
   },
 };
 
+Template.argTypes = {
+  previewMode: {
+    table: {
+      disable: true,
+    },
+  },
+};
+
 const WithEnvironmentData = Template.bind({});
 
 WithEnvironmentData.args = {
   ...Template.args,
+  ...PreviewDisabledPageHeader.args,
   applications: [
     {
       applicationName: "Application One",
@@ -241,29 +249,44 @@ WithEnvironmentData.args = {
   ],
 };
 
+WithEnvironmentData.argTypes = {
+  ...Template.argTypes,
+};
+
 const WithoutEnvironmentData = Template.bind({});
 WithoutEnvironmentData.args = {
   ...Template.args,
-
+  ...PreviewDisabledPageHeader.args,
   applications: WithEnvironmentData.args.applications.map((application) => {
     return { ...application, environments: [] };
   }),
 };
 
+WithoutEnvironmentData.argTypes = {
+  ...Template.argTypes,
+};
+
 const WithoutRequiredPermissions = Template.bind({});
 WithoutRequiredPermissions.args = {
   ...Template.args,
-
+  ...PreviewDisabledPageHeader.args,
   applications: WithEnvironmentData.args.applications.map((application) => {
     return { ...application, environments: null };
   }),
+};
+
+WithoutRequiredPermissions.argTypes = {
+  ...Template.argTypes,
 };
 
 const Loading = Template.bind({});
 Loading.args = {
   ...Template.args,
   ...LoadingPageHeader.args,
-  loading: true,
+};
+
+Loading.argTypes = {
+  ...Template.argTypes,
 };
 
 export default config;
