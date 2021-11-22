@@ -24,7 +24,7 @@ export function NotFoundPage() {
           url: "/",
         },
       ]}
-      bodyContent={`The requested page at path **${requestedUrl}** was not found. Please check you have requested the correct URL, alternatively head back to the [homepage](/).`}
+      bodyContent={`The requested page at path *${requestedUrl}* was not found. Please check you have requested the correct URL. **If you were editing un-published content then this message is expected until the content is published**. Click [here](/) to head back to the homepage.`}
       loading={false}
       onQueryChange={onQueryChange}
     />

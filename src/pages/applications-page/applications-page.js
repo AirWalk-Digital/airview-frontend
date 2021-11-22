@@ -240,6 +240,13 @@ export function ApplicationsPage() {
 
         const listing = await controller.getListing("application", null);
 
+        if (listing[application_id] === undefined) {
+          listing[application_id] = {};
+        }
+        if (listing[application_id]["knowledge"] === undefined) {
+          listing[application_id]["knowledge"] = {};
+        }
+
         listing[application_id]["knowledge"][slug] = {
           "_index.md": {
             __meta: {
