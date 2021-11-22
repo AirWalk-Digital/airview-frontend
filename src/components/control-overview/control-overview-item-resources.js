@@ -244,7 +244,7 @@ export function ControlOverviewItemResources({
           <TableBody className={classes.tableBody}>
             {processedResourcesData.map((resource) => {
               return (
-                <TableRow key={resource.type}>
+                <TableRow key={resource.id}>
                   <TableCell>{resource.type}</TableCell>
                   <TableCell>{resource.reference}</TableCell>
                   <TableCell>{resource.environment}</TableCell>

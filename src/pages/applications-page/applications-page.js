@@ -130,30 +130,27 @@ export function ApplicationsPage() {
       console.error(error);
     }
   };
-  const [
-    controlOverviewState,
-    setControlsData,
-    setResourcesData,
-  ] = useControlOverviewController(async () => {
-    if (state.applicationId == undefined) {
-      return [];
-    }
-    const models = JSON.parse(
-      await (
-        await apiService(
-          `/api/applications/${state.applicationId}/quality-models`
-        )
-      ).data.text()
-    );
-    return models.map((item) => {
-      return {
-        id: item.name,
-        title:
-          item.controlType.charAt(0).toUpperCase() +
-          item.controlType.slice(1).toLowerCase(),
-      };
-    });
-  }, state.applicationId);
+  const [controlOverviewState, setControlsData, setResourcesData] =
+    useControlOverviewController(async () => {
+      if (state.applicationId == undefined) {
+        return [];
+      }
+      const models = JSON.parse(
+        await (
+          await apiService(
+            `/api/applications/${state.applicationId}/quality-models`
+          )
+        ).data.text()
+      );
+      return models.map((item, index) => {
+        return {
+          id: index,
+          title:
+            item.name.charAt(0).toUpperCase() +
+            item.name.slice(1).toLowerCase(),
+        };
+      });
+    }, state.applicationId);
 
   const handleOnRequestOfControlsData = (id) => {
     setControlsData(id, async () => {
@@ -168,6 +165,10 @@ export function ApplicationsPage() {
       return controls.map((item) => {
         return {
           ...item,
+          severity:
+            item.severity.charAt(0).toUpperCase() +
+            item.severity.slice(1).toLowerCase(),
+
           control: { name: item.name, url: "/" },
           frameworks: [],
           controlType:
@@ -191,7 +192,7 @@ export function ApplicationsPage() {
       return resources.map((item) => {
         const status =
           item.state === "FLAGGED" ? "Non-Compliant" : "Monitoring";
-        return { ...item, type: "Server", status: status };
+        return { ...item, type: "Unknown", status: status };
       });
     });
   };
