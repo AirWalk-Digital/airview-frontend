@@ -308,7 +308,7 @@ export function ComplianceTableAcceptRiskDialog({
               icon={<WarningIcon />}
               label={impactLevelData[getImpactLevel].label}
               labelColor="#fff"
-              ariaLabel="Impact Level"
+              aria-label="Impact Level"
             />
           </Grid>
 
