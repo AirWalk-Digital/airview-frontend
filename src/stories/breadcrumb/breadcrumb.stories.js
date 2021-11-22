@@ -53,12 +53,12 @@ Loaded.args = {
   ],
 };
 
-const LoadedWithCollapsedBreadCrumbs = Template.bind({});
+const LoadedWithCollapsedBreadcrumbs = Template.bind({});
 
-LoadedWithCollapsedBreadCrumbs.args = {
+LoadedWithCollapsedBreadcrumbs.args = {
   ...Loaded.args,
   maxItems: Loaded.args.links.length,
 };
 
 export default config;
-export { Loading, Loaded, LoadedWithCollapsedBreadCrumbs };
+export { Loading, Loaded, LoadedWithCollapsedBreadcrumbs };
