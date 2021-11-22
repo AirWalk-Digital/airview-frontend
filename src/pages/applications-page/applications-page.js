@@ -132,7 +132,24 @@ export function ApplicationsPage() {
   };
   const [controlOverviewState, setControlsData, setResourcesData] =
     useControlOverviewController(async () => {
-      return [{ id: 1, title: "Security" }];
+      if (state.applicationId == undefined) {
+        return [];
+      }
+      const models = JSON.parse(
+        await (
+          await apiService(
+            `/api/applications/${state.applicationId}/quality-models`
+          )
+        ).data.text()
+      );
+      return models.map((item) => {
+        return {
+          id: item.name,
+          title:
+            item.controlType.charAt(0).toUpperCase() +
+            item.controlType.slice(1).toLowerCase(),
+        };
+      });
     });
 
   const handleOnRequestOfControlsData = (id) => {
