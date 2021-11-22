@@ -130,27 +130,30 @@ export function ApplicationsPage() {
       console.error(error);
     }
   };
-  const [controlOverviewState, setControlsData, setResourcesData] =
-    useControlOverviewController(async () => {
-      if (state.applicationId == undefined) {
-        return [];
-      }
-      const models = JSON.parse(
-        await (
-          await apiService(
-            `/api/applications/${state.applicationId}/quality-models`
-          )
-        ).data.text()
-      );
-      return models.map((item) => {
-        return {
-          id: item.name,
-          title:
-            item.controlType.charAt(0).toUpperCase() +
-            item.controlType.slice(1).toLowerCase(),
-        };
-      });
+  const [
+    controlOverviewState,
+    setControlsData,
+    setResourcesData,
+  ] = useControlOverviewController(async () => {
+    if (state.applicationId == undefined) {
+      return [];
+    }
+    const models = JSON.parse(
+      await (
+        await apiService(
+          `/api/applications/${state.applicationId}/quality-models`
+        )
+      ).data.text()
+    );
+    return models.map((item) => {
+      return {
+        id: item.name,
+        title:
+          item.controlType.charAt(0).toUpperCase() +
+          item.controlType.slice(1).toLowerCase(),
+      };
     });
+  }, state.applicationId);
 
   const handleOnRequestOfControlsData = (id) => {
     setControlsData(id, async () => {
