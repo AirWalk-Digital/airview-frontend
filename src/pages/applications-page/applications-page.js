@@ -12,6 +12,7 @@ import { useIsMounted } from "../../hooks/use-is-mounted";
 import { useResolveMarkdown } from "../../hooks/use-resolve-markdown";
 import { useApiService } from "../../hooks/use-api-service/use-api-service";
 import { useQuery } from "../../hooks/use-query";
+import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
 import { useSearch } from "../../hooks/use-search";
 
 export function ApplicationsPage() {
@@ -129,6 +130,72 @@ export function ApplicationsPage() {
       console.error(error);
     }
   };
+  const [controlOverviewState, setControlsData, setResourcesData] =
+    useControlOverviewController(async () => {
+      if (state.applicationId == undefined) {
+        return [];
+      }
+      const models = JSON.parse(
+        await (
+          await apiService(
+            `/api/applications/${state.applicationId}/quality-models`
+          )
+        ).data.text()
+      );
+      return models.map((item, index) => {
+        return {
+          id: index,
+          title:
+            item.name.charAt(0).toUpperCase() +
+            item.name.slice(1).toLowerCase(),
+        };
+      });
+    }, state.applicationId);
+
+  const handleOnRequestOfControlsData = (id) => {
+    setControlsData(id, async () => {
+      const controls = JSON.parse(
+        await (
+          await apiService(
+            `/api/applications/${state.applicationId}/control-overviews?qualityModel=SECURITY`
+          )
+        ).data.text()
+      );
+
+      return controls.map((item) => {
+        return {
+          ...item,
+          severity:
+            item.severity.charAt(0).toUpperCase() +
+            item.severity.slice(1).toLowerCase(),
+
+          control: { name: item.name, url: "/" },
+          frameworks: [],
+          controlType:
+            item.controlType.charAt(0).toUpperCase() +
+            item.controlType.slice(1).toLowerCase(),
+          lifecycle: item.systemStage,
+        };
+      });
+    });
+  };
+
+  const handleOnRequestOfResourcesData = (id) => {
+    setResourcesData(id, async () => {
+      const resources = JSON.parse(
+        await (
+          await apiService(
+            `/api/applications/${state.applicationId}/monitored-resources?technicalControlId=${id}`
+          )
+        ).data.text()
+      );
+      return resources.map((item) => {
+        const status =
+          item.state === "FLAGGED" ? "Non-Compliant" : "Monitoring";
+        return { ...item, type: "Unknown", status: status };
+      });
+    });
+  };
 
   const handleOnRequestToCreateApplication = async (formData) => {
     try {
@@ -236,7 +303,7 @@ export function ApplicationsPage() {
         environment: data.environment,
         assignmentGroup: "-",
         assignee: "-",
-        systemSource: data.systemSource,
+        systemSource: data.systemName,
         systemStage: data.systemStage,
       },
     }));
@@ -435,7 +502,13 @@ export function ApplicationsPage() {
       onRequestToCreateBranch={(branchName) =>
         controller.createBranch("application", branchName)
       }
-      onRequestToCreatePullRequest = {async (sourceBranch) => await controller.createPullRequest("application", controller.getBaseBranchName("application"), sourceBranch) }
+      onRequestToCreatePullRequest={async (sourceBranch) =>
+        await controller.createPullRequest(
+          "application",
+          controller.getBaseBranchName("application"),
+          sourceBranch
+        )
+      }
       onSave={handleOnSave}
       applications={state.applications}
       applicationTypes={state.applicationTypes}
@@ -448,13 +521,9 @@ export function ApplicationsPage() {
       onRequestToUploadImage={handleOnUploadImage}
       onRequestToCreatePage={handleOnCreatePage}
       controlOverviewTitle="Control Overview"
-      controlOverviewData={{
-        groups: [],
-        controls: undefined,
-        resources: undefined,
-      }}
-      onRequestOfControlsData={() => {}}
-      onRequestOfResourcesData={() => {}}
+      controlOverviewData={controlOverviewState}
+      onRequestOfControlsData={handleOnRequestOfControlsData}
+      onRequestOfResourcesData={handleOnRequestOfResourcesData}
       onResourceExemptionDelete={() => {}}
       onResourceExemptionSave={() => {}}
       onQueryChange={onQueryChange}

@@ -33,12 +33,13 @@ function reducer(state, action) {
   }
 }
 
-function useControlOverviewController(getInitalData) {
+function useControlOverviewController(getInitalData, applicationId) {
   const [state, dispatch] = useReducer(reducer);
 
   useEffect(() => {
+    if (applicationId === undefined) return;
     initializeData();
-  }, []);
+  }, [applicationId]);
 
   async function initializeData() {
     dispatch({ type: "INITIALIZE", payload: "loading" });
