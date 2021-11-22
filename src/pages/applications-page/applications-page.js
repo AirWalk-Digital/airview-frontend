@@ -185,15 +185,11 @@ export function ApplicationsPage() {
           )
         ).data.text()
       );
-      console.log(resources);
       return resources.map((item) => {
         const status =
           item.state === "FLAGGED" ? "Non-Compliant" : "Monitoring";
         return { ...item, type: "Server", status: status };
       });
-
-      return [];
-      /* return resources[1]; */
     });
   };
 
