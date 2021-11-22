@@ -18,7 +18,7 @@ export function Breadcrumb({
   return (
     <Breadcrumbs
       maxItems={maxItems}
-      aria-label="breadcrumb"
+      aria-label="Breadcrumb"
       aria-live="polite"
       aria-busy={loading}
       {...rest}
