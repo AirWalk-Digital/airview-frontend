@@ -11,21 +11,16 @@ const IconChip = React.forwardRef(
       color = "#000",
       labelColor = "#fff",
       dense = false,
-      classNames,
-      ariaLabel,
       ...rest
     },
     ref
   ) => {
     const classes = useIconChipStyles({ color, labelColor, dense });
 
+    const { className, ...otherProps } = rest;
+
     return (
-      <div
-        {...rest}
-        className={clsx(classes.root, classNames)}
-        aria-label={ariaLabel}
-        ref={ref}
-      >
+      <div className={clsx(classes.root, className)} {...otherProps} ref={ref}>
         <div className={classes.iconContainer}>{icon}</div>
         <div className={classes.labelContainer}>
           <span>{label}</span>
@@ -58,14 +53,6 @@ IconChip.propTypes = {
    * Reduces the padding of around the chip icon and label for a smaller appearance
    */
   dense: PropTypes.bool,
-  /**
-   * Allows the passing of additional style classes to the component root node
-   */
-  classNames: PropTypes.string,
-  /**
-   * Allows the passing of an aria-label to the component
-   */
-  ariaLabel: PropTypes.string,
 };
 
 const useIconChipStyles = makeStyles((theme) => {

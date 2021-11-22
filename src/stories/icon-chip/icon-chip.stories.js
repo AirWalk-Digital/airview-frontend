@@ -33,9 +33,6 @@ Template.argTypes = {
       type: "color",
     },
   },
-  classNames: {
-    control: false,
-  },
 };
 
 const Default = Template.bind({});
