@@ -10,13 +10,21 @@ describe("AccordionMenu", () => {
   test("in a loading state, it renders correctly", () => {
     render(<Loading />);
 
-    const navigation = screen.getByRole("navigation", {
-      name: Loading.args.menuTitle,
-    });
+    const navigation = screen.getByRole("navigation");
 
     // It should have required accessibility attributes
     expect(navigation).toHaveAttribute("aria-live", "polite");
     expect(navigation).toHaveAttribute("aria-busy", "true");
+
+    // It does not render menu title
+    expect(
+      within(navigation).queryByRole("heading", {
+        name: Loading.args.menuTitle,
+      })
+    ).not.toBeInTheDocument();
+
+    // It renders a loading skeleton title
+    expect(within(navigation).getByRole("heading")).toBeInTheDocument();
 
     // It should not output any navigation links
     expect(within(navigation).queryAllByRole("link")).toHaveLength(0);
@@ -32,6 +40,13 @@ describe("AccordionMenu", () => {
     // It should have required accessibility attributes
     expect(navigation).toHaveAttribute("aria-live", "polite");
     expect(navigation).toHaveAttribute("aria-busy", "false");
+
+    // It renders the menu title
+    expect(
+      within(navigation).queryByRole("heading", {
+        name: Loaded.args.menuTitle,
+      })
+    ).toBeInTheDocument();
 
     // It should initially render the top level navigation nodes by default
     const topLevelNavItems = Loaded.args.navItems.filter(
