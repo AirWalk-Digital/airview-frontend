@@ -55,7 +55,8 @@ export const Link = React.forwardRef(
         component={HashLink}
         to={href}
         smooth
-        {...{ ref, className }}
+        className={classes}
+        {...{ ref }}
         {...otherProps}
       >
         {children}
