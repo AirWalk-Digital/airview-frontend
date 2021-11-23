@@ -14,7 +14,7 @@ describe("Message", () => {
     expect(screen.getByText(Default.args.message)).toBeInTheDocument();
   });
 
-  test("it should allow the forwardind of a ref", () => {
+  test("it should allow the forwarding of a ref", () => {
     const ref = React.createRef();
     const testId = "ref-test-id";
 
