@@ -105,11 +105,20 @@ export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
       subheader={
         menuTitle && (
           <ListSubheader
-            component="span"
+            component="p"
             disableSticky
             id={`${id}-list-subheader`}
+            className={classes.menuTitle}
           >
-            {menuTitle}
+            {loading ? (
+              <Skeleton
+                width="70%"
+                height={16}
+                className={classes.menuTitleSkeleton}
+              />
+            ) : (
+              menuTitle
+            )}
           </ListSubheader>
         )
       }
@@ -167,6 +176,16 @@ const useStyles = makeStyles((theme) => ({
   // Loading nav item
   loadingNavItem: {
     margin: theme.spacing(1, 2),
+  },
+
+  // Menu title
+  menuTitle: {
+    display: "block",
+  },
+
+  menuTitleSkeleton: {
+    display: "block",
+    margin: "32px 0",
   },
 
   // Menu Item
