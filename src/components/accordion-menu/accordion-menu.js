@@ -130,7 +130,7 @@ AccordionMenu.propTypes = {
   /**
    * Presents the menu in a lodaing state (for when fetching data async)
    */
-  loading: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
   /**
    * Defines the menu structure
    */
@@ -156,7 +156,7 @@ AccordionMenu.propTypes = {
         ),
       })
     ),
-  ]),
+  ]).isRequired,
   /**
    * A unique ID required for accessibility requirements
    */
