@@ -42,6 +42,7 @@ Template.args = {
   ],
   collapsible: true,
   initialCollapsed: false,
+  id: "menu-component",
 };
 
 const LoadingDefault = Template.bind({});
