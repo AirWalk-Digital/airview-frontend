@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccordionMenu } from "../../components/accordion-menu";
-import { LocationProvider } from "../../hooks/use-location";
 
 const config = {
   title: "Modules/Accordion Menu",
