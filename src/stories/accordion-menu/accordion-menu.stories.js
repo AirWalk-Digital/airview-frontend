@@ -84,16 +84,11 @@ const testNavItems = [
 ];
 
 function Template(args) {
-  return (
-    <LocationProvider location="/seven">
-      <AccordionMenu {...args} />
-    </LocationProvider>
-  );
+  return <AccordionMenu {...args} />;
 }
 
 Template.args = {
   menuTitle: "Menu Title",
-  loading: false,
   navItems: [...testNavItems],
   id: "accordion-nav",
 };
@@ -105,20 +100,12 @@ Loading.args = {
   loading: true,
 };
 
-const LoadedWithTitle = Template.bind({});
-LoadedWithTitle.args = {
+const Loaded = Template.bind({});
+Loaded.args = {
   ...Template.args,
   loading: false,
 };
 
-const LoadedWithoutTitle = Template.bind({});
-
-LoadedWithoutTitle.args = {
-  ...Template.args,
-  menuTitle: null,
-  loading: false,
-};
-
-export { Loading, LoadedWithTitle, LoadedWithoutTitle };
+export { Loading, Loaded };
 
 export default config;

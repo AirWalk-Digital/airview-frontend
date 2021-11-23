@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/accordion-menu/accordion-menu.stories";
 
-const { Loading, LoadedWithTitle } = composeStories(stories);
+const { Loading, Loaded } = composeStories(stories);
 
 describe("AccordionMenu", () => {
   test("in a loading state, it renders correctly", () => {
@@ -23,10 +23,10 @@ describe("AccordionMenu", () => {
   });
 
   test("in a loaded state, it renders correctly", () => {
-    render(<LoadedWithTitle />);
+    render(<Loaded />);
 
     const navigation = screen.getByRole("navigation", {
-      name: Loading.args.menuTitle,
+      name: Loaded.args.menuTitle,
     });
 
     // It should have required accessibility attributes
@@ -34,7 +34,7 @@ describe("AccordionMenu", () => {
     expect(navigation).toHaveAttribute("aria-busy", "false");
 
     // It should initially render the top level navigation nodes by default
-    const topLevelNavItems = LoadedWithTitle.args.navItems.filter(
+    const topLevelNavItems = Loaded.args.navItems.filter(
       ({ children }) => !children
     );
 
@@ -48,7 +48,7 @@ describe("AccordionMenu", () => {
     });
 
     // It should initially render the top level parents by default
-    const topLevelParentNavItems = LoadedWithTitle.args.navItems.filter(
+    const topLevelParentNavItems = Loaded.args.navItems.filter(
       ({ children }) => children
     );
 
@@ -62,13 +62,13 @@ describe("AccordionMenu", () => {
   });
 
   test("a user can toggle visibility of nested child links", async () => {
-    render(<LoadedWithTitle />);
+    render(<Loaded />);
 
     const navigation = screen.getByRole("navigation", {
       name: Loading.args.menuTitle,
     });
 
-    const topLevelNavParent = LoadedWithTitle.args.navItems
+    const topLevelNavParent = Loaded.args.navItems
       .filter(({ children }) => children)
       .shift();
 

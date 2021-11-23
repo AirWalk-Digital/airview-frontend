@@ -126,7 +126,7 @@ AccordionMenu.propTypes = {
   /**
    * Sets a title for the AccordionMenu component
    */
-  menuTitle: PropTypes.string,
+  menuTitle: PropTypes.string.isRequired,
   /**
    * Presents the menu in a lodaing state (for when fetching data async)
    */
