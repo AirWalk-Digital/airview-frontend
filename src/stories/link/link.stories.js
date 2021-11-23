@@ -44,12 +44,20 @@ NonMuiStyledInternalLink.args = {
   noLinkStyle: true,
 };
 
-const ActiveInternalLink = Template.bind({});
+const ActiveMuiStyledInternalLink = Template.bind({});
 
-ActiveInternalLink.args = {
+ActiveMuiStyledInternalLink.args = {
   ...Template.args,
   href: "/",
   noLinkStyle: false,
+};
+
+const NonActiveMuiStyledInternalLink = Template.bind({});
+
+NonActiveMuiStyledInternalLink.args = {
+  ...Template.args,
+  href: "/",
+  noLinkStyle: true,
 };
 
 const MuiStyledExternalLink = Template.bind({});
@@ -72,7 +80,8 @@ export default config;
 export {
   MuiStyledInternalLink,
   NonMuiStyledInternalLink,
-  ActiveInternalLink,
+  ActiveMuiStyledInternalLink,
+  NonActiveMuiStyledInternalLink,
   MuiStyledExternalLink,
   NonMuiStyledExternalLink,
 };
