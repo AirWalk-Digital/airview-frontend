@@ -86,7 +86,7 @@ export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
               <Link
                 href={node.url}
                 activeClassName={classes.activeLink}
-                classNames={classes.menuItemLink}
+                className={classes.menuItemLink}
               >
                 {node.name}
               </Link>

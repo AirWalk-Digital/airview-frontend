@@ -23,7 +23,6 @@ Default.argTypes = {
 
 Default.args = {
   href: "/",
-  linkProps: {},
   children: "Link Label",
 };
 

@@ -62,7 +62,7 @@ function Menu({
                   <li className={classes.menuItem} key={index}>
                     <Link
                       href={url}
-                      classNames={classes.menuLink}
+                      className={classes.menuLink}
                       activeClassName={classes.currentMenuItem}
                     >
                       {label}

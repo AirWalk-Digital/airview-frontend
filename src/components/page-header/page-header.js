@@ -117,8 +117,9 @@ export function PageHeader({
 
         <AccordionMenu
           loading={loading}
-          classNames={classes.accordionMenu}
+          className={classes.accordionMenu}
           menuTitle="Main Navigation"
+          id="main-header-navigation"
           {...{ navItems }}
         />
       </Drawer>
