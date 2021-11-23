@@ -5,76 +5,64 @@ import { Link as MuiLink } from "@material-ui/core";
 import clsx from "clsx";
 import { useLocation } from "../../hooks/use-location";
 
-export const Link = React.forwardRef((props, ref) => {
-  const {
-    href,
-    noLinkStyle = false,
-    className,
-    activeClassName,
-    linkProps,
-    children,
-  } = props;
+export const Link = React.forwardRef(
+  ({ href, noLinkStyle = false, activeClassName, children, ...rest }, ref) => {
+    const { className, ...otherProps } = rest;
 
-  const location = useLocation();
+    const location = useLocation();
 
-  const isExternal =
-    typeof href === "string" &&
-    (href.indexOf("http") === 0 ||
-      href.indexOf("mailto:") === 0 ||
-      href.indexOf("tel:") === 0);
+    const internal = /^\/(?!\/)/.test(href);
+    const isFile = /\.[0-9a-z]+$/i.test(href);
 
-  if (isExternal) {
-    if (noLinkStyle) {
+    if (!internal || isFile) {
+      if (noLinkStyle) {
+        return (
+          <a
+            rel="noreferrer"
+            target="_blank"
+            {...{ href, ref, className }}
+            {...otherProps}
+          >
+            {children}
+          </a>
+        );
+      }
+
       return (
-        <a
-          href={href}
-          ref={ref}
+        <MuiLink
           rel="noreferrer"
           target="_blank"
-          className={className}
-          {...linkProps}
+          {...{ href, ref, className }}
+          {...otherProps}
         >
           {children}
-        </a>
+        </MuiLink>
+      );
+    }
+
+    const classes = clsx(className, href === location ? activeClassName : null);
+
+    if (noLinkStyle) {
+      return (
+        <HashLink to={href} className={classes} smooth {...otherProps}>
+          {children}
+        </HashLink>
       );
     }
 
     return (
       <MuiLink
-        href={href}
-        ref={ref}
-        rel="noreferrer"
-        target="_blank"
-        className={className}
-        {...linkProps}
+        component={HashLink}
+        to={href}
+        smooth
+        {...{ ref, className }}
+        {...otherProps}
       >
         {children}
       </MuiLink>
     );
   }
-
-  const classes = clsx(className, href === location ? activeClassName : null);
-
-  if (noLinkStyle) {
-    return (
-      <HashLink to={href} className={classes} smooth>
-        {children}
-      </HashLink>
-    );
-  }
-
-  return (
-    <MuiLink
-      component={HashLink}
-      to={href}
-      className={classes}
-      {...linkProps}
-      smooth
-    >
-      {children}
-    </MuiLink>
-  );
-});
+);
 
 Link.displayName = "Link";
 
@@ -84,21 +72,13 @@ Link.propTypes = {
    */
   href: PropTypes.string.isRequired,
   /**
-   * Renders the link with no styles
+   * Renders the link with no MUI Link styles
    */
   noLinkStyle: PropTypes.bool,
-  /**
-   * Applies classnames to the element
-   */
-  className: PropTypes.string,
   /**
    * Applies an active classname to the Link (if required)
    */
   activeClassName: PropTypes.string,
-  /**
-   * Applies any required Mui Link component props
-   */
-  linkProps: PropTypes.object,
   /**
    * Used to set the inner content of the link
    */
