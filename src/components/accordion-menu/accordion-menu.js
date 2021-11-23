@@ -105,7 +105,7 @@ export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
       subheader={
         menuTitle && (
           <ListSubheader
-            component="p"
+            component="h6"
             disableSticky
             id={`${id}-list-subheader`}
             className={classes.menuTitle}
@@ -181,11 +181,12 @@ const useStyles = makeStyles((theme) => ({
   // Menu title
   menuTitle: {
     display: "block",
+    margin: 0,
   },
 
   menuTitleSkeleton: {
     display: "block",
-    margin: "32px 0",
+    margin: "18px 0",
   },
 
   // Menu Item
