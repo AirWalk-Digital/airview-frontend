@@ -1,37 +1,78 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { LocationProvider } from "../../hooks/use-location";
 import { Link } from "../../components/link";
 
 const config = {
   title: "Modules/Link",
   component: Link,
+  decorators: [
+    (story) => {
+      return <LocationProvider location="/">{story()}</LocationProvider>;
+    },
+  ],
+  argTypes: {
+    children: {
+      control: {
+        type: "text",
+      },
+    },
+  },
 };
 
-function Default(args) {
-  const styles = useStyles();
-  return <Link {...args} activeClassName={styles.currentLink} />;
+function Template(args) {
+  return <Link {...args} />;
 }
 
-Default.argTypes = {
-  classNames: {
-    control: false,
-  },
-  activeClassName: {
-    control: false,
-  },
-};
-
-Default.args = {
-  href: "/",
+Template.args = {
   children: "Link Label",
+  activeClassName: "test-active-classname",
 };
 
-const useStyles = makeStyles((theme) => ({
-  currentLink: {
-    color: "red",
-    fontWeight: theme.typography.fontWeightBold,
-  },
-}));
+const MuiStyledInternalLink = Template.bind({});
+
+MuiStyledInternalLink.args = {
+  ...Template.args,
+  href: "/some-internal-link",
+  noLinkStyle: false,
+};
+
+const NonMuiStyledInternalLink = Template.bind({});
+
+NonMuiStyledInternalLink.args = {
+  ...Template.args,
+  href: "/some-internal-link",
+  noLinkStyle: true,
+};
+
+const ActiveInternalLink = Template.bind({});
+
+ActiveInternalLink.args = {
+  ...Template.args,
+  href: "/",
+  noLinkStyle: false,
+};
+
+const MuiStyledExternalLink = Template.bind({});
+
+MuiStyledExternalLink.args = {
+  ...Template.args,
+  href: "https://google.co.uk",
+  noLinkStyle: false,
+};
+
+const NonMuiStyledExternalLink = Template.bind({});
+
+NonMuiStyledExternalLink.args = {
+  ...Template.args,
+  href: "https://google.co.uk",
+  noLinkStyle: true,
+};
 
 export default config;
-export { Default };
+export {
+  MuiStyledInternalLink,
+  NonMuiStyledInternalLink,
+  ActiveInternalLink,
+  MuiStyledExternalLink,
+  NonMuiStyledExternalLink,
+};
