@@ -1,331 +1,262 @@
 import React from "react";
-import { screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import { composeStories } from "@storybook/testing-react";
+import * as stories from "../stories/menu/menu.stories";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "./utils/with-providers";
-import { Menu } from "../components/menu";
+
+const {
+  LoadingDefault,
+  LoadingInitialCollapsed,
+  LoadingNotCollapsible,
+  LoadedDefault,
+  LoadedInitialCollapsed,
+  LoadedNotCollapsible,
+} = composeStories(stories);
 
 describe("Menu", () => {
-  describe("with no value passed to the collapsible prop", () => {
-    it("should default to a collapsible menu", () => {
-      renderWithProviders(<Menu menuTitle="Test menu title" menuItems={[]} />);
+  test("in a default loading state, it renders correctly", () => {
+    render(<LoadingDefault />);
 
-      expect(screen.getByRole("button", { name: /menu/ })).toBeInTheDocument();
-    });
+    const menu = screen.getByRole("navigation");
+
+    // It should have required accessibility attributes
+    expect(menu).toHaveAttribute("aria-live", "polite");
+    expect(menu).toHaveAttribute("aria-busy", "true");
+
+    // It does not render menu title to the user
+    expect(
+      within(menu).queryByRole("heading", {
+        name: LoadingDefault.args.menuTitle,
+      })
+    ).not.toBeInTheDocument();
+
+    // It renders a loading skeleton title
+    expect(within(menu).getByRole("heading", { level: 6 })).toBeInTheDocument();
+
+    // It does not render any link items
+    expect(within(menu).queryAllByRole("link")).toHaveLength(0);
+
+    // It renders a list of loading skeleton link items
+    expect(within(menu).getByRole("list")).toBeVisible();
+
+    // It sets the menu toggle button to disabled
+    expect(
+      within(menu).getByRole("button", { name: /collapse menu/i })
+    ).toBeDisabled();
   });
 
-  describe("with a true value passed to the collapsible prop", () => {
-    it("should render the collapsible toggle UI", () => {
-      renderWithProviders(
-        <Menu menuTitle="Test menu title" menuItems={[]} collapsible />
-      );
+  test("in a loading state, set to initial collapsed, it renders correctly", () => {
+    render(<LoadingInitialCollapsed />);
 
-      expect(screen.getByRole("button", { name: /menu/ })).toBeInTheDocument();
+    const menu = screen.getByRole("navigation");
+
+    // It should have required accessibility attributes
+    expect(menu).toHaveAttribute("aria-live", "polite");
+    expect(menu).toHaveAttribute("aria-busy", "true");
+
+    // It does not render menu title to the user
+    expect(
+      within(menu).queryByRole("heading", {
+        name: LoadingInitialCollapsed.args.menuTitle,
+      })
+    ).not.toBeInTheDocument();
+
+    // It renders a loading skeleton title
+    expect(within(menu).getByRole("heading")).toBeInTheDocument();
+
+    // It does not render any link items
+    expect(within(menu).queryAllByRole("link")).toHaveLength(0);
+
+    // It does not render a list of loading skeleton link items
+    expect(within(menu).queryByRole("list")).toBeNull();
+
+    // It correctly renders the toggle button
+    const menuToggleButton = within(menu).getByRole("button", {
+      name: /expand menu/i,
     });
+    expect(menuToggleButton).toBeInTheDocument();
 
-    describe("and with no value passed to the initialCollapsed prop", () => {
-      beforeEach(() => {
-        renderWithProviders(
-          <Menu menuTitle="Test menu title" menuItems={[]} collapsible />
-        );
-      });
-
-      it("should indicate to the user that the menu can be collapsed", () => {
-        expect(
-          screen.getByRole("button", { name: "Collapse menu" })
-        ).toBeInTheDocument();
-      });
-
-      it("should not set the menu items to hidden", () => {
-        expect(screen.getByRole("list")).toBeInTheDocument();
-      });
-    });
-
-    describe("and with a true value passed to the initialCollapsed prop", () => {
-      beforeEach(() => {
-        renderWithProviders(
-          <Menu
-            menuTitle="Test menu title"
-            menuItems={[]}
-            collapsible
-            initialCollapsed={true}
-          />
-        );
-      });
-
-      it("should indicate to the user that the menu can be expanded", () => {
-        expect(
-          screen.getByRole("button", { name: "Expand menu" })
-        ).toBeInTheDocument();
-      });
-
-      it("should set the menu items to hidden", () => {
-        expect(screen.queryByRole("list")).not.toBeInTheDocument();
-      });
-    });
-
-    describe("and with a false value passed to the initialCollapsed prop", () => {
-      beforeEach(() => {
-        renderWithProviders(
-          <Menu
-            menuTitle="Test menu title"
-            menuItems={[]}
-            collapsible
-            initialCollapsed={false}
-          />
-        );
-      });
-
-      it("should indicate to the user that the menu can be collapsed", () => {
-        expect(
-          screen.getByRole("button", { name: "Collapse menu" })
-        ).toBeInTheDocument();
-      });
-
-      it("should not set the menu items to hidden", () => {
-        expect(screen.getByRole("list")).toBeInTheDocument();
-      });
-    });
+    // It sets the menu toggle button to disabled
+    expect(menuToggleButton).toBeDisabled();
   });
 
-  describe("with a false value passed to the collapsible prop", () => {
-    beforeEach(() => {
-      renderWithProviders(
-        <Menu menuTitle="Test menu title" menuItems={[]} collapsible={false} />
-      );
-    });
-    it("should not render the collapsible toggle UI", () => {
-      expect(
-        screen.queryByRole("button", { name: /menu/ })
-      ).not.toBeInTheDocument();
-    });
+  test("in a loading state, set to not collapsible, it renders correctly", () => {
+    render(<LoadingNotCollapsible />);
 
-    it("should not set the menu items to hidden", () => {
-      expect(screen.getByRole("list")).toBeInTheDocument();
-    });
+    const menu = screen.getByRole("navigation");
+
+    // It should have required accessibility attributes
+    expect(menu).toHaveAttribute("aria-live", "polite");
+    expect(menu).toHaveAttribute("aria-busy", "true");
+
+    // It does not render menu title to the user
+    expect(
+      within(menu).queryByRole("heading", {
+        name: LoadingNotCollapsible.args.menuTitle,
+      })
+    ).not.toBeInTheDocument();
+
+    // It renders a loading skeleton title
+    expect(within(menu).getByRole("heading")).toBeInTheDocument();
+
+    // It does not render any link items
+    expect(within(menu).queryAllByRole("link")).toHaveLength(0);
+
+    // It renders a list of loading skeleton link items
+    expect(within(menu).getByRole("list")).toBeVisible();
+
+    // It does not render a menu toggle button
+    expect(within(menu).queryByRole("button")).toBeNull();
   });
 
-  describe("toggling the collpased state of the menu", () => {
-    describe("on click of the toggle button, when the menu is expanded", () => {
-      beforeEach(() => {
-        renderWithProviders(
-          <Menu
-            menuTitle="Test menu title"
-            menuItems={[]}
-            collapsible={true}
-            initialCollapsed={false}
-          />
-        );
-      });
+  test("in a default loaded state, it renders correctly", () => {
+    render(<LoadedDefault />);
 
-      it("should hide the menu items", async () => {
-        expect(screen.getByRole("list")).toBeInTheDocument();
+    const menu = screen.getByRole("navigation");
 
-        userEvent.click(screen.getByRole("button", { name: "Collapse menu" }));
+    // It should have required accessibility attributes
+    expect(menu).toHaveAttribute("aria-live", "polite");
+    expect(menu).toHaveAttribute("aria-busy", "false");
 
-        expect(screen.queryByRole("list")).not.toBeInTheDocument();
-      });
+    // It renders a menu title to the user
+    expect(
+      within(menu).queryByRole("heading", {
+        level: 6,
+        name: LoadedDefault.args.menuTitle,
+      })
+    ).toBeInTheDocument();
 
-      it("should indicate to the user that the menu items can be expanded", async () => {
-        expect(
-          screen.queryByRole("button", { name: "Expand menu" })
-        ).not.toBeInTheDocument();
+    // It renders all links
+    LoadedDefault.args.menuItems.forEach(({ label, url }) => {
+      const link = within(menu).getByRole("link", { name: label });
 
-        userEvent.click(screen.getByRole("button", { name: "Collapse menu" }));
-
-        expect(
-          screen.getByRole("button", { name: "Expand menu" })
-        ).toBeInTheDocument();
-      });
+      expect(link).toHaveAttribute("href", url);
     });
 
-    describe("on click of the toggle button, when the menu is collapsed", () => {
-      beforeEach(() => {
-        renderWithProviders(
-          <Menu
-            menuTitle="Test menu title"
-            menuItems={[]}
-            collapsible={true}
-            initialCollapsed={true}
-          />
-        );
-      });
-
-      it("should reveal the menu items", async () => {
-        expect(screen.queryByRole("list")).not.toBeInTheDocument();
-
-        userEvent.click(screen.getByRole("button", { name: "Expand menu" }));
-
-        expect(screen.getByRole("list")).toBeInTheDocument();
-      });
-
-      it("should indicate to the user that the menu items can be collapsed", async () => {
-        expect(
-          screen.queryByRole("button", { name: "Collapse menu" })
-        ).not.toBeInTheDocument();
-
-        userEvent.click(screen.getByRole("button", { name: "Expand menu" }));
-
-        expect(
-          screen.getByRole("button", { name: "Collapse menu" })
-        ).toBeInTheDocument();
-      });
-    });
+    // It correctly renders the toggle button
+    expect(
+      within(menu).getByRole("button", { name: /collapse menu/i })
+    ).not.toBeDisabled();
   });
 
-  describe("with a valid value passed to menuTitle prop", () => {
-    it("should output a menu title equal to the value of the menuTitle prop", () => {
-      renderWithProviders(<Menu menuTitle="Test menu title" menuItems={[]} />);
+  test("in a loaded state, set to initial collapsed, it renders correctly", () => {
+    render(<LoadedInitialCollapsed />);
 
-      expect(screen.getByText("Test menu title")).toBeInTheDocument();
-    });
+    const menu = screen.getByRole("navigation");
+
+    // It should have required accessibility attributes
+    expect(menu).toHaveAttribute("aria-live", "polite");
+    expect(menu).toHaveAttribute("aria-busy", "false");
+
+    // It renders a menu title to the user
+    expect(
+      within(menu).queryByRole("heading", {
+        name: LoadedDefault.args.menuTitle,
+      })
+    ).toBeInTheDocument();
+
+    // It does not render any links
+    expect(within(menu).queryAllByRole("link")).toHaveLength(0);
+
+    // It correctly renders the toggle button
+    expect(
+      within(menu).getByRole("button", { name: /expand menu/i })
+    ).not.toBeDisabled();
   });
 
-  describe.each`
-    element
-    ${"h1"}
-    ${"h2"}
-    ${"h3"}
-    ${"h4"}
-    ${"h5"}
-    ${"h6"}
-  `(
-    "with a value of $element passed to the menuTitleElement prop",
-    ({ element }) => {
-      it(`should output the title using a HTML ${element} tag`, () => {
-        renderWithProviders(
-          <Menu
-            menuTitle="Test menu title"
-            menuItems={[]}
-            menuTitleElement={element}
-          />
-        );
+  test("in a loaded state, set to not collapsible, it renders correctly", () => {
+    render(<LoadedNotCollapsible />);
 
-        expect(screen.getByText("Test menu title").tagName).toBe(
-          element.toUpperCase()
-        );
-      });
-    }
-  );
+    const menu = screen.getByRole("navigation");
 
-  describe("with no value passed to the menuTitleElement prop", () => {
-    it("should output the title using a h6 HTML element tag", () => {
-      renderWithProviders(<Menu menuTitle="Test menu title" menuItems={[]} />);
+    // It should have required accessibility attributes
+    expect(menu).toHaveAttribute("aria-live", "polite");
+    expect(menu).toHaveAttribute("aria-busy", "false");
 
-      expect(screen.getByText("Test menu title").tagName).toBe("H6");
+    // It renders a menu title to the user
+    expect(
+      within(menu).queryByRole("heading", {
+        name: LoadedDefault.args.menuTitle,
+      })
+    ).toBeInTheDocument();
+
+    // It renders all links
+    LoadedDefault.args.menuItems.forEach(({ label, url }) => {
+      const link = within(menu).getByRole("link", { name: label });
+
+      expect(link).toHaveAttribute("href", url);
     });
+
+    // It does not render a toggle button
+    expect(within(menu).queryByRole("button")).toBeNull();
   });
 
-  describe("with an array of menuItems greater than one passed to the menuItems prop", () => {
-    beforeEach(() => {
-      renderWithProviders(
-        <Menu
-          menuItems={[
-            {
-              label: "Menu item one - internal",
-              url: "/one",
-            },
-            {
-              label: "Menu item two - external",
-              url: "https://www.testurl.com/",
-              externalLink: true,
-            },
-            {
-              label: "Menu item three - internal current item",
-              url: "/three",
-              currentMenuItem: true,
-            },
-          ]}
-        />
-      );
-    });
+  test("the header level of the menu title can be customised", () => {
+    render(<LoadedDefault menuTitleElement="h1" />);
 
-    it("should output menu items equal to the count of the value passed to the menuItems prop", () => {
-      expect(screen.getAllByRole("listitem").length).toBe(3);
-    });
+    const menu = screen.getByRole("navigation");
 
-    it("should output the list items in the same order as they are passed", () => {
-      const listItems = screen.getAllByRole("listitem");
-
-      expect(listItems[0]).toHaveTextContent(/^Menu item one - internal$/);
-      expect(listItems[1]).toHaveTextContent(/^Menu item two - external$/);
-      expect(listItems[2]).toHaveTextContent(
-        /^Menu item three - internal current item$/
-      );
-    });
-
-    it("should output the correct url value for each menuItem link", () => {
-      const listItems = screen.getAllByRole("link");
-
-      expect(listItems[0]).toHaveAttribute("href", "/one");
-      expect(listItems[1]).toHaveAttribute("href", "https://www.testurl.com/");
-      expect(listItems[2]).toHaveAttribute("href", "/three");
-    });
+    // It renders the menu title using the passed heading level
+    expect(
+      within(menu).getByRole("heading", {
+        name: LoadedDefault.args.menuTitle,
+        level: 1,
+      })
+    ).toBeInTheDocument();
   });
 
-  describe("with menuItem external link value set to a falsy value", () => {
-    beforeEach(() => {
-      renderWithProviders(
-        <Menu
-          menuItems={[
-            {
-              label: "External Link",
-              url: "#",
-              externalLink: false,
-            },
-          ]}
-        />
-      );
-    });
+  test("a user can toggle a items in a collapsible menu", () => {
+    render(<LoadedDefault />);
 
-    it("should not set a link target", () => {
-      expect(screen.getByText("External Link")).not.toHaveAttribute("target");
-    });
+    const menu = screen.getByRole("navigation");
 
-    it("should not set a link 'rel' attribute", () => {
-      expect(screen.getByText("External Link")).not.toHaveAttribute("rel");
-    });
+    // It renders the navigation links
+    expect(within(menu).getAllByRole("link")).toHaveLength(
+      LoadedDefault.args.menuItems.length
+    );
+
+    // On click of the collapse menu button
+    userEvent.click(
+      within(menu).getByRole("button", { name: /collapse menu/i })
+    );
+
+    // The toggle button label changes
+    expect(
+      within(menu).queryByRole("button", { name: /collapse menu/i })
+    ).toBeNull();
+
+    expect(
+      within(menu).getByRole("button", { name: /expand menu/i })
+    ).toBeInTheDocument();
+
+    // It does not render the navigation links
+    expect(within(menu).queryAllByRole("link")).toHaveLength(0);
+
+    // On click of the expand menu button
+    userEvent.click(within(menu).getByRole("button", { name: /expand menu/i }));
+
+    // The toggle button label changes
+    expect(
+      within(menu).queryByRole("button", { name: /expand menu/i })
+    ).toBeNull();
+
+    expect(
+      within(menu).getByRole("button", { name: /collapse menu/i })
+    ).toBeInTheDocument();
+
+    // It renders the navigation links
+    expect(within(menu).getAllByRole("link")).toHaveLength(
+      LoadedDefault.args.menuItems.length
+    );
   });
 
-  describe("with menuItem external link prop set to true", () => {
-    beforeEach(() => {
-      renderWithProviders(
-        <Menu
-          menuItems={[
-            {
-              label: "External Link",
-              url: "https://somedomain.com",
-            },
-          ]}
-        />
-      );
-    });
+  test("it should spread other props to the component root DOM node", () => {
+    const className = "test-class-name";
 
-    it("should set a link target equal to '_blank'", () => {
-      expect(screen.getByText("External Link")).toHaveAttribute(
-        "target",
-        "_blank"
-      );
-    });
+    render(<LoadedDefault className={className} />);
 
-    it("should set the link rel attribute to 'noreferrer'", () => {
-      expect(screen.getByText("External Link")).toHaveAttribute(
-        "rel",
-        "noreferrer"
-      );
-    });
-  });
+    const menu = screen.getByRole("navigation");
 
-  describe("with classnames passed to the classNames prop", () => {
-    it("should apply the passed classnames to the root component node", () => {
-      const { container } = renderWithProviders(
-        <Menu
-          menuTitle="Test menu title"
-          menuItems={[]}
-          classNames="test-css-classname"
-        />
-      );
-
-      expect(container.firstChild).toHaveClass("test-css-classname");
-    });
+    expect(menu).toHaveClass(className);
   });
 });
