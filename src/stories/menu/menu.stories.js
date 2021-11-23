@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Menu } from "../../components/menu";
-import { LocationProvider } from "../../hooks/use-location";
 
 const config = {
   title: "Modules/Menu",
@@ -10,8 +9,7 @@ const config = {
     (story) => {
       const classes = makeStyles(() => ({
         root: {
-          width: "100%",
-          maxWidth: 225,
+          width: 225,
           margin: "0 auto",
         },
       }))();
@@ -22,96 +20,83 @@ const config = {
 };
 
 function Template(args) {
-  return (
-    <LocationProvider location="/some-link">
-      <Menu {...args} />
-    </LocationProvider>
-  );
+  return <Menu {...args} />;
 }
 
-Template.argTypes = {
-  menuItems: {
-    control: false,
-  },
-};
-
-const Default = Template.bind({});
-Default.args = {
-  menuTitle: "Menu Title",
+Template.args = {
+  menuTitle: "Lorem ipsum dolor sit amet",
+  menuTitleElement: "h6",
   menuItems: [
     {
-      label: "Menu item one - internal link",
-      url: "/",
+      label: "Lorem ipsum dolor, sit amet consectetur adipisicing elit",
+      url: "/menu-item-one-link",
     },
     {
-      label: "Menu item two - external link",
-      url: "https://somelocation.com",
+      label: "Lorem ipsum dolor sit amet consectetur",
+      url: "menu-item-two-link",
     },
     {
-      label: "Menu item three - internal link current menu item",
-      url: "/some-link",
+      label: "Lorem ipsum dolor sit amet, consectetur adipisicing elit rerum",
+      url: "/menu-item-three-link",
     },
   ],
-};
-
-Default.argTypes = {
-  ...Template.argTypes,
-};
-
-const WithIntialCollapsedTrue = Template.bind({});
-WithIntialCollapsedTrue.args = {
-  ...Default.args,
-  initialCollapsed: true,
-};
-
-WithIntialCollapsedTrue.argTypes = {
-  ...Template.argTypes,
-};
-
-const WithIntialCollapsedFalse = Template.bind({});
-WithIntialCollapsedFalse.args = {
-  ...Default.args,
+  collapsible: true,
   initialCollapsed: false,
 };
 
-WithIntialCollapsedFalse.argTypes = {
-  ...Template.argTypes,
-};
+const LoadingDefault = Template.bind({});
 
-const WithCollapsibleTrue = Template.bind({});
-WithCollapsibleTrue.args = {
-  ...Default.args,
-  collapsible: true,
-};
-
-WithCollapsibleTrue.argTypes = {
-  ...Template.argTypes,
-};
-
-const WithCollapsibleFalse = Template.bind({});
-WithCollapsibleFalse.args = {
-  ...Default.args,
-  collapsible: false,
-};
-
-WithCollapsibleFalse.argTypes = {
-  ...Template.argTypes,
-};
-
-const Loading = Template.bind({});
-Loading.args = {
-  ...Default.args,
-  menuItems: null,
+LoadingDefault.args = {
+  ...Template.args,
   loading: true,
 };
 
+const LoadingInitialCollapsed = Template.bind({});
+
+LoadingInitialCollapsed.args = {
+  ...Template.args,
+  loading: true,
+  initialCollapsed: true,
+};
+
+const LoadingNotCollapsible = Template.bind({});
+
+LoadingNotCollapsible.args = {
+  ...Template.args,
+  loading: true,
+  collapsible: false,
+};
+
+const LoadedDefault = Template.bind({});
+
+LoadedDefault.args = {
+  ...Template.args,
+  loading: false,
+};
+
+const LoadedInitialCollapsed = Template.bind({});
+
+LoadedInitialCollapsed.args = {
+  ...Template.args,
+  loading: false,
+  initialCollapsed: true,
+};
+
+const LoadedNotCollapsible = Template.bind({});
+
+LoadedNotCollapsible.args = {
+  ...Template.args,
+  loading: false,
+  collapsible: false,
+};
+
 export {
-  Default,
-  WithCollapsibleTrue,
-  WithCollapsibleFalse,
-  WithIntialCollapsedTrue,
-  WithIntialCollapsedFalse,
-  Loading,
+  LoadingDefault,
+  LoadingInitialCollapsed,
+  LoadingNotCollapsible,
+  LoadedDefault,
+  LoadedInitialCollapsed,
+  LoadedNotCollapsible,
 };
 
 export default config;
