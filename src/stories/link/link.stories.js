@@ -28,49 +28,49 @@ Template.args = {
   activeClassName: "test-active-classname",
 };
 
-const MuiStyledInternalLink = Template.bind({});
+const InternalLinkNonActiveMuiStyled = Template.bind({});
 
-MuiStyledInternalLink.args = {
+InternalLinkNonActiveMuiStyled.args = {
   ...Template.args,
   href: "/some-internal-link",
   noLinkStyle: false,
 };
 
-const NonMuiStyledInternalLink = Template.bind({});
+const InternalLinkNonActiveNonMuiStyled = Template.bind({});
 
-NonMuiStyledInternalLink.args = {
+InternalLinkNonActiveNonMuiStyled.args = {
   ...Template.args,
   href: "/some-internal-link",
   noLinkStyle: true,
 };
 
-const ActiveMuiStyledInternalLink = Template.bind({});
+const InternalLinkActiveMuiStyled = Template.bind({});
 
-ActiveMuiStyledInternalLink.args = {
+InternalLinkActiveMuiStyled.args = {
   ...Template.args,
   href: "/",
   noLinkStyle: false,
 };
 
-const NonActiveMuiStyledInternalLink = Template.bind({});
+const InternalLinkActiveNonMuiStyled = Template.bind({});
 
-NonActiveMuiStyledInternalLink.args = {
+InternalLinkActiveNonMuiStyled.args = {
   ...Template.args,
   href: "/",
   noLinkStyle: true,
 };
 
-const MuiStyledExternalLink = Template.bind({});
+const ExternalLinkMuiStyled = Template.bind({});
 
-MuiStyledExternalLink.args = {
+ExternalLinkMuiStyled.args = {
   ...Template.args,
   href: "https://google.co.uk",
   noLinkStyle: false,
 };
 
-const NonMuiStyledExternalLink = Template.bind({});
+const ExternalLinkNonMuiStyled = Template.bind({});
 
-NonMuiStyledExternalLink.args = {
+ExternalLinkNonMuiStyled.args = {
   ...Template.args,
   href: "https://google.co.uk",
   noLinkStyle: true,
@@ -78,10 +78,10 @@ NonMuiStyledExternalLink.args = {
 
 export default config;
 export {
-  MuiStyledInternalLink,
-  NonMuiStyledInternalLink,
-  ActiveMuiStyledInternalLink,
-  NonActiveMuiStyledInternalLink,
-  MuiStyledExternalLink,
-  NonMuiStyledExternalLink,
+  InternalLinkNonActiveMuiStyled,
+  InternalLinkNonActiveNonMuiStyled,
+  InternalLinkActiveMuiStyled,
+  InternalLinkActiveNonMuiStyled,
+  ExternalLinkMuiStyled,
+  ExternalLinkNonMuiStyled,
 };

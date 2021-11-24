@@ -6,120 +6,120 @@ import * as stories from "../stories/link/link.stories";
 import { Link } from "../components/link";
 
 const {
-  MuiStyledInternalLink,
-  NonMuiStyledInternalLink,
-  ActiveMuiStyledInternalLink,
-  NonActiveMuiStyledInternalLink,
-  MuiStyledExternalLink,
-  NonMuiStyledExternalLink,
+  InternalLinkNonActiveMuiStyled,
+  InternalLinkNonActiveNonMuiStyled,
+  InternalLinkActiveMuiStyled,
+  InternalLinkActiveNonMuiStyled,
+  ExternalLinkMuiStyled,
+  ExternalLinkNonMuiStyled,
 } = composeStories(stories);
 
 describe("Link", () => {
   test("it renders correctly when passed an internal link using MUI styles", () => {
-    render(<MuiStyledInternalLink />);
+    render(<InternalLinkNonActiveMuiStyled />);
 
     const linkElement = screen.getByRole("link", {
-      name: MuiStyledInternalLink.args.children,
+      name: InternalLinkNonActiveMuiStyled.args.children,
     });
 
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).not.toHaveClass(
-      MuiStyledInternalLink.args.activeClassName
+      InternalLinkNonActiveMuiStyled.args.activeClassName
     );
     expect(linkElement).toHaveAttribute(
       "href",
-      MuiStyledInternalLink.args.href
+      InternalLinkNonActiveMuiStyled.args.href
     );
     expect(linkElement).not.toHaveAttribute("rel", "noreferrer");
     expect(linkElement).not.toHaveAttribute("target", "_blank");
   });
 
   test("it renders correctly when passed an internal link not using MUI styles", () => {
-    render(<NonMuiStyledInternalLink />);
+    render(<InternalLinkNonActiveNonMuiStyled />);
 
     const linkElement = screen.getByRole("link", {
-      name: NonMuiStyledInternalLink.args.children,
+      name: InternalLinkNonActiveNonMuiStyled.args.children,
     });
 
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).not.toHaveClass(
-      NonMuiStyledInternalLink.args.activeClassName
+      InternalLinkNonActiveNonMuiStyled.args.activeClassName
     );
     expect(linkElement).toHaveAttribute(
       "href",
-      NonMuiStyledInternalLink.args.href
+      InternalLinkNonActiveNonMuiStyled.args.href
     );
     expect(linkElement).not.toHaveAttribute("rel", "noreferrer");
     expect(linkElement).not.toHaveAttribute("target", "_blank");
   });
 
   test("it renders correctly when passed an external link using MUI styles", () => {
-    render(<MuiStyledExternalLink />);
+    render(<ExternalLinkMuiStyled />);
 
     const linkElement = screen.getByRole("link", {
-      name: MuiStyledExternalLink.args.children,
+      name: ExternalLinkMuiStyled.args.children,
     });
 
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).not.toHaveClass(
-      MuiStyledExternalLink.args.activeClassName
+      ExternalLinkMuiStyled.args.activeClassName
     );
     expect(linkElement).toHaveAttribute(
       "href",
-      MuiStyledExternalLink.args.href
+      ExternalLinkMuiStyled.args.href
     );
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
     expect(linkElement).toHaveAttribute("target", "_blank");
   });
 
   test("it renders correctly when passed an external link not using MUI styles", () => {
-    render(<NonMuiStyledExternalLink />);
+    render(<ExternalLinkNonMuiStyled />);
 
     const linkElement = screen.getByRole("link", {
-      name: NonMuiStyledExternalLink.args.children,
+      name: ExternalLinkNonMuiStyled.args.children,
     });
 
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).not.toHaveClass(
-      NonMuiStyledExternalLink.args.activeClassName
+      ExternalLinkNonMuiStyled.args.activeClassName
     );
     expect(linkElement).toHaveAttribute(
       "href",
-      NonMuiStyledExternalLink.args.href
+      ExternalLinkNonMuiStyled.args.href
     );
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
     expect(linkElement).toHaveAttribute("target", "_blank");
   });
 
   test("it applies an active classname when the internal link href matches the current route, using MUI styles", () => {
-    render(<ActiveMuiStyledInternalLink />);
+    render(<InternalLinkActiveMuiStyled />);
 
     const linkElement = screen.getByRole("link", {
-      name: ActiveMuiStyledInternalLink.args.children,
+      name: InternalLinkActiveMuiStyled.args.children,
     });
 
     expect(linkElement).toHaveClass(
-      ActiveMuiStyledInternalLink.args.activeClassName
+      InternalLinkActiveMuiStyled.args.activeClassName
     );
   });
 
   test("it applies an active classname when the internal link href matches the current route, not using MUI styles", () => {
-    render(<NonActiveMuiStyledInternalLink />);
+    render(<InternalLinkActiveNonMuiStyled />);
 
     const linkElement = screen.getByRole("link", {
-      name: NonActiveMuiStyledInternalLink.args.children,
+      name: InternalLinkActiveNonMuiStyled.args.children,
     });
 
     expect(linkElement).toHaveClass(
-      NonActiveMuiStyledInternalLink.args.activeClassName
+      InternalLinkActiveNonMuiStyled.args.activeClassName
     );
   });
 
   test("it renders correctly when passed an internal file link", () => {
-    render(<NonMuiStyledInternalLink href="/some-image.jpg" />);
+    render(<InternalLinkNonActiveNonMuiStyled href="/some-image.jpg" />);
 
     const linkElement = screen.getByRole("link", {
-      name: NonMuiStyledInternalLink.args.children,
+      name: InternalLinkNonActiveNonMuiStyled.args.children,
     });
 
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
@@ -127,10 +127,10 @@ describe("Link", () => {
   });
 
   test("it renders correctly when passed a telephone (tel:) number", () => {
-    render(<NonMuiStyledInternalLink href="tel:01234567890" />);
+    render(<InternalLinkNonActiveNonMuiStyled href="tel:01234567890" />);
 
     const linkElement = screen.getByRole("link", {
-      name: NonMuiStyledInternalLink.args.children,
+      name: InternalLinkNonActiveNonMuiStyled.args.children,
     });
 
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
@@ -138,10 +138,10 @@ describe("Link", () => {
   });
 
   test("it renders correctly when passed an email (mailto:) address", () => {
-    render(<NonMuiStyledInternalLink href="mailto:mail@mail.com" />);
+    render(<InternalLinkNonActiveNonMuiStyled href="mailto:mail@mail.com" />);
 
     const linkElement = screen.getByRole("link", {
-      name: NonMuiStyledInternalLink.args.children,
+      name: InternalLinkNonActiveNonMuiStyled.args.children,
     });
 
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
