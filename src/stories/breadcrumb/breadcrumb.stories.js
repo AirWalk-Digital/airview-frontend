@@ -31,8 +31,7 @@ LoadingWithoutCollapsedBreadcrumbs.args = {
 const LoadingWithCollapsedBreadcrumbs = Template.bind({});
 
 LoadingWithCollapsedBreadcrumbs.args = {
-  ...Template.args,
-  loading: true,
+  ...LoadingWithoutCollapsedBreadcrumbs.args,
   maxItems: 4,
 };
 
