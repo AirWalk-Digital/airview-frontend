@@ -20,9 +20,9 @@ Template.args = {
   maxItems: 5,
 };
 
-const LoadingWithoutColapsedBreadcrumbs = Template.bind({});
+const LoadingWithoutCollapsedBreadcrumbs = Template.bind({});
 
-LoadingWithoutColapsedBreadcrumbs.args = {
+LoadingWithoutCollapsedBreadcrumbs.args = {
   ...Template.args,
   loading: true,
   links: [],
@@ -70,7 +70,7 @@ LoadedWithCollapsedBreadcrumbs.args = {
 
 export default config;
 export {
-  LoadingWithoutColapsedBreadcrumbs,
+  LoadingWithoutCollapsedBreadcrumbs,
   LoadingWithCollapsedBreadcrumbs,
   LoadedWithoutCollapsedBreadcrumbs,
   LoadedWithCollapsedBreadcrumbs,
