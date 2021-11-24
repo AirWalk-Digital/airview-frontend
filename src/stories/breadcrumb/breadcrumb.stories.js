@@ -20,17 +20,25 @@ Template.args = {
   maxItems: 5,
 };
 
-const Loading = Template.bind({});
+const LoadingWithoutColapsedBreadcrumbs = Template.bind({});
 
-Loading.args = {
+LoadingWithoutColapsedBreadcrumbs.args = {
   ...Template.args,
   loading: true,
   links: [],
 };
 
-const Loaded = Template.bind({});
+const LoadingWithCollapsedBreadcrumbs = Template.bind({});
 
-Loaded.args = {
+LoadingWithCollapsedBreadcrumbs.args = {
+  ...Template.args,
+  loading: true,
+  maxItems: 4,
+};
+
+const LoadedWithoutCollapsedBreadcrumbs = Template.bind({});
+
+LoadedWithoutCollapsedBreadcrumbs.args = {
   ...Template.args,
   loading: false,
   links: [
@@ -56,9 +64,14 @@ Loaded.args = {
 const LoadedWithCollapsedBreadcrumbs = Template.bind({});
 
 LoadedWithCollapsedBreadcrumbs.args = {
-  ...Loaded.args,
-  maxItems: Loaded.args.links.length,
+  ...LoadedWithoutCollapsedBreadcrumbs.args,
+  maxItems: LoadedWithoutCollapsedBreadcrumbs.args.links.length,
 };
 
 export default config;
-export { Loading, Loaded, LoadedWithCollapsedBreadcrumbs };
+export {
+  LoadingWithoutColapsedBreadcrumbs,
+  LoadingWithCollapsedBreadcrumbs,
+  LoadedWithoutCollapsedBreadcrumbs,
+  LoadedWithCollapsedBreadcrumbs,
+};
