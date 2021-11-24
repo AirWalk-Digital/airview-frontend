@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, within, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import userEvent, { specialChars } from "@testing-library/user-event";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/search/search.stories";
 import { responses } from "../stories/search/responses";
@@ -281,13 +281,14 @@ describe("Search", () => {
     onRequestToCloseMock.mockRestore();
   });
 
-  // Needs library update
-  test.skip("a request to close the search dialog is fired when pressing the escape key", () => {
+  test("a request to close the search dialog is fired when pressing the escape key", () => {
     const onRequestToCloseMock = jest.fn();
 
     render(<MultipleResultsFound onRequestToClose={onRequestToCloseMock} />);
 
-    userEvent.keyboard("{esc}");
+    userEvent.type(screen.getByRole("searchbox"), `${specialChars.escape}`, {
+      skipClick: true,
+    });
 
     expect(onRequestToCloseMock).toHaveBeenCalledTimes(1);
 
