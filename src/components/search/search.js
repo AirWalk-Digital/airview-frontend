@@ -86,7 +86,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
         <div className={styles.searchBody}>
           {state.errorMessage || state.results.length < 1 ? (
             <div className={styles.searchFeedback}>
-              <Typography align="center">
+              <Typography align="center" aria-label="Feedback">
                 {state.errorMessage ?? (
                   <>
                     No results found for{" "}
