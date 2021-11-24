@@ -63,7 +63,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 
         {state.query.length > 0 && (
           <IconButton
-            aria-label="clear query"
+            aria-label="Clear query"
             size="small"
             className={styles.clearQueryBtn}
             onClick={reset}
