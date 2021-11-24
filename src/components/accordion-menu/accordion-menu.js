@@ -137,7 +137,7 @@ AccordionMenu.propTypes = {
    */
   menuTitle: PropTypes.string.isRequired,
   /**
-   * Presents the menu in a lodaing state (for when fetching data async)
+   * Presents the menu in a loading state (for when fetching data async)
    */
   loading: PropTypes.bool.isRequired,
   /**
