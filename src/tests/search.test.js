@@ -379,8 +379,6 @@ describe("Search", () => {
     // It should persist the query in the search input
     expect(searchInput).toHaveValue(revisedSearchQuery);
     expect(searchInput).toHaveDisplayValue(revisedSearchQuery);
-
-    screen.debug();
   });
 
   test("a request to close the search dialog is fired when clicking the modal backdrop", () => {
