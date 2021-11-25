@@ -6,7 +6,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:coverage": "npm test -- --coverage --watchAll=false --maxWorkers=50%",
+    "test:coverage": "npm test -- --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -s public -p 6006",
     "build-storybook": "build-storybook -s public",
