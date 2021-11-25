@@ -5,7 +5,12 @@ import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/search/search.stories";
 import { responses } from "../stories/search/responses";
 
-const { MultipleResultsFound, NoResultsFound, Error } = composeStories(stories);
+const {
+  SingleResultFound,
+  MultipleResultsFound,
+  NoResultsFound,
+  Error,
+} = composeStories(stories);
 
 describe("Search", () => {
   test("in a closed state", () => {
@@ -251,6 +256,131 @@ describe("Search", () => {
     expect(onQueryChangeSpy).toHaveBeenCalledWith(searchQuery);
 
     onQueryChangeSpy.mockRestore();
+  });
+
+  test("a user can perform subsequent searches without having to close the component", async () => {
+    render(<SingleResultFound />);
+
+    const initialSearchQuery = "ipsum";
+
+    const searchDialog = screen.queryByRole("dialog");
+
+    const searchInput = within(searchDialog).getByRole("searchbox");
+
+    // Setup: enter a search query
+    userEvent.type(searchInput, initialSearchQuery);
+
+    // Searching
+
+    // It should set the search input equal to the query value
+    expect(searchInput).toHaveDisplayValue(initialSearchQuery);
+    expect(searchInput).toHaveValue(initialSearchQuery);
+
+    // It should present a clear search button
+    await waitFor(() => {
+      expect(
+        within(searchDialog).getByRole("button", { name: /clear/i })
+      ).toBeInTheDocument();
+    });
+
+    // It should present the search progress indicator
+    await waitFor(() => {
+      expect(
+        within(searchDialog).queryByRole("progressbar")
+      ).toBeInTheDocument();
+    });
+
+    // Resolved results
+
+    // It should remove the search progress indicator
+    await waitFor(() => {
+      expect(
+        within(searchDialog).queryByRole("progressbar")
+      ).not.toBeInTheDocument();
+    });
+
+    // It should output each result
+    expect(within(searchDialog).queryAllByRole("link")).toHaveLength(1);
+
+    within(searchDialog)
+      .queryAllByRole("link")
+      .forEach((link, index) => {
+        expect(link).toHaveTextContent(responses.resolved[index].title);
+        expect(link).toHaveTextContent(responses.resolved[index].summary);
+      });
+
+    const marks = document.querySelectorAll("mark");
+
+    // It should higlight the query within the results
+    expect(marks.length).toBe(2);
+
+    marks.forEach((mark) => {
+      expect(mark).toHaveTextContent(initialSearchQuery);
+    });
+
+    // It should persist the query in the search input
+    expect(searchInput).toHaveValue(initialSearchQuery);
+    expect(searchInput).toHaveDisplayValue(initialSearchQuery);
+
+    // Change the query
+    userEvent.type(searchInput, `${specialChars.backspace}`);
+
+    const revisedSearchQuery = initialSearchQuery.substr(
+      0,
+      initialSearchQuery.length - 1
+    );
+
+    // It should set the search input equal to the query value
+    expect(searchInput).toHaveDisplayValue(revisedSearchQuery);
+    expect(searchInput).toHaveValue(revisedSearchQuery);
+
+    // It should present a clear search button
+    await waitFor(() => {
+      expect(
+        within(searchDialog).getByRole("button", { name: /clear/i })
+      ).toBeInTheDocument();
+    });
+
+    // It should present the search progress indicator
+    await waitFor(() => {
+      expect(
+        within(searchDialog).queryByRole("progressbar")
+      ).toBeInTheDocument();
+    });
+
+    // Resolved results
+
+    // It should remove the search progress indicator
+    await waitFor(() => {
+      expect(
+        within(searchDialog).queryByRole("progressbar")
+      ).not.toBeInTheDocument();
+    });
+
+    // It should output each result
+    expect(within(searchDialog).queryAllByRole("link")).toHaveLength(1);
+
+    within(searchDialog)
+      .queryAllByRole("link")
+      .forEach((link, index) => {
+        expect(link).toHaveTextContent(responses.resolved[index].title);
+        expect(link).toHaveTextContent(responses.resolved[index].summary);
+      });
+
+    const revisedMarks = document.querySelectorAll("mark");
+
+    // It should higlight the query within the results
+    expect(revisedMarks.length).toBe(2);
+
+    revisedMarks.forEach((mark) => {
+      expect(mark).toHaveTextContent(revisedSearchQuery);
+    });
+
+    // It should persist the query in the search input
+    expect(searchInput).toHaveValue(revisedSearchQuery);
+    expect(searchInput).toHaveDisplayValue(revisedSearchQuery);
+
+    screen.debug();
   });
 
   test("a request to close the search dialog is fired when clicking the modal backdrop", () => {
