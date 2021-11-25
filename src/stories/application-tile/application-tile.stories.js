@@ -25,6 +25,7 @@ const config = {
     ApplicationTileContent,
     ApplicationTileContentRow,
     ApplicationTileCallToActionButton,
+    ApplicationTileChip,
   },
   parameters: {
     docs: {
