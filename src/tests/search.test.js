@@ -115,13 +115,17 @@ describe("Search", () => {
       .queryAllByRole("link")
       .forEach((link, index) => {
         expect(link).toHaveTextContent(responses.resolved[index].title);
-        expect(link).toHaveTextContent(responses.resolved[index].summary);
+
+        if (responses.resolved[index].summary) {
+          // eslint-disable-next-line jest/no-conditional-expect
+          expect(link).toHaveTextContent(responses.resolved[index]?.summary);
+        }
       });
 
     // It should higlight the query within the results
     const marks = document.querySelectorAll("mark");
 
-    expect(marks.length).toBe(12);
+    expect(marks.length).toBe(11);
 
     marks.forEach((mark) => {
       expect(mark).toHaveTextContent(searchQuery);
