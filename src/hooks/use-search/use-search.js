@@ -12,8 +12,11 @@ export function useSearch() {
       }
 
       const results = await response.data.text();
-
-      return JSON.parse(results);
+      const parsed = JSON.parse(results);
+      return parsed.map((item) => ({
+        ...item,
+        path: item.path.substring(0, item.path.lastIndexOf("/")),
+      }));
     } catch (error) {
       throw new Error(error.message);
     }
