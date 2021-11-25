@@ -8,8 +8,6 @@ export const responses = {
     },
     {
       title: "Integer urna ipsum",
-      summary:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
       path: "/",
     },
     {
