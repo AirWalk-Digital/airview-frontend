@@ -376,7 +376,7 @@ describe("ComplianceTableAcceptRiskDialog", () => {
         "Exemption One, Exemption Two"
       );
 
-      expect(selectedResourcesInput.value).toBe("1,2");
+      expect(selectedResourcesInput.value).toBe("Exemption One,Exemption Two");
     });
 
     it("should reveal the exemption end input when a user sets the limited exemption input to a truthy value", () => {
@@ -607,7 +607,10 @@ describe("ComplianceTableAcceptRiskDialog", () => {
       expect(formData.mitigation.value).toBe(formValues.mitigation);
       expect(formData.probability.value).toBe("Low");
       expect(formData.impact.value).toBe("Low");
-      expect(formData.resources.value).toEqual([1, 2]);
+      expect(formData.resources.value).toEqual([
+        "Exemption One",
+        "Exemption Two",
+      ]);
       expect(formData.limitedExemption.value).toBe(true);
       expect(formData.exemptionEnd.value).toBeInstanceOf(Date);
       expect(formData.exemptionEnd.value.getDate()).toBe(1);

@@ -63,7 +63,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
 
         {state.query.length > 0 && (
           <IconButton
-            aria-label="clear query"
+            aria-label="Clear query"
             size="small"
             className={styles.clearQueryBtn}
             onClick={reset}
@@ -86,7 +86,7 @@ export function Search({ open, onRequestToClose, onQueryChange }) {
         <div className={styles.searchBody}>
           {state.errorMessage || state.results.length < 1 ? (
             <div className={styles.searchFeedback}>
-              <Typography align="center">
+              <Typography align="center" aria-label="Feedback">
                 {state.errorMessage ?? (
                   <>
                     No results found for{" "}

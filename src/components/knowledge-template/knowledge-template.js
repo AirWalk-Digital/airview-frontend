@@ -132,7 +132,7 @@ export function KnowledgeTemplate({
           links={breadcrumbLinks}
           loading={loading}
           activeRoute={pageTitle}
-          classNames={styles.breadcrumb}
+          className={styles.breadcrumb}
         />
       </Container>
 
@@ -164,6 +164,7 @@ export function KnowledgeTemplate({
                   menuTitle="Related Knowledge"
                   menuItems={relatedKnowledge}
                   initialCollapsed
+                  id="related-knowledge-links"
                 />
               );
             }
@@ -176,6 +177,7 @@ export function KnowledgeTemplate({
                   loading={loading}
                   menuTitle="Table of Contents"
                   menuItems={tocData}
+                  id="knowledge-toc"
                 />
               );
           })()}

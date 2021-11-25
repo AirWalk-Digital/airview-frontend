@@ -30,6 +30,9 @@ function Template(args) {
 Template.argTypes = {
   children: {
     control: false,
+    table: {
+      disable: true,
+    },
   },
   borderColor: {
     control: {

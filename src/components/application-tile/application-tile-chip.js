@@ -18,7 +18,7 @@ export function ApplicationTileChip({
       <IconChip
         {...{ icon, label, color }}
         dense
-        classNames={classes.root}
+        className={classes.root}
         {...rest}
       />
     </Tooltip>

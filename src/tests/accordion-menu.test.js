@@ -1,168 +1,135 @@
 import React from "react";
-import { screen, waitFor } from "@testing-library/react";
+import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "./utils/with-providers";
-import { AccordionMenu } from "../components/accordion-menu";
+import { composeStories } from "@storybook/testing-react";
+import * as stories from "../stories/accordion-menu/accordion-menu.stories";
 
-const testNavItems = [
-  {
-    id: "1",
-    name: "Navigation Item 1",
-    url: "one",
-  },
-  {
-    id: "2",
-    name: "Navigation Item Parent 1",
-    children: [
-      {
-        id: "3",
-        name: "Sub Navigation A Item 1",
-        url: "two",
-      },
-      {
-        id: "4",
-        name: "Sub Navigation A Item 2",
-        url: "three",
-      },
-      {
-        id: "5",
-        name: "Navigation Item Parent 2",
-        children: [
-          {
-            id: "6",
-            name: "Sub Navigation B Item 1",
-            url: "four",
-          },
-          {
-            id: "7",
-            name: "Sub Navigation B Item 2",
-            url: "five",
-          },
-        ],
-      },
-      {
-        id: "6",
-        name: "Sub Navigation A Item 3",
-        url: "six",
-      },
-      {
-        id: "7",
-        name: "Sub Navigation A Item 4",
-        url: "seven",
-      },
-    ],
-  },
-  {
-    id: "8",
-    name: "Navigation Item 2",
-    url: "eight",
-  },
-  {
-    id: "9",
-    name: "Navigation Item 3",
-    url: "nine",
-  },
-];
+const { Loading, Loaded } = composeStories(stories);
 
-describe("AccordionMenu - menu title", () => {
-  describe("with a menuTitle prop set", () => {
-    it("should output a title equal to the value of the menuTitle prop", () => {
-      renderWithProviders(
-        <AccordionMenu
-          menuTitle="Menu Title"
-          navItems={[...testNavItems]}
-          testid="testid"
-        />
-      );
+describe("AccordionMenu", () => {
+  test("in a loading state, it renders correctly", () => {
+    render(<Loading />);
 
-      expect(screen.getByLabelText("Menu title")).toHaveTextContent(
-        /^Menu Title$/
-      );
+    const navigation = screen.getByRole("navigation");
+
+    // It should have required accessibility attributes
+    expect(navigation).toHaveAttribute("aria-live", "polite");
+    expect(navigation).toHaveAttribute("aria-busy", "true");
+
+    // It does not render menu title
+    expect(
+      within(navigation).queryByRole("heading", {
+        name: Loading.args.menuTitle,
+      })
+    ).not.toBeInTheDocument();
+
+    // It renders a loading skeleton title
+    expect(within(navigation).getByRole("heading")).toBeInTheDocument();
+
+    // It should not output any navigation links
+    expect(within(navigation).queryAllByRole("link")).toHaveLength(0);
+  });
+
+  test("in a loaded state, it renders correctly", () => {
+    render(<Loaded />);
+
+    const navigation = screen.getByRole("navigation", {
+      name: Loaded.args.menuTitle,
+    });
+
+    // It should have required accessibility attributes
+    expect(navigation).toHaveAttribute("aria-live", "polite");
+    expect(navigation).toHaveAttribute("aria-busy", "false");
+
+    // It renders the menu title
+    expect(
+      within(navigation).queryByRole("heading", {
+        name: Loaded.args.menuTitle,
+      })
+    ).toBeInTheDocument();
+
+    // It should initially render the top level navigation nodes by default
+    const topLevelNavItems = Loaded.args.navItems.filter(
+      ({ children }) => !children
+    );
+
+    const topLevelLinks = within(navigation).queryAllByRole("link");
+
+    expect(topLevelLinks.length).toBe(topLevelNavItems.length);
+
+    topLevelLinks.forEach((link, index) => {
+      expect(link).toHaveTextContent(topLevelNavItems[index].name);
+      expect(link).toHaveAttribute("href", topLevelNavItems[index].url);
+    });
+
+    // It should initially render the top level parents by default
+    const topLevelParentNavItems = Loaded.args.navItems.filter(
+      ({ children }) => children
+    );
+
+    const topLevelParents = within(navigation).queryAllByRole("button");
+
+    expect(topLevelParents.length).toBe(topLevelParentNavItems.length);
+
+    topLevelParents.forEach((parent, index) => {
+      expect(parent).toHaveTextContent(topLevelParentNavItems[index].name);
     });
   });
 
-  describe("with no menuTitle prop set", () => {
-    it("should not output a title", () => {
-      renderWithProviders(
-        <AccordionMenu navItems={[...testNavItems]} testid="testid" />
-      );
+  test("a user can toggle visibility of nested child links", async () => {
+    render(<Loaded />);
 
-      expect(screen.queryByLabelText("Menu title")).toBeNull();
+    const navigation = screen.getByRole("navigation", {
+      name: Loading.args.menuTitle,
     });
-  });
-});
 
-describe("AccordionMenu - menu items", () => {
-  beforeEach(() => {
-    renderWithProviders(
-      <AccordionMenu
-        menuTitle="Menu Title"
-        navItems={[...testNavItems]}
-        testid="testid"
-      />
-    );
-  });
+    const topLevelNavParent = Loaded.args.navItems
+      .filter(({ children }) => children)
+      .shift();
 
-  it("should render all menu items equal to the order of the passed array", () => {
-    const menuItems = screen.getAllByLabelText("Menu item label");
-    const subMenuItems = screen.getAllByLabelText("Sub-menu");
-
-    expect(menuItems[0]).toHaveTextContent(/^Navigation Item 1$/);
-    expect(menuItems[1]).toHaveTextContent(/^Navigation Item 2$/);
-    expect(menuItems[2]).toHaveTextContent(/^Navigation Item 3$/);
-
-    expect(subMenuItems[0]).toHaveTextContent(/^Navigation Item Parent 1$/);
-  });
-});
-
-describe("AccordionMenu - sub menus", () => {
-  beforeEach(() => {
-    renderWithProviders(
-      <AccordionMenu
-        menuTitle="Menu Title"
-        navItems={[...testNavItems]}
-        testid="testid"
-      />
-    );
-  });
-
-  it("should not render sub navigation items by default", () => {
-    const menuItems = screen.getAllByLabelText("Menu item label");
-
-    expect(menuItems).toHaveLength(3);
-  });
-
-  it("should show a given sub navigation when a request to reveal a sub navigation is made", () => {
+    // Click on the parent naviagtion node to reveal sub level links
     userEvent.click(
-      screen.getByLabelText("Sub-menu", { name: "Navigation Item Parent 1" })
+      within(navigation).getByRole("button", {
+        name: topLevelNavParent.name,
+      })
     );
 
-    const menuItems = screen.getAllByLabelText("Menu item label");
+    const subNavigationLinks = topLevelNavParent.children.filter(
+      ({ children }) => !children
+    );
 
-    expect(menuItems).toHaveLength(7);
-    expect(menuItems[0]).toHaveTextContent(/^Navigation Item 1$/);
-    expect(menuItems[1]).toHaveTextContent(/^Sub Navigation A Item 1$/);
-    expect(menuItems[2]).toHaveTextContent(/^Sub Navigation A Item 2$/);
-    expect(menuItems[3]).toHaveTextContent(/^Sub Navigation A Item 3$/);
-    expect(menuItems[4]).toHaveTextContent(/^Sub Navigation A Item 4$/);
-    expect(menuItems[5]).toHaveTextContent(/^Navigation Item 2$/);
-    expect(menuItems[6]).toHaveTextContent(/^Navigation Item 3$/);
+    // It should render sub level links
+    subNavigationLinks.forEach(({ name, url }) => {
+      const linkItem = screen.getByRole("link", { name });
+
+      expect(linkItem).toBeInTheDocument();
+      expect(linkItem).toHaveAttribute("href", url);
+    });
+
+    // Click on the parent naviagtion node to hide sub level links
+    userEvent.click(
+      within(navigation).getByRole("button", {
+        name: topLevelNavParent.name,
+      })
+    );
+
+    // It should remove all sub level links
+    await Promise.all(
+      subNavigationLinks.map(async ({ name }) => {
+        await waitFor(() => {
+          expect(screen.queryByRole("link", { name })).not.toBeInTheDocument();
+        });
+      })
+    );
   });
 
-  it("should hide a given sub navigation when a request to reveal a sub navigation is made", async () => {
-    const subMenuItem = screen.getByLabelText("Sub-menu", {
-      name: "Navigation Item Parent 1",
-    });
+  test("it should spread other props to the component root DOM node", () => {
+    const testId = "accordion-menu";
+    render(<Loading data-testid={testId} />);
 
-    userEvent.click(subMenuItem);
-    expect(screen.queryByText("Sub Navigation A Item 1")).toBeInTheDocument();
-
-    userEvent.click(subMenuItem);
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Sub Navigation A Item 1")
-      ).not.toBeInTheDocument();
-    });
+    expect(screen.getByRole("navigation")).toHaveAttribute(
+      "data-testid",
+      testId
+    );
   });
 });

@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccordionMenu } from "../../components/accordion-menu";
-import { LocationProvider } from "../../hooks/use-location";
 
 const config = {
   title: "Modules/Accordion Menu",
@@ -31,7 +30,7 @@ const testNavItems = [
   },
   {
     id: "2",
-    name: "Navigation Item Parent",
+    name: "Navigation Item Parent 1",
     children: [
       {
         id: "3",
@@ -45,7 +44,7 @@ const testNavItems = [
       },
       {
         id: "5",
-        name: "Navigation Item Parent",
+        name: "Navigation Item Parent 2",
         children: [
           {
             id: "6",
@@ -84,29 +83,13 @@ const testNavItems = [
 ];
 
 function Template(args) {
-  return (
-    <LocationProvider location="/seven">
-      <AccordionMenu {...args} />
-    </LocationProvider>
-  );
+  return <AccordionMenu {...args} />;
 }
 
 Template.args = {
   menuTitle: "Menu Title",
-  loading: false,
   navItems: [...testNavItems],
-};
-
-const Default = Template.bind({});
-Default.args = {
-  ...Template.args,
-};
-
-const WithoutTitle = Template.bind({});
-
-WithoutTitle.args = {
-  ...Template.args,
-  menuTitle: null,
+  id: "accordion-nav",
 };
 
 const Loading = Template.bind({});
@@ -114,9 +97,14 @@ const Loading = Template.bind({});
 Loading.args = {
   ...Template.args,
   loading: true,
-  navItems: null,
 };
 
-export { Default, WithoutTitle, Loading };
+const Loaded = Template.bind({});
+Loaded.args = {
+  ...Template.args,
+  loading: false,
+};
+
+export { Loading, Loaded };
 
 export default config;

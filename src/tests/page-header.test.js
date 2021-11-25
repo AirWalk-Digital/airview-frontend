@@ -80,3 +80,9 @@ describe("PageHeader - test ID prop", () => {
     expect(screen.getByTestId("Test id")).toBeInTheDocument();
   });
 });
+
+test.todo("closing the Search component resets it to an initial state");
+
+test.todo(
+  "closing the Search component whilst a request is pending, prevents the output of the request response"
+);

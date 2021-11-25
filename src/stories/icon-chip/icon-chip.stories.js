@@ -11,6 +11,14 @@ function Template(args) {
   return <IconChip {...args} />;
 }
 
+Template.args = {
+  icon: <WarningIcon />,
+  label: "Chip Label",
+  color: "#000",
+  labelColor: "#fff",
+  dense: false,
+};
+
 Template.argTypes = {
   icon: {
     control: false,
@@ -25,15 +33,11 @@ Template.argTypes = {
       type: "color",
     },
   },
-  classNames: {
-    control: false,
-  },
 };
 
 const Default = Template.bind({});
 Default.args = {
-  icon: <WarningIcon />,
-  label: "chip label",
+  ...Template.args,
 };
 
 Default.argTypes = {
@@ -42,7 +46,7 @@ Default.argTypes = {
 
 const Dense = Template.bind({});
 Dense.args = {
-  ...Default.args,
+  ...Template.args,
   dense: true,
 };
 

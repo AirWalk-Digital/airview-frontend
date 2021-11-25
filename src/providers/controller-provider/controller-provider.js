@@ -3,7 +3,7 @@ import React from "react";
 import { useStore } from "../../store/store";
 import { useApiService } from "../../hooks/use-api-service";
 import * as matter from "gray-matter";
-import { get } from "lodash-es";
+import get from "lodash/get";
 import path from "path";
 
 export const ControllerProviderContext = React.createContext();
@@ -16,7 +16,6 @@ export function ControllerProvider({ initialState, children, client }) {
     setWorkingBranchName,
     resetWorkingBranchName,
   } = useStore(initialState);
-
 
   const apiService = useApiService();
 
@@ -65,16 +64,15 @@ export function ControllerProvider({ initialState, children, client }) {
   };
 
   const getBaseBranchName = (route) => {
-    return initialState.routeRepoData[route].workingBranchName
-  }
+    return initialState.routeRepoData[route].workingBranchName;
+  };
 
   const createPullRequest = async (route, baseBranch, sourceBranch) => {
     const repo = getWorkingRepoName(route);
-    const url = await client.createPR(repo,baseBranch, sourceBranch) 
+    const url = await client.createPR(repo, baseBranch, sourceBranch);
     return url;
-    
-  }
-  
+  };
+
   const commitContent = async (route, filePath, content) => {
     for (let item of content) {
       await commitFile(
@@ -210,14 +208,14 @@ export function ControllerProvider({ initialState, children, client }) {
         getWorkingRepoName,
         getWorkingBranchName,
         setWorkingBranchName,
-	getBaseBranchName,
+        getBaseBranchName,
         resetWorkingBranchName,
         getFile,
         getMedia,
         getBranches,
         getListing,
         createBranch,
-	createPullRequest,
+        createPullRequest,
         commitContent,
         commitFile, // Temp addition to allow commiting of content for new page creation
       }}

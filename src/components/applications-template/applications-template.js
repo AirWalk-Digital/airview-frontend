@@ -152,7 +152,7 @@ export function ApplicationsTemplate({
           links={breadcrumbLinks}
           loading={loading}
           activeRoute={pageTitle}
-          classNames={styles.breadcrumb}
+          className={styles.breadcrumb}
         />
       </Container>
 
@@ -213,6 +213,7 @@ export function ApplicationsTemplate({
                   menuTitle="Knowledge"
                   menuItems={knowledgeLinks}
                   initialCollapsed
+                  id="applications-knowledge-links"
                 />
               );
             }
@@ -225,6 +226,7 @@ export function ApplicationsTemplate({
                   loading={loading}
                   menuTitle="Table of Contents"
                   menuItems={tocData}
+                  id="applications-toc"
                 />
               );
           })()}

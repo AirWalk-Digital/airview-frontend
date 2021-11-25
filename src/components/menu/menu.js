@@ -16,7 +16,8 @@ function Menu({
   menuItems,
   collapsible = true,
   initialCollapsed = false,
-  classNames,
+  id,
+  ...rest
 }) {
   const classes = useCollapsibleMenuStyles();
 
@@ -25,9 +26,18 @@ function Menu({
   );
 
   return (
-    <nav className={classNames}>
+    <nav
+      aria-labelledby={`${id}-menu-title`}
+      aria-live="polite"
+      aria-busy={loading}
+      {...rest}
+    >
       <header className={classes.menuHeader}>
-        <Typography component={menuTitleElement} className={classes.menuTitle}>
+        <Typography
+          component={menuTitleElement}
+          className={classes.menuTitle}
+          id={`${id}-menu-title`}
+        >
           {loading ? <Skeleton width="90%" /> : menuTitle}
         </Typography>
 
@@ -37,6 +47,7 @@ function Menu({
             size="medium"
             classes={{ root: classes.menuCollapseIconButton }}
             aria-label={collapsed ? "Expand menu" : "Collapse menu"}
+            disabled={loading}
           >
             {collapsed ? (
               <ExpandMore fontSize="inherit" />
@@ -62,7 +73,7 @@ function Menu({
                   <li className={classes.menuItem} key={index}>
                     <Link
                       href={url}
-                      classNames={classes.menuLink}
+                      className={classes.menuLink}
                       activeClassName={classes.currentMenuItem}
                     >
                       {label}
@@ -80,11 +91,11 @@ Menu.propTypes = {
   /**
    * Presents the component in a lodaing state (for when fetching data async)
    */
-  loading: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
   /**
    * An optional title for the menu (required if collapsible is true)
    */
-  menuTitle: PropTypes.string,
+  menuTitle: PropTypes.string.isRequired,
   /**
    * The required semantic HTML tag for the menu title
    */
@@ -97,7 +108,7 @@ Menu.propTypes = {
       label: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
     })
-  ),
+  ).isRequired,
   /**
    * Determines if the menu should have collapsible functionality
    */
@@ -107,9 +118,9 @@ Menu.propTypes = {
    */
   initialCollapsed: PropTypes.bool,
   /**
-   * Optional CSS classname to apply styles to the parent `Menu` container
+   * A unique ID required for accessibility requirements
    */
-  classNames: PropTypes.string,
+  id: PropTypes.string.isRequired,
 };
 
 const useCollapsibleMenuStyles = makeStyles((theme) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useHistory } from "react-router-dom";
-import { isEmpty } from "lodash-es";
+import isEmpty from "lodash/isEmpty";
 import { default as slugger } from "slug";
 import * as matter from "gray-matter";
 import siteConfig from "../../site-config.json";

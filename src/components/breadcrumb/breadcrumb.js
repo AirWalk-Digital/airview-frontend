@@ -10,20 +10,26 @@ export function Breadcrumb({
   links,
   activeRoute,
   maxItems = 5,
-  classNames,
   loading,
+  ...rest
 }) {
   const classes = useStyles();
 
   return (
     <Breadcrumbs
       maxItems={maxItems}
-      aria-label="breadcrumb"
-      className={classNames}
+      aria-label="Breadcrumb"
+      aria-live="polite"
+      aria-busy={loading}
+      {...rest}
     >
       {loading
-        ? [...Array(4)].map((item, index) => (
-            <Skeleton key={index} className={classes.loadingBreadCrumbItem} />
+        ? [...Array(5)].map((item, index) => (
+            <Skeleton
+              key={index}
+              className={classes.loadingBreadCrumbItem}
+              aria-label="Breadcrumb item placeholder"
+            />
           ))
         : links?.map((link) => (
             <Link href={link.url} key={link.url}>
@@ -45,7 +51,7 @@ Breadcrumb.propTypes = {
   /**
    * Presents the breadcrumbs in a lodaing state (for when fetching data async)
    */
-  loading: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
   /**
    * Sets the available interactive link items
    */
@@ -54,17 +60,13 @@ Breadcrumb.propTypes = {
       label: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
     })
-  ),
+  ).isRequired,
   /**
    * Sets the active route (the current page)
    */
-  activeRoute: PropTypes.string,
+  activeRoute: PropTypes.string.isRequired,
   /**
    * Set the maximum number of breadcrumbs to display. When the value is exceeded an ellipsis in rendered inbetween
    */
   maxItems: PropTypes.number,
-  /**
-   * Apply any required classNames to the root container
-   */
-  classNames: PropTypes.string,
 };

@@ -1,43 +1,37 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import { composeStories } from "@storybook/testing-react";
+import * as stories from "../stories/icon-chip/icon-chip.stories";
 import { IconChip } from "../components/icon-chip";
-import WarningIcon from "@material-ui/icons/Warning";
+
+const { Default } = composeStories(stories);
 
 describe("IconChip", () => {
-  beforeEach(() => {
-    render(
-      <IconChip
-        icon={<WarningIcon aria-label="Test Icon" />}
-        label="Test Label"
-      />
-    );
+  test("it renders correctly", () => {
+    const iconPropNode = "icon prop node";
+    render(<Default icon={<span>{iconPropNode}</span>} />);
+
+    // It renders the node passed to the icon prop
+    expect(screen.getByText(iconPropNode)).toBeInTheDocument();
+
+    // It renders the label
+    expect(screen.getByText(Default.args.label)).toBeInTheDocument();
   });
 
-  describe("with a valid icon passed to the icon prop", () => {
-    it("should set the icon equal to the value passed to the icon prop", () => {
-      expect(screen.getByLabelText("Test Icon")).toBeInTheDocument();
-    });
+  test("it should allow the forwardind of a ref", () => {
+    const ref = React.createRef();
+    const testId = "ref-test-id";
+
+    render(<IconChip ref={ref} data-testid={testId} />);
+
+    expect(ref.current.getAttribute("data-testid")).toBe(testId);
   });
 
-  describe("with a valid string passed to the label prop", () => {
-    it("set the label text equal to the value passed to the label prop", () => {
-      expect(screen.getByText("Test Label")).toBeInTheDocument();
-    });
-  });
+  test("it should spread other props to the component root DOM node", () => {
+    const testClassName = "test-classname";
 
-  describe("with a value passed to the classNames prop", () => {
-    it("should apply classnames equal to the value passed to the classNames prop", () => {
-      const { container } = render(
-        <IconChip
-          icon={<WarningIcon aria-label="Test Icon" />}
-          label="Test Label"
-          classNames="test-class-name"
-        />
-      );
+    const { container } = render(<Default className={testClassName} />);
 
-      expect(container.firstChild.className).toEqual(
-        expect.stringContaining("test-class-name")
-      );
-    });
+    expect(container.firstChild).toHaveClass(testClassName);
   });
 });

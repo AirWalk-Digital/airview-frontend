@@ -1,74 +1,198 @@
 import React from "react";
-import { screen } from "@testing-library/react";
+import { screen, render } from "@testing-library/react";
+import { composeStories } from "@storybook/testing-react";
 import { renderWithProviders } from "./utils/with-providers";
+import * as stories from "../stories/link/link.stories";
 import { Link } from "../components/link";
-import { LocationProvider } from "../hooks/use-location";
 
-test("it should apply the correct attributes to the link when passed an external href prop", () => {
-  const linkHref = "https://somedomain.com";
+const {
+  InternalLinkNonActiveMuiStyled,
+  InternalLinkNonActiveNonMuiStyled,
+  InternalLinkActiveMuiStyled,
+  InternalLinkActiveNonMuiStyled,
+  ExternalLinkMuiStyled,
+  ExternalLinkNonMuiStyled,
+} = composeStories(stories);
 
-  renderWithProviders(<Link href={linkHref}>Test External Link</Link>);
+describe("Link", () => {
+  test("it renders correctly when passed an internal link using MUI styles", () => {
+    render(<InternalLinkNonActiveMuiStyled />);
 
-  const linkElement = screen.getByRole("link", { name: /test external link/i });
+    const linkElement = screen.getByRole("link", {
+      name: InternalLinkNonActiveMuiStyled.args.children,
+    });
 
-  expect(linkElement).toHaveAttribute("rel", "noreferrer");
-  expect(linkElement).toHaveAttribute("target", "_blank");
-  expect(linkElement).toHaveAttribute("href", linkHref);
-});
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).not.toHaveClass(
+      InternalLinkNonActiveMuiStyled.args.activeClassName
+    );
+    expect(linkElement).toHaveAttribute(
+      "href",
+      InternalLinkNonActiveMuiStyled.args.href
+    );
+    expect(linkElement).not.toHaveAttribute("rel", "noreferrer");
+    expect(linkElement).not.toHaveAttribute("target", "_blank");
+  });
 
-test("it should apply the correct attributes to the link when passed a mailto: href prop", () => {
-  const linkHref = "mailto:someone@somedomain.com";
+  test("it renders correctly when passed an internal link not using MUI styles", () => {
+    render(<InternalLinkNonActiveNonMuiStyled />);
 
-  renderWithProviders(<Link href={linkHref}>Test Email Link</Link>);
+    const linkElement = screen.getByRole("link", {
+      name: InternalLinkNonActiveNonMuiStyled.args.children,
+    });
 
-  const linkElement = screen.getByRole("link", { name: /test email link/i });
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).not.toHaveClass(
+      InternalLinkNonActiveNonMuiStyled.args.activeClassName
+    );
+    expect(linkElement).toHaveAttribute(
+      "href",
+      InternalLinkNonActiveNonMuiStyled.args.href
+    );
+    expect(linkElement).not.toHaveAttribute("rel", "noreferrer");
+    expect(linkElement).not.toHaveAttribute("target", "_blank");
+  });
 
-  expect(linkElement).toHaveAttribute("rel", "noreferrer");
-  expect(linkElement).toHaveAttribute("target", "_blank");
-  expect(linkElement).toHaveAttribute("href", linkHref);
-});
+  test("it renders correctly when passed an external link using MUI styles", () => {
+    render(<ExternalLinkMuiStyled />);
 
-test("it should apply the correct attributes to the link when passed a tel: href prop", () => {
-  const linkHref = "tel:01234567890";
+    const linkElement = screen.getByRole("link", {
+      name: ExternalLinkMuiStyled.args.children,
+    });
 
-  renderWithProviders(<Link href={linkHref}>Test Tel Link</Link>);
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).not.toHaveClass(
+      ExternalLinkMuiStyled.args.activeClassName
+    );
+    expect(linkElement).toHaveAttribute(
+      "href",
+      ExternalLinkMuiStyled.args.href
+    );
+    expect(linkElement).toHaveAttribute("rel", "noreferrer");
+    expect(linkElement).toHaveAttribute("target", "_blank");
+  });
 
-  const linkElement = screen.getByRole("link", { name: /test tel link/i });
+  test("it renders correctly when passed an external link not using MUI styles", () => {
+    render(<ExternalLinkNonMuiStyled />);
 
-  expect(linkElement).toHaveAttribute("rel", "noreferrer");
-  expect(linkElement).toHaveAttribute("target", "_blank");
-  expect(linkElement).toHaveAttribute("href", linkHref);
-});
+    const linkElement = screen.getByRole("link", {
+      name: ExternalLinkNonMuiStyled.args.children,
+    });
 
-test("it should apply the correct attributes when passed an internal href prop", () => {
-  const linkHref = "/some-route";
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).not.toHaveClass(
+      ExternalLinkNonMuiStyled.args.activeClassName
+    );
+    expect(linkElement).toHaveAttribute(
+      "href",
+      ExternalLinkNonMuiStyled.args.href
+    );
+    expect(linkElement).toHaveAttribute("rel", "noreferrer");
+    expect(linkElement).toHaveAttribute("target", "_blank");
+  });
 
-  renderWithProviders(<Link href={linkHref}>Test Internal Link</Link>);
+  test("it applies an active classname when the internal link href matches the current route, using MUI styles", () => {
+    render(<InternalLinkActiveMuiStyled />);
 
-  const linkElement = screen.getByRole("link", { name: /test internal link/i });
+    const linkElement = screen.getByRole("link", {
+      name: InternalLinkActiveMuiStyled.args.children,
+    });
 
-  expect(linkElement).not.toHaveAttribute("rel", "noreferrer");
-  expect(linkElement).not.toHaveAttribute("target", "_blank");
-  expect(linkElement).toHaveAttribute("href", linkHref);
-});
+    expect(linkElement).toHaveClass(
+      InternalLinkActiveMuiStyled.args.activeClassName
+    );
+  });
 
-test("it should apply an active class name when the link href prop mathces the current location", () => {
-  const linkHref = "/some-route";
-  const activeClassName = "active";
+  test("it applies an active classname when the internal link href matches the current route, not using MUI styles", () => {
+    render(<InternalLinkActiveNonMuiStyled />);
 
-  renderWithProviders(
-    <LocationProvider location={linkHref}>
-      <Link href={linkHref} activeClassName={activeClassName}>
-        Test Internal Link
+    const linkElement = screen.getByRole("link", {
+      name: InternalLinkActiveNonMuiStyled.args.children,
+    });
+
+    expect(linkElement).toHaveClass(
+      InternalLinkActiveNonMuiStyled.args.activeClassName
+    );
+  });
+
+  test("it renders correctly when passed an internal file link", () => {
+    render(<InternalLinkNonActiveNonMuiStyled href="/some-image.jpg" />);
+
+    const linkElement = screen.getByRole("link", {
+      name: InternalLinkNonActiveNonMuiStyled.args.children,
+    });
+
+    expect(linkElement).toHaveAttribute("rel", "noreferrer");
+    expect(linkElement).toHaveAttribute("target", "_blank");
+  });
+
+  test("it renders correctly when passed a telephone (tel:) number", () => {
+    render(<InternalLinkNonActiveNonMuiStyled href="tel:01234567890" />);
+
+    const linkElement = screen.getByRole("link", {
+      name: InternalLinkNonActiveNonMuiStyled.args.children,
+    });
+
+    expect(linkElement).toHaveAttribute("rel", "noreferrer");
+    expect(linkElement).toHaveAttribute("target", "_blank");
+  });
+
+  test("it renders correctly when passed an email (mailto:) address", () => {
+    render(<InternalLinkNonActiveNonMuiStyled href="mailto:mail@mail.com" />);
+
+    const linkElement = screen.getByRole("link", {
+      name: InternalLinkNonActiveNonMuiStyled.args.children,
+    });
+
+    expect(linkElement).toHaveAttribute("rel", "noreferrer");
+    expect(linkElement).toHaveAttribute("target", "_blank");
+  });
+
+  test("it should forward a ref to an internal link using MUI styles", () => {
+    const mockRef = jest.fn();
+
+    renderWithProviders(
+      <Link href="/" noLinkStyle={false} ref={mockRef}>
+        Link Label
       </Link>
-    </LocationProvider>,
-    { route: linkHref }
-  );
+    );
 
-  const linkElement = screen.getByRole("link", { name: /test internal link/i });
+    expect(mockRef).toHaveBeenCalled();
+  });
 
-  expect(linkElement).not.toHaveAttribute("rel", "noreferrer");
-  expect(linkElement).not.toHaveAttribute("target", "_blank");
-  expect(linkElement).toHaveAttribute("href", linkHref);
-  expect(linkElement).toHaveClass("active");
+  test("it should not forward a ref to an internal link not using MUI styles", () => {
+    const mockRef = jest.fn();
+
+    renderWithProviders(
+      <Link href="/" noLinkStyle={true} ref={mockRef}>
+        Link Label
+      </Link>
+    );
+
+    expect(mockRef).not.toHaveBeenCalled();
+  });
+
+  test("it should forward a ref to an external link using MUI styles", () => {
+    const mockRef = jest.fn();
+
+    renderWithProviders(
+      <Link href="https://google.co.uk" noLinkStyle={false} ref={mockRef}>
+        Link Label
+      </Link>
+    );
+
+    expect(mockRef).toHaveBeenCalled();
+  });
+
+  test("it should forward a ref to an external link not using MUI styles", () => {
+    const mockRef = jest.fn();
+
+    renderWithProviders(
+      <Link href="https://google.co.uk" noLinkStyle={true} ref={mockRef}>
+        Link Label
+      </Link>
+    );
+
+    expect(mockRef).toHaveBeenCalled();
+  });
 });

@@ -2,6 +2,7 @@ import React from "react";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 import { action } from "@storybook/addon-actions";
 import { Search } from "../../components/search";
+import { responses } from "./responses";
 
 const config = {
   title: "Modules/Search",
@@ -20,48 +21,6 @@ const config = {
 };
 
 const delay = process.env.NODE_ENV === "test" ? 0 : 1000;
-
-const responses = {
-  resolved: [
-    {
-      title: "Integer urna ipsum",
-      summary:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      path: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      summary:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      path: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      summary:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      path: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      summary:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      path: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      summary:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      path: "/",
-    },
-    {
-      title: "Integer urna ipsum",
-      summary:
-        "Feugiat ac nulla ac, urna mattis dignissim risus ipsum. Sed feugiat vitae ligula eu pulvinar",
-      path: "/",
-    },
-  ],
-  rejected: { message: "There was an error" },
-};
 
 function Template(args) {
   return <Search {...args} />;

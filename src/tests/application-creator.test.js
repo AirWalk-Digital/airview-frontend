@@ -253,7 +253,7 @@ test("the component correctly responds to submission errors", async () => {
   const errorMessage = "Form error";
   const onSubmitHandler = jest
     .fn()
-    .mockRejectedValueOnce(errorMessage)
+    .mockRejectedValueOnce({ error: errorMessage })
     .mockResolvedValue();
 
   setupComponent({ onSubmit: onSubmitHandler });

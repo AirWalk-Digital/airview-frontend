@@ -1,5 +1,5 @@
 import { useCallback, useState, useMemo, useEffect, useRef } from "react";
-import { debounce } from "lodash-es";
+import debounce from "lodash/debounce";
 
 function highlightQueryWithinString(inputString, query) {
   const keywords = query.split(/\s/);

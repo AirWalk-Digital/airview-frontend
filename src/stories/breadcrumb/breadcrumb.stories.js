@@ -16,6 +16,29 @@ function Template(args) {
 }
 
 Template.args = {
+  activeRoute: "Activity Feed Guide",
+  maxItems: 5,
+};
+
+const LoadingWithoutCollapsedBreadcrumbs = Template.bind({});
+
+LoadingWithoutCollapsedBreadcrumbs.args = {
+  ...Template.args,
+  loading: true,
+  links: [],
+};
+
+const LoadingWithCollapsedBreadcrumbs = Template.bind({});
+
+LoadingWithCollapsedBreadcrumbs.args = {
+  ...LoadingWithoutCollapsedBreadcrumbs.args,
+  maxItems: 4,
+};
+
+const LoadedWithoutCollapsedBreadcrumbs = Template.bind({});
+
+LoadedWithoutCollapsedBreadcrumbs.args = {
+  ...Template.args,
   loading: false,
   links: [
     {
@@ -35,23 +58,19 @@ Template.args = {
       url: "/applications/microsoft_teams/knowledge",
     },
   ],
-  activeRoute: "Activity Feed Guide",
-  maxItems: 5,
 };
 
-const Default = Template.bind({});
+const LoadedWithCollapsedBreadcrumbs = Template.bind({});
 
-Default.args = {
-  ...Template.args,
-};
-
-const Loading = Template.bind({});
-
-Loading.args = {
-  ...Template.args,
-  links: null,
-  loading: true,
+LoadedWithCollapsedBreadcrumbs.args = {
+  ...LoadedWithoutCollapsedBreadcrumbs.args,
+  maxItems: LoadedWithoutCollapsedBreadcrumbs.args.links.length,
 };
 
 export default config;
-export { Default, Loading };
+export {
+  LoadingWithoutCollapsedBreadcrumbs,
+  LoadingWithCollapsedBreadcrumbs,
+  LoadedWithoutCollapsedBreadcrumbs,
+  LoadedWithCollapsedBreadcrumbs,
+};

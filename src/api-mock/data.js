@@ -106,7 +106,7 @@ export const resources = {
       type: "Test instance 2",
       reference: "Instance reference",
       environment: "Development",
-      lastSeen: dayjs().subtract(1, "year").toISOString(),
+      lastSeen: dayjs().subtract(1, "day").toISOString(),
       status: "Non-Compliant",
       pending: false,
     },
@@ -115,7 +115,7 @@ export const resources = {
       type: "Test instance 3",
       reference: "Instance reference",
       environment: "Development",
-      lastSeen: dayjs().subtract(2, "year").toISOString(),
+      lastSeen: dayjs().subtract(1, "month").toISOString(),
       status: "Exempt",
       pending: false,
       exemptionData: {
@@ -129,7 +129,7 @@ export const resources = {
       type: "Test instance 4",
       reference: "Instance reference",
       environment: "Development",
-      lastSeen: dayjs().subtract(2, "year").toISOString(),
+      lastSeen: dayjs().subtract(1, "year").toISOString(),
       status: "Exempt",
       pending: false,
       exemptionData: {

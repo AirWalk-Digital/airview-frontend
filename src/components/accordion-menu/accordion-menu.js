@@ -11,13 +11,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Link } from "../link";
 
-export function AccordionMenu({
-  menuTitle,
-  navItems,
-  classNames,
-  loading,
-  testid,
-}) {
+export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
   const classes = useStyles();
 
   const [expanded, setExpanded] = useState([]);
@@ -57,7 +51,6 @@ export function AccordionMenu({
               onClick={() => handleOnExpandClick(node.id)}
             >
               <ListItemText
-                aria-label="Sub-menu"
                 classes={{
                   root: classes.subMenuParentLabelRoot,
                   primary: classes.subMenuParentLabelPrimary,
@@ -89,11 +82,11 @@ export function AccordionMenu({
             component="div"
             key={node.id}
           >
-            <ListItemText aria-label="Menu item label">
+            <ListItemText>
               <Link
                 href={node.url}
                 activeClassName={classes.activeLink}
-                classNames={classes.menuItemLink}
+                className={classes.menuItemLink}
               >
                 {node.name}
               </Link>
@@ -106,17 +99,32 @@ export function AccordionMenu({
 
   return (
     <List
-      className={classNames}
       component="nav"
+      aria-labelledby={`${id}-list-subheader`}
       dense
       subheader={
         menuTitle && (
-          <ListSubheader component="span" disableSticky aria-label="Menu title">
-            {menuTitle}
+          <ListSubheader
+            component="h6"
+            disableSticky
+            id={`${id}-list-subheader`}
+            className={classes.menuTitle}
+          >
+            {loading ? (
+              <Skeleton
+                width="70%"
+                height={16}
+                className={classes.menuTitleSkeleton}
+              />
+            ) : (
+              menuTitle
+            )}
           </ListSubheader>
         )
       }
-      data-testid={testid}
+      aria-live="polite"
+      aria-busy={loading}
+      {...rest}
     >
       {loading ? makeLoadingNavTree() : makeNavTree(navItems)}
     </List>
@@ -127,11 +135,11 @@ AccordionMenu.propTypes = {
   /**
    * Sets a title for the AccordionMenu component
    */
-  menuTitle: PropTypes.string,
+  menuTitle: PropTypes.string.isRequired,
   /**
-   * Presents the menu in a lodaing state (for when fetching data async)
+   * Presents the menu in a loading state (for when fetching data async)
    */
-  loading: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
   /**
    * Defines the menu structure
    */
@@ -157,21 +165,28 @@ AccordionMenu.propTypes = {
         ),
       })
     ),
-  ]),
+  ]).isRequired,
   /**
-   * Sets a test id on the parent node of the component, for testing purposes
+   * A unique ID required for accessibility requirements
    */
-  testid: PropTypes.string,
-  /**
-   * Allows the passing of additional style classes
-   */
-  classNames: PropTypes.string,
+  id: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
   // Loading nav item
   loadingNavItem: {
     margin: theme.spacing(1, 2),
+  },
+
+  // Menu title
+  menuTitle: {
+    display: "block",
+    margin: 0,
+  },
+
+  menuTitleSkeleton: {
+    display: "block",
+    margin: "18px 0",
   },
 
   // Menu Item
