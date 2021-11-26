@@ -59,7 +59,7 @@ const Template = (args) => {
     } catch (error) {
       return "error";
     }
-  });
+  }, 1);
 
   const handleOnRequestOfControlsData = (id) => {
     setControlsData(id, async () => {
