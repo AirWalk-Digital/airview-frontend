@@ -1,7 +1,7 @@
 import React from "react";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 import { makeStyles } from "@material-ui/core/styles";
-import { MultipleResultsFound } from "../search/search.stories";
+import { SingleResultFound } from "../search/search.stories";
 import { PageHeader } from "../../components/page-header";
 import { AccordionMenu } from "../../components/accordion-menu";
 import { Search } from "../../components/search";
@@ -39,66 +39,6 @@ const config = {
   ],
 };
 
-const testNavItems = [
-  {
-    id: "1",
-    name: "Navigation Item 1",
-    url: "/one",
-  },
-  {
-    id: "2",
-    name: "Navigation Item Parent",
-    children: [
-      {
-        id: "3",
-        name: "Sub Navigation Item 1",
-        url: "/two",
-      },
-      {
-        id: "4",
-        name: "Sub Navigation Item 2",
-        url: "/three",
-      },
-      {
-        id: "5",
-        name: "Navigation Item Parent",
-        children: [
-          {
-            id: "6",
-            name: "Sub Navigation Item 1",
-            url: "/four",
-          },
-          {
-            id: "7",
-            name: "Sub Navigation Item 2",
-            url: "/five",
-          },
-        ],
-      },
-      {
-        id: "6",
-        name: "Sub Navigation Item 3",
-        url: "/six",
-      },
-      {
-        id: "7",
-        name: "Sub Navigation Item 4",
-        url: "/seven",
-      },
-    ],
-  },
-  {
-    id: "8",
-    name: "Navigation Item 2",
-    url: "/eight",
-  },
-  {
-    id: "9",
-    name: "Navigation Item 3",
-    url: "/nine",
-  },
-];
-
 function Template(args) {
   return (
     <LocationProvider location="/seven">
@@ -111,8 +51,66 @@ Template.args = {
   siteTitle: "AirView",
   version: "1.0",
   logoSrc: logo,
-  navItems: [...testNavItems],
-  onQueryChange: MultipleResultsFound.args.onQueryChange,
+  navItems: [
+    {
+      id: "1",
+      name: "Navigation Item 1",
+      url: "/one",
+    },
+    {
+      id: "2",
+      name: "Navigation Item Parent",
+      children: [
+        {
+          id: "3",
+          name: "Sub Navigation Item 1",
+          url: "/two",
+        },
+        {
+          id: "4",
+          name: "Sub Navigation Item 2",
+          url: "/three",
+        },
+        {
+          id: "5",
+          name: "Navigation Item Parent",
+          children: [
+            {
+              id: "6",
+              name: "Sub Navigation Item 1",
+              url: "/four",
+            },
+            {
+              id: "7",
+              name: "Sub Navigation Item 2",
+              url: "/five",
+            },
+          ],
+        },
+        {
+          id: "6",
+          name: "Sub Navigation Item 3",
+          url: "/six",
+        },
+        {
+          id: "7",
+          name: "Sub Navigation Item 4",
+          url: "/seven",
+        },
+      ],
+    },
+    {
+      id: "8",
+      name: "Navigation Item 2",
+      url: "/eight",
+    },
+    {
+      id: "9",
+      name: "Navigation Item 3",
+      url: "/nine",
+    },
+  ],
+  onQueryChange: SingleResultFound.args.onQueryChange,
 };
 
 const PreviewDisabled = Template.bind({});
