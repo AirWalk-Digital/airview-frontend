@@ -72,7 +72,9 @@ export function PageHeader({
               className={classes.revealMenuButton}
               edge="start"
               color="inherit"
-              aria-label="Show navigation menu"
+              aria-label={
+                drawerOpen ? "Close navigation menu" : "Open navigation menu"
+              }
               onClick={() => setDrawerOpen(!drawerOpen)}
             >
               <MenuIcon />
@@ -111,7 +113,7 @@ export function PageHeader({
       >
         <div className={classes.drawerTitle}>
           <Typography variant="h6">{siteTitle}</Typography>
-          <Typography className={classes.version}>v{version}</Typography>
+          <Typography className={classes.version}>{version}</Typography>
         </div>
 
         <AccordionMenu
