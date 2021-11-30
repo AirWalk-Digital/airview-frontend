@@ -4,7 +4,7 @@ import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/knowledge-template/knowledge-template.stories";
 import userEvent from "@testing-library/user-event";
 
-const { PreviewDisabled } = composeStories(stories);
+const { PreviewDisabled, Loading } = composeStories(stories);
 
 const getNavItems = (navItems) => {
   const output = [];
@@ -39,6 +39,14 @@ describe("ApplicationsTemplate", () => {
         // It should set the logo src equal to the value passed
         // expect(logo).toHaveAttribute("src", PreviewDisabled.args.logoSrc);
 
+        // It renders a link to the homepage
+        const homeLink = screen.getByRole("link", {
+          name: PreviewDisabled.args.siteTitle,
+        });
+
+        expect(homeLink).toHaveAttribute("href", "/");
+
+        // Open navigation
         userEvent.click(
           screen.queryByRole("button", { name: /open navigation/i })
         );
@@ -60,9 +68,6 @@ describe("ApplicationsTemplate", () => {
         const mainNavigation = screen.getByRole("navigation", {
           name: /main navigation/i,
         });
-
-        // It presents the main navigation
-        expect(mainNavigation).toBeInTheDocument();
 
         // It does not render the navigation in a loading state
         expect(mainNavigation).toHaveAttribute("aria-busy", "false");
@@ -89,6 +94,32 @@ describe("ApplicationsTemplate", () => {
         links.forEach((link, index) => {
           expect(link).toHaveTextContent(navLinks[index].name);
           expect(link).toHaveAttribute("href", navLinks[index].url);
+        });
+      });
+
+      test("a user can invoke the search UI using the search button", async () => {
+        const onQueryChangeMock = jest.fn();
+
+        render(<PreviewDisabled onQueryChange={onQueryChangeMock} />);
+
+        userEvent.click(screen.getByRole("button", { name: /search site/i }));
+
+        await waitFor(() => {
+          expect(screen.getByRole("searchbox")).toBeInTheDocument();
+        });
+      });
+
+      test("a user can invoke the search UI using the keyboard shortcut", async () => {
+        const onQueryChangeMock = jest.fn();
+
+        render(<PreviewDisabled onQueryChange={onQueryChangeMock} />);
+
+        userEvent.type(document.querySelector("body"), "/", {
+          skipClick: true,
+        });
+
+        await waitFor(() => {
+          expect(screen.getByRole("searchbox")).toBeInTheDocument();
         });
       });
 
@@ -319,7 +350,170 @@ describe("ApplicationsTemplate", () => {
     });
   });
 
-  describe("in a loading state", () => {});
+  describe("in a loading state", () => {
+    describe("main header content", () => {
+      test("it renders correctly", async () => {
+        render(<Loading />);
+
+        const logo = screen.getByRole("img", {
+          name: Loading.args.siteTitle,
+        });
+
+        // It renders the logo to the document
+        expect(logo).toBeInTheDocument();
+
+        // It renders a link to the homepage
+        const homeLink = screen.getByRole("link", {
+          name: Loading.args.siteTitle,
+        });
+
+        expect(homeLink).toBeInTheDocument();
+        expect(homeLink).toHaveAttribute("href", "/");
+
+        userEvent.click(
+          screen.queryByRole("button", { name: /open navigation/i })
+        );
+
+        // It renders the site title
+        await waitFor(() => {
+          expect(
+            screen.getByRole("heading", {
+              name: Loading.args.siteTitle,
+            })
+          ).toBeInTheDocument();
+        });
+
+        // It renders the site version
+        expect(screen.getByText(Loading.args.version)).toBeInTheDocument();
+
+        // It should not render the main navigation
+        expect(
+          screen.queryByRole("navigation", { name: /main navigation/i })
+        ).not.toBeInTheDocument();
+      });
+
+      test("a user can not invoke the search UI using the search button", async () => {
+        const onQueryChangeMock = jest.fn();
+
+        render(<Loading onQueryChange={onQueryChangeMock} />);
+
+        expect(screen.getByRole("button", { name: /search/i })).toBeDisabled();
+      });
+
+      test("a user can not invoke the search UI using the keyboard shortcut", async () => {
+        const onQueryChangeMock = jest.fn();
+
+        render(<Loading onQueryChange={onQueryChangeMock} />);
+
+        userEvent.type(document.querySelector("body"), "/", {
+          skipClick: true,
+        });
+
+        await waitFor(() => {
+          expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
+        });
+      });
+    });
+
+    describe("breadcrumb content", () => {
+      test("it renders correctly", () => {
+        render(<Loading />);
+
+        const breadcrumb = screen.getByRole("navigation", {
+          name: /breadcrumb/i,
+        });
+
+        // It sets the correct accesibility attributes
+        expect(breadcrumb).toHaveAttribute("aria-busy", "true");
+
+        // It should not render any breadcrumb links
+        expect(within(breadcrumb).queryAllByRole("link")).toHaveLength(0);
+
+        // It should not render the page title within the breadcrumb links
+        expect(
+          within(breadcrumb).queryByText(Loading.args.pageTitle)
+        ).not.toBeInTheDocument();
+      });
+    });
+
+    describe("related knowledge content", () => {
+      test("it renders corectly", () => {
+        render(<Loading />);
+
+        // It does not render a related knowledge menu
+        expect(
+          screen.queryByRole("navigation", { name: /related knowledge/i })
+        ).not.toBeInTheDocument();
+      });
+    });
+
+    describe("table of contents content", () => {
+      test("it renders correctly", () => {
+        render(<Loading />);
+
+        // It does not render a table of contents
+        expect(
+          screen.queryByRole("navigation", {
+            name: /table of contents/i,
+          })
+        ).not.toBeInTheDocument();
+      });
+    });
+
+    describe("main content", () => {
+      test("it renders correctly", () => {
+        const bodyContent = "Test body content";
+
+        render(<Loading {...{ bodyContent }} />);
+
+        // It does not render the body content
+        expect(screen.queryByText(bodyContent)).not.toBeInTheDocument();
+      });
+    });
+
+    describe("preview mode controller", () => {
+      test("it renders correctly", () => {
+        render(<Loading />);
+
+        // It does not render the enable preview mode button
+        expect(
+          screen.queryByRole("button", {
+            name: /enable preview mode/i,
+          })
+        ).not.toBeInTheDocument();
+
+        // It does not render the branch switcher
+        expect(
+          screen.queryByRole("button", { name: /switch working branch/i })
+        ).not.toBeInTheDocument();
+
+        // It does not render the branch creator
+        expect(
+          screen.queryByRole("button", { name: /create branch/i })
+        ).not.toBeInTheDocument();
+
+        // It does not render the knowledge page creator button
+        expect(
+          screen.queryByRole("button", { name: /create knowledge/i })
+        ).not.toBeInTheDocument();
+
+        // It does not render the knowledge meta data editor button
+        expect(
+          screen.queryByRole("button", { name: /edit knowledge/i })
+        ).not.toBeInTheDocument();
+
+        // It does not render the commit changes button
+        expect(
+          screen.queryByRole("button", { name: /commit changes/i })
+        ).not.toBeInTheDocument();
+
+        // It does not render the pull request button
+        expect(
+          screen.queryByRole("button", { name: /create pull request/i })
+        ).not.toBeInTheDocument();
+      });
+    });
+  });
 
   describe("with preview mode enabled", () => {});
 });
