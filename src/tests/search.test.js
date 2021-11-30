@@ -385,48 +385,6 @@ describe("Search", () => {
     expect(searchInput).toHaveDisplayValue(revisedSearchQuery);
   });
 
-  test("a request to close the search dialog is fired when clicking the modal backdrop", () => {
-    const onRequestToCloseMock = jest.fn();
-
-    render(<MultipleResultsFound onRequestToClose={onRequestToCloseMock} />);
-
-    userEvent.click(screen.getByRole("presentation").firstChild);
-
-    expect(onRequestToCloseMock).toHaveBeenCalledTimes(1);
-
-    onRequestToCloseMock.mockRestore();
-  });
-
-  test("a request to close the search dialog is fired when clicking the close button", () => {
-    const onRequestToCloseMock = jest.fn();
-
-    render(<MultipleResultsFound onRequestToClose={onRequestToCloseMock} />);
-
-    const searchDialog = screen.queryByRole("dialog");
-
-    userEvent.click(
-      within(searchDialog).getByRole("button", { name: /close/i })
-    );
-
-    expect(onRequestToCloseMock).toHaveBeenCalledTimes(1);
-
-    onRequestToCloseMock.mockRestore();
-  });
-
-  test("a request to close the search dialog is fired when pressing the escape key", () => {
-    const onRequestToCloseMock = jest.fn();
-
-    render(<MultipleResultsFound onRequestToClose={onRequestToCloseMock} />);
-
-    userEvent.type(screen.getByRole("searchbox"), `${specialChars.escape}`, {
-      skipClick: true,
-    });
-
-    expect(onRequestToCloseMock).toHaveBeenCalledTimes(1);
-
-    onRequestToCloseMock.mockRestore();
-  });
-
   test("clearing the query using the clear button resets the component to an inital state", async () => {
     render(<MultipleResultsFound />);
 
