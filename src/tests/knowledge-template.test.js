@@ -4,7 +4,7 @@ import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/knowledge-template/knowledge-template.stories";
 import userEvent from "@testing-library/user-event";
 
-const { PreviewDisabled, Loading } = composeStories(stories);
+const { PreviewDisabled, Loading, PreviewEnabled } = composeStories(stories);
 
 const getNavItems = (navItems) => {
   const output = [];
@@ -521,5 +521,140 @@ describe("ApplicationsTemplate", () => {
     });
   });
 
-  describe("with preview mode enabled", () => {});
+  describe("with preview mode enabled", () => {
+    describe("main header content", () => {
+      test("it renders correctly", async () => {
+        render(<PreviewEnabled />);
+
+        const logo = screen.getByRole("img", {
+          name: PreviewEnabled.args.siteTitle,
+        });
+
+        // It renders the logo to the document
+        expect(logo).toBeInTheDocument();
+
+        // It should set the logo src equal to the value passed
+        // expect(logo).toHaveAttribute("src", PreviewDisabled.args.logoSrc);
+
+        // It renders a link to the homepage
+        const homeLink = screen.getByRole("link", {
+          name: PreviewEnabled.args.siteTitle,
+        });
+
+        expect(homeLink).toHaveAttribute("href", "/");
+
+        // Open navigation
+        userEvent.click(
+          screen.queryByRole("button", { name: /open navigation/i })
+        );
+
+        // It renders the site title
+        await waitFor(() => {
+          expect(
+            screen.getByRole("heading", {
+              name: PreviewEnabled.args.siteTitle,
+            })
+          ).toBeInTheDocument();
+        });
+
+        // It renders the site version
+        expect(
+          screen.getByText(PreviewEnabled.args.version)
+        ).toBeInTheDocument();
+
+        const mainNavigation = screen.getByRole("navigation", {
+          name: /main navigation/i,
+        });
+
+        // It does not render the navigation in a loading state
+        expect(mainNavigation).toHaveAttribute("aria-busy", "false");
+
+        // Open all sub navigation nodes
+        userEvent.click(
+          within(mainNavigation).getByRole("button", {
+            name: PreviewEnabled.args.navItems[1].name,
+          })
+        );
+
+        userEvent.click(
+          within(mainNavigation).getByRole("button", {
+            name: PreviewEnabled.args.navItems[1].children[2].name,
+          })
+        );
+
+        // Get all nav links from passed props
+        const navLinks = getNavItems(PreviewEnabled.args.navItems);
+
+        // It renders all navigation nodes
+        const links = within(mainNavigation).getAllByRole("link");
+
+        links.forEach((link, index) => {
+          expect(link).toHaveTextContent(navLinks[index].name);
+          expect(link).toHaveAttribute("href", navLinks[index].url);
+        });
+      });
+
+      test("a user can not invoke the search UI using the search button", async () => {
+        const onQueryChangeMock = jest.fn();
+
+        render(<PreviewEnabled onQueryChange={onQueryChangeMock} />);
+
+        expect(screen.getByRole("button", { name: /search/i })).toBeDisabled();
+      });
+
+      test("a user can not invoke the search UI using the keyboard shortcut", async () => {
+        const onQueryChangeMock = jest.fn();
+
+        render(<PreviewEnabled onQueryChange={onQueryChangeMock} />);
+
+        userEvent.type(document.querySelector("body"), "/", {
+          skipClick: true,
+        });
+
+        await waitFor(() => {
+          expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
+        });
+      });
+    });
+
+    describe("breadcrumb content", () => {
+      test("it renders correctly", () => {
+        render(<PreviewEnabled />);
+
+        const breadcrumb = screen.getByRole("navigation", {
+          name: /breadcrumb/i,
+        });
+
+        // The breadcrumb should have the required accesibility attributes
+        expect(breadcrumb).toHaveAttribute("aria-busy", "false");
+
+        // It should not render any breadcrumb item placeholders
+        expect(
+          within(breadcrumb).queryAllByLabelText(/breadcrumb item placeholder/i)
+        ).toHaveLength(0);
+
+        const breadcrumbLinks = within(breadcrumb).getAllByRole("link");
+
+        // It should render all breadcrumb links with correct URLs
+        expect(breadcrumbLinks).toHaveLength(
+          PreviewEnabled.args.breadcrumbLinks.length
+        );
+
+        breadcrumbLinks.forEach((link, index) => {
+          expect(link).toHaveTextContent(
+            PreviewEnabled.args.breadcrumbLinks[index].label
+          );
+          expect(link).toHaveAttribute(
+            "href",
+            PreviewEnabled.args.breadcrumbLinks[index].url
+          );
+        });
+
+        // It renders the current page as static text
+        expect(
+          within(breadcrumb).getByText(PreviewEnabled.args.pageTitle)
+        ).toBeInTheDocument();
+      });
+    });
+  });
 });
