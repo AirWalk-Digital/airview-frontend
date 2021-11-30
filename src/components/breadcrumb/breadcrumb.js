@@ -6,14 +6,10 @@ import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Link } from "../link";
 
-export function Breadcrumb({
-  links,
-  activeRoute,
-  maxItems = 5,
-  loading,
-  ...rest
-}) {
+export function Breadcrumb({ links, activeRoute, loading, ...rest }) {
   const classes = useStyles();
+
+  const maxItems = 5;
 
   return (
     <Breadcrumbs
@@ -24,7 +20,7 @@ export function Breadcrumb({
       {...rest}
     >
       {loading
-        ? [...Array(5)].map((item, index) => (
+        ? [...Array(maxItems)].map((item, index) => (
             <Skeleton
               key={index}
               className={classes.loadingBreadCrumbItem}
@@ -65,8 +61,4 @@ Breadcrumb.propTypes = {
    * Sets the active route (the current page)
    */
   activeRoute: PropTypes.string.isRequired,
-  /**
-   * Set the maximum number of breadcrumbs to display. When the value is exceeded an ellipsis in rendered inbetween
-   */
-  maxItems: PropTypes.number,
 };
