@@ -206,7 +206,7 @@ describe("ApplicationsTemplate", () => {
         // Expand the menu
         userEvent.click(toggleRelatedKnowledgeBtn);
 
-        // It reveals all knowldge links
+        // It reveals all knowledge links
         const knowledgeLinks = within(relatedKnowledge).getAllByRole("link");
 
         expect(knowledgeLinks).toHaveLength(
@@ -370,6 +370,7 @@ describe("ApplicationsTemplate", () => {
         expect(homeLink).toBeInTheDocument();
         expect(homeLink).toHaveAttribute("href", "/");
 
+        // Open the main drawer
         userEvent.click(
           screen.queryByRole("button", { name: /open navigation/i })
         );
@@ -428,6 +429,11 @@ describe("ApplicationsTemplate", () => {
 
         // It should not render any breadcrumb links
         expect(within(breadcrumb).queryAllByRole("link")).toHaveLength(0);
+
+        // It should render placeholder items
+        expect(
+          within(breadcrumb).queryAllByLabelText(/breadcrumb item placeholder/i)
+        ).toHaveLength(5);
 
         // It should not render the page title within the breadcrumb links
         expect(
