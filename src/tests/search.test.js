@@ -6,15 +6,16 @@ import * as stories from "../stories/search/search.stories";
 import { responses } from "../stories/search/responses";
 
 const {
+  Default,
+  SearchInProgress,
   SingleResultFound,
-  MultipleResultsFound,
   NoResultsFound,
   Error,
 } = composeStories(stories);
 
 describe("Search", () => {
   test("in a closed state", () => {
-    render(<MultipleResultsFound open={false} />);
+    render(<Default open={false} />);
 
     const searchDialog = screen.queryByRole("dialog");
 
@@ -23,7 +24,7 @@ describe("Search", () => {
   });
 
   test("in a initial open state", async () => {
-    render(<MultipleResultsFound />);
+    render(<Default />);
 
     const searchDialog = screen.queryByRole("dialog");
 
@@ -60,24 +61,16 @@ describe("Search", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("with multiple results", async () => {
-    const onQueryChangeSpy = jest.spyOn(
-      MultipleResultsFound.args,
-      "onQueryChange"
-    );
+  test("in a search in progress state", async () => {
+    render(<SearchInProgress />);
 
-    render(<MultipleResultsFound />);
+    const searchQuery = "test";
 
-    const searchQuery = "ipsum";
+    await SearchInProgress.play({ searchQuery });
 
-    const searchDialog = screen.queryByRole("dialog");
+    const searchDialog = await screen.findByRole("dialog");
 
     const searchInput = within(searchDialog).getByRole("searchbox");
-
-    // Setup: enter a search query
-    userEvent.type(searchInput, searchQuery);
-
-    // Searching
 
     // It should set the search input equal to the query value
     expect(searchInput).toHaveDisplayValue(searchQuery);
@@ -96,44 +89,64 @@ describe("Search", () => {
         within(searchDialog).queryByRole("progressbar")
       ).toBeInTheDocument();
     });
+  });
 
-    // Resolved results
+  test("in a resolved state", async () => {
+    render(<SingleResultFound />);
 
-    // It should remove the search progress indicator
+    const searchQuery = "test";
+
+    await SingleResultFound.play({ searchQuery });
+
+    const searchDialog = await screen.findByRole("dialog");
+
+    const searchInput = within(searchDialog).getByRole("searchbox");
+
+    // It should persist the query in the search input
+    expect(searchInput).toHaveValue(searchQuery);
+    expect(searchInput).toHaveDisplayValue(searchQuery);
+
+    // It should present a clear search button
+    await waitFor(() => {
+      expect(
+        within(searchDialog).getByRole("button", { name: /clear/i })
+      ).toBeInTheDocument();
+    });
+
+    // It should not present the search progress indicator
     await waitFor(() => {
       expect(
         within(searchDialog).queryByRole("progressbar")
       ).not.toBeInTheDocument();
     });
+  });
 
-    // It should output each result
-    expect(within(searchDialog).queryAllByRole("link")).toHaveLength(
-      responses.resolved.length
+  test("with result found", async () => {
+    const onQueryChangeSpy = jest.spyOn(
+      SingleResultFound.args,
+      "onQueryChange"
     );
 
-    within(searchDialog)
-      .queryAllByRole("link")
-      .forEach((link, index) => {
-        expect(link).toHaveTextContent(responses.resolved[index].title);
+    render(<SingleResultFound />);
 
-        if (responses.resolved[index].summary) {
-          // eslint-disable-next-line jest/no-conditional-expect
-          expect(link).toHaveTextContent(responses.resolved[index]?.summary);
-        }
-      });
+    const searchQuery = "ipsum";
+
+    SingleResultFound.play({ searchQuery });
+
+    const result = await screen.findByRole("link");
+
+    // It should output the result
+    expect(result).toHaveTextContent(responses.resolved[0].title);
+    expect(result).toHaveTextContent(responses.resolved[0].summary);
 
     // It should higlight the query within the results
     const marks = document.querySelectorAll("mark");
 
-    expect(marks.length).toBe(11);
+    expect(marks.length).toBe(2);
 
     marks.forEach((mark) => {
       expect(mark).toHaveTextContent(searchQuery);
     });
-
-    // It should persist the query in the search input
-    expect(searchInput).toHaveValue(searchQuery);
-    expect(searchInput).toHaveDisplayValue(searchQuery);
 
     // It debounces the query change callback
     expect(onQueryChangeSpy).toHaveBeenCalledTimes(1);
@@ -145,250 +158,69 @@ describe("Search", () => {
   });
 
   test("with no results", async () => {
-    const onQueryChangeSpy = jest.spyOn(NoResultsFound.args, "onQueryChange");
-
     render(<NoResultsFound />);
 
     const searchQuery = "ipsum";
 
-    const searchDialog = screen.queryByRole("dialog");
-
-    const searchInput = within(searchDialog).getByRole("searchbox");
-
-    // Setup: enter a search query
-    userEvent.type(searchInput, searchQuery);
-
-    // Searching
-
-    // It should set the search input equal to the query value
-    expect(searchInput).toHaveDisplayValue(searchQuery);
-    expect(searchInput).toHaveValue(searchQuery);
-
-    // It should present a clear search button
-    await waitFor(() => {
-      expect(
-        within(searchDialog).getByRole("button", { name: /clear/i })
-      ).toBeInTheDocument();
-    });
-
-    // It should present the search progress indicator
-    await waitFor(() => {
-      expect(within(searchDialog).getByRole("progressbar")).toBeInTheDocument();
-    });
-
-    // Resolved results
-
-    // It should remove the search progress indicator
-    await waitFor(() => {
-      expect(
-        within(searchDialog).queryByRole("progressbar")
-      ).not.toBeInTheDocument();
-    });
+    NoResultsFound.play({ searchQuery });
 
     // It should output a message indicating no results found
-    expect(
-      within(searchDialog).queryByLabelText(/feedback/i)
-    ).toHaveTextContent(`No results found for "${searchQuery}`);
-
-    // It should persist the query in the search input
-    expect(searchInput).toHaveValue(searchQuery);
-    expect(searchInput).toHaveDisplayValue(searchQuery);
-
-    // It debounces the query change callback
-    expect(onQueryChangeSpy).toHaveBeenCalledTimes(1);
-
-    // It calls the query change callback with the argument equal to the search query
-    expect(onQueryChangeSpy).toHaveBeenCalledWith(searchQuery);
-
-    onQueryChangeSpy.mockRestore();
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/feedback/i)).toHaveTextContent(
+        `No results found for "${searchQuery}`
+      );
+    });
   });
 
   test("with an error", async () => {
-    const onQueryChangeSpy = jest.spyOn(Error.args, "onQueryChange");
-
     render(<Error />);
 
-    const searchQuery = "ipsum";
-
-    const searchDialog = screen.queryByRole("dialog");
-
-    const searchInput = within(searchDialog).getByRole("searchbox");
-
-    // Setup: enter a search query
-    userEvent.type(searchInput, searchQuery);
-
-    // Searching
-
-    // It should set the search input equal to the query value
-    expect(searchInput).toHaveDisplayValue(searchQuery);
-    expect(searchInput).toHaveValue(searchQuery);
-
-    // It should present a clear search button
-    await waitFor(() => {
-      expect(
-        within(searchDialog).getByRole("button", { name: /clear/i })
-      ).toBeInTheDocument();
-    });
-
-    // It should present the search progress indicator
-    await waitFor(() => {
-      expect(within(searchDialog).getByRole("progressbar")).toBeInTheDocument();
-    });
-
-    // Resolved results
+    Error.play();
 
     // It should remove the search progress indicator
     await waitFor(() => {
-      expect(
-        within(searchDialog).queryByRole("progressbar")
-      ).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/feedback/i)).toHaveTextContent(/error/i);
     });
-
-    // It should output an error message
-    expect(
-      within(searchDialog).queryByLabelText(/feedback/i)
-    ).toHaveTextContent(/error/i);
-
-    // It should persist the query in the search input
-    expect(searchInput).toHaveValue(searchQuery);
-    expect(searchInput).toHaveDisplayValue(searchQuery);
-
-    // It debounces the query change callback
-    expect(onQueryChangeSpy).toHaveBeenCalledTimes(1);
-
-    // It calls the query change callback with the argument equal to the search query
-    expect(onQueryChangeSpy).toHaveBeenCalledWith(searchQuery);
-
-    onQueryChangeSpy.mockRestore();
   });
 
   test("a user can perform subsequent searches without having to close the component", async () => {
     render(<SingleResultFound />);
 
-    const initialSearchQuery = "ipsum";
+    SingleResultFound.play();
 
-    const searchDialog = screen.queryByRole("dialog");
-
-    const searchInput = within(searchDialog).getByRole("searchbox");
-
-    // Setup: enter a search query
-    userEvent.type(searchInput, initialSearchQuery);
-
-    // Searching
-
-    // It should set the search input equal to the query value
-    expect(searchInput).toHaveDisplayValue(initialSearchQuery);
-    expect(searchInput).toHaveValue(initialSearchQuery);
-
-    // It should present a clear search button
     await waitFor(() => {
-      expect(
-        within(searchDialog).getByRole("button", { name: /clear/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole("link")).toBeInTheDocument();
     });
 
-    // It should present the search progress indicator
+    userEvent.clear(screen.getByRole("searchbox"));
+
+    const searchQuery = "Sed";
+
+    SingleResultFound.play({ searchQuery });
+
     await waitFor(() => {
-      expect(
-        within(searchDialog).queryByRole("progressbar")
-      ).toBeInTheDocument();
+      const link = screen.getByRole("link");
+
+      expect(link).toHaveTextContent(responses.resolved[0].title);
+      expect(link).toHaveTextContent(responses.resolved[0].summary);
     });
-
-    // Resolved results
-
-    // It should remove the search progress indicator
-    await waitFor(() => {
-      expect(
-        within(searchDialog).queryByRole("progressbar")
-      ).not.toBeInTheDocument();
-    });
-
-    // It should output each result
-    expect(within(searchDialog).queryAllByRole("link")).toHaveLength(1);
-
-    within(searchDialog)
-      .queryAllByRole("link")
-      .forEach((link, index) => {
-        expect(link).toHaveTextContent(responses.resolved[index].title);
-        expect(link).toHaveTextContent(responses.resolved[index].summary);
-      });
 
     const marks = document.querySelectorAll("mark");
 
     // It should higlight the query within the results
-    expect(marks.length).toBe(2);
+    expect(marks.length).toBe(1);
 
     marks.forEach((mark) => {
-      expect(mark).toHaveTextContent(initialSearchQuery);
+      expect(mark).toHaveTextContent(searchQuery);
     });
-
-    // It should persist the query in the search input
-    expect(searchInput).toHaveValue(initialSearchQuery);
-    expect(searchInput).toHaveDisplayValue(initialSearchQuery);
-
-    // Change the query
-    userEvent.type(searchInput, `${specialChars.backspace}`);
-
-    const revisedSearchQuery = initialSearchQuery.substr(
-      0,
-      initialSearchQuery.length - 1
-    );
-
-    // It should set the search input equal to the query value
-    expect(searchInput).toHaveDisplayValue(revisedSearchQuery);
-    expect(searchInput).toHaveValue(revisedSearchQuery);
-
-    // It should present a clear search button
-    await waitFor(() => {
-      expect(
-        within(searchDialog).getByRole("button", { name: /clear/i })
-      ).toBeInTheDocument();
-    });
-
-    // It should present the search progress indicator
-    await waitFor(() => {
-      expect(
-        within(searchDialog).queryByRole("progressbar")
-      ).toBeInTheDocument();
-    });
-
-    // Resolved results
-
-    // It should remove the search progress indicator
-    await waitFor(() => {
-      expect(
-        within(searchDialog).queryByRole("progressbar")
-      ).not.toBeInTheDocument();
-    });
-
-    // It should output each result
-    expect(within(searchDialog).queryAllByRole("link")).toHaveLength(1);
-
-    within(searchDialog)
-      .queryAllByRole("link")
-      .forEach((link, index) => {
-        expect(link).toHaveTextContent(responses.resolved[index].title);
-        expect(link).toHaveTextContent(responses.resolved[index].summary);
-      });
-
-    const revisedMarks = document.querySelectorAll("mark");
-
-    // It should higlight the query within the results
-    expect(revisedMarks.length).toBe(2);
-
-    revisedMarks.forEach((mark) => {
-      expect(mark).toHaveTextContent(revisedSearchQuery);
-    });
-
-    // It should persist the query in the search input
-    expect(searchInput).toHaveValue(revisedSearchQuery);
-    expect(searchInput).toHaveDisplayValue(revisedSearchQuery);
   });
 
-  test("a request to close the search dialog is fired when clicking the modal backdrop", () => {
+  test("a request to close the search dialog is fired when clicking the modal backdrop", async () => {
     const onRequestToCloseMock = jest.fn();
 
-    render(<MultipleResultsFound onRequestToClose={onRequestToCloseMock} />);
+    render(<Default onRequestToClose={onRequestToCloseMock} />);
+
+    await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
 
     userEvent.click(screen.getByRole("presentation").firstChild);
 
@@ -397,28 +229,28 @@ describe("Search", () => {
     onRequestToCloseMock.mockRestore();
   });
 
-  test("a request to close the search dialog is fired when clicking the close button", () => {
+  test("a request to close the search dialog is fired when clicking the close button", async () => {
     const onRequestToCloseMock = jest.fn();
 
-    render(<MultipleResultsFound onRequestToClose={onRequestToCloseMock} />);
+    render(<Default onRequestToClose={onRequestToCloseMock} />);
 
-    const searchDialog = screen.queryByRole("dialog");
+    const closeButton = await screen.findByRole("button", { name: /close/i });
 
-    userEvent.click(
-      within(searchDialog).getByRole("button", { name: /close/i })
-    );
+    userEvent.click(closeButton);
 
     expect(onRequestToCloseMock).toHaveBeenCalledTimes(1);
 
     onRequestToCloseMock.mockRestore();
   });
 
-  test("a request to close the search dialog is fired when pressing the escape key", () => {
+  test("a request to close the search dialog is fired when pressing the escape key", async () => {
     const onRequestToCloseMock = jest.fn();
 
-    render(<MultipleResultsFound onRequestToClose={onRequestToCloseMock} />);
+    render(<Default onRequestToClose={onRequestToCloseMock} />);
 
-    userEvent.type(screen.getByRole("searchbox"), `${specialChars.escape}`, {
+    const searchBox = await screen.findByRole("searchbox");
+
+    userEvent.type(searchBox, `${specialChars.escape}`, {
       skipClick: true,
     });
 
@@ -428,76 +260,86 @@ describe("Search", () => {
   });
 
   test("clearing the query using the clear button resets the component to an inital state", async () => {
-    render(<MultipleResultsFound />);
+    render(<SingleResultFound />);
 
-    const searchDialog = screen.queryByRole("dialog");
-
-    const searchInput = within(searchDialog).getByRole("searchbox");
-
-    // Enter a search query
-    userEvent.type(searchInput, "test");
+    SingleResultFound.play();
 
     // Await for results
     await waitFor(() => {
-      expect(within(searchDialog).queryAllByRole("link")).toHaveLength(
-        responses.resolved.length
-      );
-    });
-
-    const clearQueryButton = within(searchDialog).queryByRole("button", {
-      name: /clear query/i,
+      expect(screen.queryByRole("link")).toBeInTheDocument();
     });
 
     // Click the clear query button
-    userEvent.click(clearQueryButton);
+    userEvent.click(
+      screen.getByRole("button", {
+        name: /clear query/i,
+      })
+    );
 
     // It does not display a loading indicator
-    expect(
-      within(searchDialog).queryByRole("progressbar")
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
 
     // It does not display a clear query button
     expect(
-      within(searchDialog).queryByRole("button", { name: /clear query/i })
+      screen.queryByRole("button", { name: /clear query/i })
     ).not.toBeInTheDocument();
 
     // It does not display any results
-    expect(within(searchDialog).queryAllByRole("link")).toHaveLength(0);
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
 
     // It does not display an error message or no results found message
+    expect(screen.queryByLabelText(/feedback/i)).not.toBeInTheDocument();
+  });
+
+  test("clearing the query using the keyboard resets the component to an inital state", async () => {
+    render(<SingleResultFound />);
+
+    SingleResultFound.play();
+
+    // Await for results
+    await waitFor(() => {
+      expect(screen.queryByRole("link")).toBeInTheDocument();
+    });
+
+    // Clear the text from the search query input
+    userEvent.clear(screen.getByRole("searchbox"));
+
+    // It does not display a loading indicator
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+
+    // It does not display a clear query button
     expect(
-      within(searchDialog).queryByLabelText(/feedback/i)
+      screen.queryByRole("button", { name: /clear query/i })
     ).not.toBeInTheDocument();
+
+    // It does not display any results
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+
+    // It does not display an error message or no results found message
+    expect(screen.queryByLabelText(/feedback/i)).not.toBeInTheDocument();
   });
 
   test("clearing a query using the clear button, whilst a request is pending, prevents the output of the request response", async () => {
     const onQueryChangeSpy = jest.spyOn(
-      MultipleResultsFound.args,
+      SingleResultFound.args,
       "onQueryChange"
     );
 
-    render(<MultipleResultsFound />);
+    render(<SingleResultFound />);
 
-    const searchDialog = screen.queryByRole("dialog");
-
-    const searchInput = within(searchDialog).getByRole("searchbox");
-
-    // Enter a search query
-    userEvent.type(searchInput, "test");
+    SingleResultFound.play();
 
     // Wait for search progress to reveal
     await waitFor(() => {
-      expect(
-        within(searchDialog).queryByRole("progressbar")
-      ).toBeInTheDocument();
-    });
-
-    const clearQueryButton = within(searchDialog).queryByRole("button", {
-      name: /clear query/i,
+      expect(screen.queryByRole("progressbar")).toBeInTheDocument();
     });
 
     // Click the clear query button
-    userEvent.click(clearQueryButton);
+    userEvent.click(
+      screen.getByRole("button", {
+        name: /clear query/i,
+      })
+    );
 
     // Await for the data to resolve
     await waitFor(() => {
@@ -506,75 +348,29 @@ describe("Search", () => {
 
     // It should not present any results to the user
     await waitFor(() => {
-      expect(screen.queryAllByRole("link")).toHaveLength(0);
+      expect(screen.queryByRole("link")).not.toBeInTheDocument();
     });
 
     onQueryChangeSpy.mockRestore();
   });
 
-  test("clearing the query using the keyboard resets the component to an inital state", async () => {
-    render(<MultipleResultsFound />);
-
-    const searchDialog = screen.queryByRole("dialog");
-
-    const searchInput = within(searchDialog).getByRole("searchbox");
-
-    // Enter a search query
-    userEvent.type(searchInput, "test");
-
-    // Await for results
-    await waitFor(() => {
-      expect(within(searchDialog).queryAllByRole("link")).toHaveLength(
-        responses.resolved.length
-      );
-    });
-
-    // Clear the text from the search query input
-    userEvent.clear(searchInput);
-
-    // It does not display a loading indicator
-    expect(
-      within(searchDialog).queryByRole("progressbar")
-    ).not.toBeInTheDocument();
-
-    // It does not display a clear query button
-    expect(
-      within(searchDialog).queryByRole("button", { name: /clear query/i })
-    ).not.toBeInTheDocument();
-
-    // It does not display any results
-    expect(within(searchDialog).queryAllByRole("link")).toHaveLength(0);
-
-    // It does not display an error message or no results found message
-    expect(
-      within(searchDialog).queryByLabelText(/feedback/i)
-    ).not.toBeInTheDocument();
-  });
-
   test("clearing the query using the keyboard, whilst a request is pending, prevents the output of the request response", async () => {
     const onQueryChangeSpy = jest.spyOn(
-      MultipleResultsFound.args,
+      SingleResultFound.args,
       "onQueryChange"
     );
 
-    render(<MultipleResultsFound />);
+    render(<SingleResultFound />);
 
-    const searchDialog = screen.queryByRole("dialog");
-
-    const searchInput = within(searchDialog).getByRole("searchbox");
-
-    // Enter a search query
-    userEvent.type(searchInput, "test");
+    SingleResultFound.play();
 
     // Wait for search progress to reveal
     await waitFor(() => {
-      expect(
-        within(searchDialog).queryByRole("progressbar")
-      ).toBeInTheDocument();
+      expect(screen.queryByRole("progressbar")).toBeInTheDocument();
     });
 
     // Clear the text from the search query input
-    userEvent.clear(searchInput);
+    userEvent.clear(screen.getByRole("searchbox"));
 
     // Await for the data to resolve
     await waitFor(() => {
@@ -583,7 +379,7 @@ describe("Search", () => {
 
     // It should not present any results to the user
     await waitFor(() => {
-      expect(screen.queryAllByRole("link")).toHaveLength(0);
+      expect(screen.queryByRole("link")).not.toBeInTheDocument();
     });
 
     onQueryChangeSpy.mockRestore();
