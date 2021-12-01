@@ -656,5 +656,172 @@ describe("ApplicationsTemplate", () => {
         ).toBeInTheDocument();
       });
     });
+
+    describe("main content", () => {
+      test("it renders correctly", () => {
+        const bodyContent = "Test body content";
+
+        render(<PreviewEnabled {...{ bodyContent }} />);
+
+        const renderedBodyContent = screen.getByText(bodyContent);
+
+        // It renders the body content
+        expect(renderedBodyContent).toBeInTheDocument();
+
+        // It should allow the body content to be edited
+        expect(renderedBodyContent.parentNode).toHaveAttribute(
+          "contenteditable",
+          "true"
+        );
+      });
+    });
+
+    describe("preview mode controller", () => {
+      test("it renders correctly", async () => {
+        render(<PreviewEnabled />);
+
+        // It renders the repository name
+        expect(
+          screen.getByText(PreviewEnabled.args.workingRepo)
+        ).toBeInTheDocument();
+
+        // It renders the working branch name
+        expect(
+          screen.getByText(PreviewEnabled.args.workingBranch)
+        ).toBeInTheDocument();
+
+        // It renders the disable preview mode button
+        expect(
+          screen.getByRole("button", { name: /disable preview/i })
+        ).toBeInTheDocument();
+
+        // It renders the branch switcher
+        expect(
+          screen.queryByRole("button", { name: /switch working branch/i })
+        ).toBeInTheDocument();
+
+        // It renders the branch creator
+        expect(
+          screen.queryByRole("button", { name: /create branch/i })
+        ).toBeInTheDocument();
+
+        // It renders the knowledge page creator button
+        expect(
+          screen.queryByRole("button", { name: /create knowledge/i })
+        ).toBeInTheDocument();
+
+        // It renders the knowledge meta data editor button
+        const editPageMetaDataButton = screen.queryByRole("button", {
+          name: /edit knowledge/i,
+        });
+
+        // It initially does not disable the edit meta data button
+        expect(editPageMetaDataButton).not.toBeDisabled();
+
+        // It renders the commit changes button
+        const commitChangesButton = screen.queryByRole("button", {
+          name: /commit changes/i,
+        });
+
+        // It initially disables the commit changes button
+        expect(commitChangesButton).toBeDisabled();
+
+        // It renders the pull request button
+        expect(
+          screen.queryByRole("button", { name: /create pull request/i })
+        ).toBeInTheDocument();
+      });
+
+      test("a user can switch branch", async () => {
+        const onRequestToSwitchBranch = jest.fn();
+
+        render(<PreviewEnabled {...{ onRequestToSwitchBranch }} />);
+
+        userEvent.click(
+          screen.getByRole("button", { name: /switch working branch/i })
+        );
+
+        const dialog = screen.getByRole("dialog", {
+          name: /switch working branch/i,
+        });
+
+        const selectedBranch = within(dialog).getByRole("button", {
+          name: /working branch/i,
+        });
+
+        userEvent.click(selectedBranch);
+
+        userEvent.click(
+          screen.getByRole("option", {
+            name: new RegExp(PreviewEnabled.args.branches[0].name, "i"),
+          })
+        );
+
+        userEvent.click(
+          within(dialog).getByRole("button", { name: /change branch/i })
+        );
+
+        expect(onRequestToSwitchBranch).toHaveBeenCalledTimes(1);
+      });
+
+      test("a user can create a new branch", () => {
+        const onRequestToCreateBranch = jest.fn();
+
+        render(<PreviewEnabled {...{ onRequestToCreateBranch }} />);
+
+        userEvent.click(screen.getByRole("button", { name: /create branch/i }));
+
+        const dialog = screen.getByRole("dialog", {
+          name: /create branch/i,
+        });
+
+        const branchNameInput = within(dialog).getByRole("textbox", {
+          name: /branch name/i,
+        });
+
+        userEvent.type(branchNameInput, "test");
+
+        userEvent.click(
+          within(dialog).getByRole("button", {
+            name: /create/i,
+          })
+        );
+
+        expect(onRequestToCreateBranch).toHaveBeenCalledTimes(1);
+      });
+
+      test("a user can create a new document", () => {
+        const onRequestToCreatePage = jest.fn();
+
+        render(<PreviewEnabled {...{ onRequestToCreatePage }} />);
+
+        userEvent.click(
+          screen.getByRole("button", {
+            name: /create knowledge page/i,
+          })
+        );
+
+        const dialog = screen.queryByRole("dialog", {
+          name: /create knowledge page/i,
+        });
+
+        userEvent.type(
+          within(dialog).getByRole("textbox", { name: /title/i }),
+          "test"
+        );
+
+        userEvent.click(
+          within(dialog).getByRole("button", { name: /create/i })
+        );
+
+        expect(onRequestToCreatePage).toHaveBeenCalledTimes(1);
+      });
+
+      test.todo("a user can edit page meta data");
+
+      test.todo("a user can save changes");
+
+      test.todo("a user can create a pull request");
+    });
   });
 });
