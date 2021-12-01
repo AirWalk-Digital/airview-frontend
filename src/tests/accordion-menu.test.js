@@ -103,13 +103,6 @@ describe("AccordionMenu", () => {
     const links = screen.getAllByRole("link");
 
     expect(links).toHaveLength(navItems.length);
-
-    links.forEach((link, index) => {
-      const { name, url } = navItems[index];
-
-      expect(link).toHaveTextContent(name);
-      expect(link).toHaveAttribute("href", url);
-    });
   });
 
   test("a user can collapse expanded nested child links", async () => {
