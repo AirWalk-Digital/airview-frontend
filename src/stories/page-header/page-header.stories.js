@@ -1,19 +1,17 @@
 import React from "react";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 import { makeStyles } from "@material-ui/core/styles";
-import { SingleResultFound } from "../search/search.stories";
+import * as SearchStories from "../search/search.stories";
+import * as AccordionMenuStories from "../accordion-menu/accordion-menu.stories";
 import { PageHeader } from "../../components/page-header";
-import { AccordionMenu } from "../../components/accordion-menu";
-import { Search } from "../../components/search";
 import { LocationProvider } from "../../hooks/use-location";
 import logo from "../__resources/logo-airwalk-reply.svg";
 
-const config = {
+export default {
   title: "Modules/Page Header",
   component: PageHeader,
   parameters: {
     layout: "fullscreen",
-    subcomponents: { AccordionMenu, Search },
     docs: {
       page: () => (
         <>
@@ -51,89 +49,34 @@ Template.args = {
   siteTitle: "AirView",
   version: "1.0",
   logoSrc: logo,
-  navItems: [
-    {
-      id: "1",
-      name: "Navigation Item 1",
-      url: "/",
-    },
-    {
-      id: "2",
-      name: "Navigation Item 2 Parent",
-      children: [
-        {
-          id: "3",
-          name: "Sub Navigation Item 1",
-          url: "/",
-        },
-        {
-          id: "4",
-          name: "Sub Navigation Item 2",
-          url: "/",
-        },
-        {
-          id: "5",
-          name: "Navigation Item 3 Parent",
-          children: [
-            {
-              id: "6",
-              name: "Sub Navigation Item A",
-              url: "/",
-            },
-            {
-              id: "7",
-              name: "Sub Navigation Item B",
-              url: "/",
-            },
-          ],
-        },
-        {
-          id: "6",
-          name: "Sub Navigation Item 4",
-          url: "/",
-        },
-        {
-          id: "7",
-          name: "Sub Navigation Item 5",
-          url: "/",
-        },
-      ],
-    },
-    {
-      id: "8",
-      name: "Navigation Item 2",
-      url: "/",
-    },
-    {
-      id: "9",
-      name: "Navigation Item 3",
-      url: "/",
-    },
-  ],
-  onQueryChange: SingleResultFound.args.onQueryChange,
+  navItems: [...AccordionMenuStories.LoadedDefault.args.navItems],
+  onQueryChange: SearchStories.SingleResultFound.args.onQueryChange,
 };
 
-const PreviewDisabled = Template.bind({});
-PreviewDisabled.args = {
-  ...Template.args,
-  loading: false,
-  previewMode: false,
+export const PreviewDisabled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    previewMode: false,
+  },
 };
 
-const Loading = Template.bind({});
-Loading.args = {
-  ...Template.args,
-  loading: true,
-  previewMode: false,
+export const Loading = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: true,
+    previewMode: false,
+    navItems: [...AccordionMenuStories.Loading.args.navItems],
+  },
 };
 
-const PreviewEnabled = Template.bind({});
-PreviewEnabled.args = {
-  ...Template.args,
-  loading: false,
-  previewMode: true,
+export const PreviewEnabled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    previewMode: true,
+  },
 };
-
-export { PreviewDisabled, Loading, PreviewEnabled };
-
-export default config;
