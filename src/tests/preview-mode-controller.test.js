@@ -16,6 +16,78 @@ import * as stories from "../stories/preview-mode-controller/preview-mode-contro
 const { Loading, Inactive, Active, ActiveWithErrors } = composeStories(stories);
 
 describe("PreviewModeController", () => {
+  test("a user can not interact with the component when in a loading state", () => {
+    render(<Loading />);
+
+    expect(screen.queryAllByRole("button")).toHaveLength(0);
+  });
+
+  test("no controller widgets are presented to the user when the component is in an inactive state", () => {
+    render(<Inactive />);
+
+    const buttons = screen.queryAllByRole("button");
+
+    expect(buttons).toHaveLength(1);
+
+    expect(
+      screen.queryByRole("button", { name: /enable Preview Mode/i })
+    ).toBeInTheDocument();
+  });
+
+  test("controller widgets are presented to the user when the component is in an active state", () => {
+    render(<Active />);
+
+    expect(
+      screen.queryByRole("button", { name: /disable Preview Mode/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: /switch working branch/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: /create branch/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: /create knowledge page/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: /edit knowledge page meta data/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: /create page section/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: /create new application/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: /commit changes/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("button", { name: /create pull request/i })
+    ).toBeInTheDocument();
+  });
+
+  test("a user can enable preview mode", () => {
+    const onToggleSpy = jest.spyOn(Inactive.args, "onToggle");
+
+    render(<Inactive />);
+
+    userEvent.click(
+      screen.getByRole("button", { name: /enable preview mode/i })
+    );
+
+    expect(onToggleSpy).toHaveBeenCalled();
+
+    onToggleSpy.mockClear();
+  });
+
   test("a user can disable preview mode", () => {
     const onToggleSpy = jest.spyOn(Active.args, "onToggle");
 
