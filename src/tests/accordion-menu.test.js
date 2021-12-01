@@ -2,13 +2,28 @@ import React from "react";
 import { render, screen, within, waitFor } from "@testing-library/react";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/accordion-menu/accordion-menu.stories";
+import userEvent from "@testing-library/user-event";
 
-const {
-  Loading,
-  LoadedDefault,
-  LoadedWithExpandedChildren,
-  LoadedWithExpandedThenCollapsedChildren,
-} = composeStories(stories);
+const { Loading, LoadedDefault, LoadedWithExpandedChildren } = composeStories(
+  stories
+);
+
+const getNavItems = (navItems) => {
+  const output = [];
+
+  navItems.forEach((navItem) => {
+    if (navItem?.children) {
+      output.push(...getNavItems(navItem.children));
+    } else {
+      output.push({
+        name: navItem.name,
+        url: navItem.url,
+      });
+    }
+  });
+
+  return output;
+};
 
 describe("AccordionMenu", () => {
   test("in a loading state, it renders correctly", () => {
@@ -21,7 +36,7 @@ describe("AccordionMenu", () => {
     expect(navigation).toHaveAttribute("aria-busy", "true");
 
     // It does not render menu title
-    expect(within(navigation).queryByRole("heading").textContent).toBe("");
+    expect(within(navigation).getByRole("heading").textContent).toBe("");
 
     // It renders a loading skeleton title
     expect(within(navigation).getByRole("heading")).toBeInTheDocument();
@@ -43,7 +58,7 @@ describe("AccordionMenu", () => {
 
     // It renders the menu title
     expect(
-      within(navigation).queryByRole("heading", {
+      within(navigation).getByRole("heading", {
         name: LoadedDefault.args.menuTitle,
       })
     ).toBeInTheDocument();
@@ -53,7 +68,7 @@ describe("AccordionMenu", () => {
       ({ children }) => !children
     );
 
-    const topLevelLinks = within(navigation).queryAllByRole("link");
+    const topLevelLinks = within(navigation).getAllByRole("link");
 
     expect(topLevelLinks.length).toBe(topLevelNavItems.length);
 
@@ -67,7 +82,7 @@ describe("AccordionMenu", () => {
       ({ children }) => children
     );
 
-    const topLevelParents = within(navigation).queryAllByRole("button");
+    const topLevelParents = within(navigation).getAllByRole("button");
 
     expect(topLevelParents.length).toBe(topLevelParentNavItems.length);
 
@@ -81,23 +96,6 @@ describe("AccordionMenu", () => {
 
     await LoadedWithExpandedChildren.play({ canvasElement: container });
 
-    const getNavItems = (navItems) => {
-      const output = [];
-
-      navItems.forEach((navItem) => {
-        if (navItem?.children) {
-          output.push(...getNavItems(navItem.children));
-        } else {
-          output.push({
-            name: navItem.name,
-            url: navItem.url,
-          });
-        }
-      });
-
-      return output;
-    };
-
     const navItems = getNavItems(LoadedWithExpandedChildren.args.navItems);
 
     const links = screen.getAllByRole("link");
@@ -106,14 +104,24 @@ describe("AccordionMenu", () => {
   });
 
   test("a user can collapse expanded nested child links", async () => {
-    const { container } = render(<LoadedWithExpandedThenCollapsedChildren />);
+    const { container } = render(<LoadedWithExpandedChildren />);
 
-    await LoadedWithExpandedThenCollapsedChildren.play({
-      canvasElement: container,
+    const navItems = getNavItems(LoadedWithExpandedChildren.args.navItems);
+
+    const topLevelNavItems = LoadedWithExpandedChildren.args.navItems.filter(
+      ({ children }) => !children
+    );
+
+    await LoadedWithExpandedChildren.play({ canvasElement: container });
+
+    await waitFor(() => {
+      expect(screen.getAllByRole("link")).toHaveLength(navItems.length);
     });
 
-    const topLevelNavItems = LoadedWithExpandedThenCollapsedChildren.args.navItems.filter(
-      ({ children }) => !children
+    userEvent.click(
+      screen.getByRole("button", {
+        name: LoadedWithExpandedChildren.args.navItems[1].name,
+      })
     );
 
     await waitFor(() => {
