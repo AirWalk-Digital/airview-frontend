@@ -14,6 +14,7 @@ afterAll(() => server.close());
 setGlobalConfig(globalStorybookConfig);
 
 window.console.error = jest.fn();
+window.console.warn = jest.fn();
 window.fetch = require("node-fetch");
 
 jest.setTimeout(30000);
