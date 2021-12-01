@@ -103,24 +103,22 @@ export function AccordionMenu({ menuTitle, navItems, loading, id, ...rest }) {
       aria-labelledby={`${id}-list-subheader`}
       dense
       subheader={
-        menuTitle && (
-          <ListSubheader
-            component="h6"
-            disableSticky
-            id={`${id}-list-subheader`}
-            className={classes.menuTitle}
-          >
-            {loading ? (
-              <Skeleton
-                width="70%"
-                height={16}
-                className={classes.menuTitleSkeleton}
-              />
-            ) : (
-              menuTitle
-            )}
-          </ListSubheader>
-        )
+        <ListSubheader
+          component="h6"
+          disableSticky
+          id={`${id}-list-subheader`}
+          className={classes.menuTitle}
+        >
+          {loading ? (
+            <Skeleton
+              width="70%"
+              height={16}
+              className={classes.menuTitleSkeleton}
+            />
+          ) : (
+            menuTitle
+          )}
+        </ListSubheader>
       }
       aria-live="polite"
       aria-busy={loading}
