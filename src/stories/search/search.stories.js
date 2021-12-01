@@ -1,10 +1,17 @@
 import React from "react";
+import {
+  screen,
+  userEvent,
+  within,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@storybook/testing-library";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 import { action } from "@storybook/addon-actions";
 import { Search } from "../../components/search";
 import { responses } from "./responses";
 
-const config = {
+export default {
   title: "Modules/Search",
   component: Search,
   parameters: {
@@ -30,83 +37,98 @@ Template.args = {
   open: true,
 };
 
-Template.argTypes = {};
+export const Default = {
+  ...Template,
+  args: {
+    ...Template.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
 
-const SingleResultFound = Template.bind({});
-
-SingleResultFound.args = {
-  ...Template.args,
-  onQueryChange: async (query) => {
-    action("onQueryChange")(query);
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([responses.resolved[0]]);
-      }, delay);
-    });
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([responses.resolved[0]]);
+        }, delay);
+      });
+    },
   },
 };
 
-SingleResultFound.argTypes = {
-  ...Template.argTypes,
-};
+export const SearchInProgress = {
+  ...Template,
+  args: {
+    ...Template.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
 
-const MultipleResultsFound = Template.bind({});
+      return new Promise(() => {});
+    },
+  },
+  play: async ({ searchQuery = "ipsum" }) => {
+    const searchDialog = await screen.findByRole("dialog");
 
-MultipleResultsFound.args = {
-  ...Template.args,
-  onQueryChange: async (query) => {
-    action("onQueryChange")(query);
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(responses.resolved);
-      }, delay);
-    });
+    await userEvent.type(
+      within(searchDialog).getByRole("searchbox"),
+      searchQuery
+    );
   },
 };
 
-MultipleResultsFound.argTypes = {
-  ...Template.argTypes,
-};
+export const SingleResultFound = {
+  ...Default,
+  play: async ({ searchQuery = "ipsum" }) => {
+    const searchDialog = await screen.findByRole("dialog");
 
-const NoResultsFound = Template.bind({});
-
-NoResultsFound.args = {
-  ...Template.args,
-  onQueryChange: async (query) => {
-    action("onQueryChange")(query);
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([]);
-      }, delay);
-    });
+    await userEvent.type(
+      within(searchDialog).getByRole("searchbox"),
+      searchQuery
+    );
   },
 };
 
-NoResultsFound.argTypes = {
-  ...Template.argTypes,
-};
+export const MultipleResultsFound = {
+  ...SingleResultFound,
+  args: {
+    ...SingleResultFound.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
 
-const Error = Template.bind({});
-
-Error.args = {
-  ...Template.args,
-  onQueryChange: async (query) => {
-    action("onQueryChange")(query);
-
-    return new Promise((_, reject) => {
-      setTimeout(() => {
-        reject({ message: "There was an error" });
-      }, delay);
-    });
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(responses.resolved);
+        }, delay);
+      });
+    },
   },
 };
 
-Error.argTypes = {
-  ...Template.argTypes,
+export const NoResultsFound = {
+  ...SingleResultFound,
+  args: {
+    ...SingleResultFound.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
+
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([]);
+        }, delay);
+      });
+    },
+  },
 };
 
-export default config;
-export { SingleResultFound, MultipleResultsFound, NoResultsFound, Error };
+export const Error = {
+  ...SingleResultFound,
+  args: {
+    ...SingleResultFound.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
+
+      return new Promise((_, reject) => {
+        setTimeout(() => {
+          reject({ message: "There was an error" });
+        }, delay);
+      });
+    },
+  },
+};
