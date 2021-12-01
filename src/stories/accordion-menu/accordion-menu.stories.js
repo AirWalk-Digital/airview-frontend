@@ -132,28 +132,3 @@ export const LoadedWithExpandedChildren = {
     );
   },
 };
-
-export const LoadedWithExpandedThenCollapsedChildren = {
-  ...LoadedDefault,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    const navigationParent = canvas.getByRole("button", {
-      name: LoadedWithExpandedChildren.args.navItems[1].name,
-    });
-
-    // Open sub navigation nodes
-    await userEvent.click(navigationParent);
-
-    const subNavigationParent = canvas.getByRole("button", {
-      name: LoadedWithExpandedChildren.args.navItems[1].children[2].name,
-    });
-
-    await userEvent.click(subNavigationParent);
-
-    // Close all sub navigation parents
-    await userEvent.click(navigationParent);
-
-    await waitForElementToBeRemoved(subNavigationParent);
-  },
-};
