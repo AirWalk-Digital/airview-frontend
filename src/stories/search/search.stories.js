@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  screen,
-  userEvent,
-  within,
-  waitFor,
-  waitForElementToBeRemoved,
-} from "@storybook/testing-library";
+import { screen, userEvent } from "@storybook/testing-library";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 import { action } from "@storybook/addon-actions";
 import { Search } from "../../components/search";
@@ -64,25 +58,15 @@ export const SearchInProgress = {
     },
   },
   play: async ({ searchQuery = "ipsum" }) => {
-    const searchDialog = await screen.findByRole("dialog");
+    const searchDialog = await screen.findByRole("searchbox");
 
-    await userEvent.type(
-      within(searchDialog).getByRole("searchbox"),
-      searchQuery
-    );
+    await userEvent.type(searchDialog, searchQuery);
   },
 };
 
 export const SingleResultFound = {
   ...Default,
-  play: async ({ searchQuery = "ipsum" }) => {
-    const searchDialog = await screen.findByRole("dialog");
-
-    await userEvent.type(
-      within(searchDialog).getByRole("searchbox"),
-      searchQuery
-    );
-  },
+  play: SearchInProgress.play,
 };
 
 export const MultipleResultsFound = {
