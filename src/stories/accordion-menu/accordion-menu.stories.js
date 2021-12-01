@@ -1,4 +1,9 @@
 import React from "react";
+import {
+  userEvent,
+  within,
+  waitForElementToBeRemoved,
+} from "@storybook/testing-library";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccordionMenu } from "../../components/accordion-menu";
 
@@ -40,7 +45,7 @@ export const Loading = {
   },
 };
 
-export const Loaded = {
+export const LoadedDefault = {
   ...Template,
   args: {
     ...Template.args,
@@ -49,61 +54,106 @@ export const Loaded = {
       {
         id: "1",
         name: "Navigation Item 1",
-        url: "/one",
+        url: "/",
       },
       {
         id: "2",
-        name: "Navigation Item Parent 1",
+        name: "Navigation Item 2 - Parent",
         children: [
           {
             id: "3",
-            name: "Sub Navigation Item 1",
-            url: "/two",
+            name: "Child Navigation Item 2:1",
+            url: "/",
           },
           {
             id: "4",
-            name: "Sub Navigation Item 2",
-            url: "/three",
+            name: "Child Navigation Item 2:2",
+            url: "/",
           },
           {
             id: "5",
-            name: "Navigation Item Parent 2",
+            name: "Child Navigation Item 2:3 - Parent",
             children: [
               {
                 id: "6",
-                name: "Sub Navigation Item 1",
-                url: "/four",
+                name: "Child Navigation Item 3:1",
+                url: "/",
               },
               {
                 id: "7",
-                name: "Sub Navigation Item 2",
-                url: "/five",
+                name: "Child Navigation Item 3:2",
+                url: "/",
               },
             ],
           },
           {
             id: "6",
-            name: "Sub Navigation Item 3",
-            url: "/six",
+            name: "Child Navigation Item 2:4",
+            url: "/",
           },
           {
             id: "7",
-            name: "Sub Navigation Item 4",
-            url: "/seven",
+            name: "Child Navigation Item 2:5",
+            url: "/",
           },
         ],
       },
       {
         id: "8",
-        name: "Navigation Item 2",
-        url: "/eight",
+        name: "Navigation Item 3",
+        url: "/",
       },
       {
         id: "9",
-        name: "Navigation Item 3",
-        url: "/nine",
+        name: "Navigation Item 4",
+        url: "/",
       },
     ],
     loading: false,
+  },
+};
+
+export const LoadedWithExpandedChildren = {
+  ...LoadedDefault,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Open sub navigation nodes
+    await userEvent.click(
+      canvas.getByRole("button", {
+        name: LoadedWithExpandedChildren.args.navItems[1].name,
+      })
+    );
+
+    await userEvent.click(
+      canvas.getByRole("button", {
+        name: LoadedWithExpandedChildren.args.navItems[1].children[2].name,
+      })
+    );
+  },
+};
+
+export const LoadedWithExpandedThenCollapsedChildren = {
+  ...LoadedDefault,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const navigationParent = canvas.getByRole("button", {
+      name: LoadedWithExpandedChildren.args.navItems[1].name,
+    });
+
+    // Open sub navigation nodes
+    await userEvent.click(navigationParent);
+
+    const subNavigationParent = canvas.getByRole("button", {
+      name: LoadedWithExpandedChildren.args.navItems[1].children[2].name,
+    });
+
+    await userEvent.click(subNavigationParent);
+
+    // Close all sub navigation parents
+    await userEvent.click(navigationParent);
+
+    await waitForElementToBeRemoved(subNavigationParent);
   },
 };
