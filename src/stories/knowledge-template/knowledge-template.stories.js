@@ -81,36 +81,38 @@ Template.args = {
       protected: false,
     },
   ],
-  onRequestToSwitchBranch: () => {},
-  onRequestToCreateBranch: () => {},
-  onRequestToCreatePage: (data) => {
-    console.log(data);
-  },
-  onRequestToEditPageMetaData: (data) => {
-    console.log(data);
-  },
-  onSave: async (data) => {
-    console.log(data);
-  },
-  onRequestToCreatePullRequest: (from, to) => {
-    console.log(`PR request from branch "${from}" to branch "${to}"`);
+  //onRequestToSwitchBranch: () => {},
+  //onRequestToCreateBranch: () => {},
+  // onRequestToCreatePage: (data) => {
+  //   console.log(data);
+  // },
+  // onRequestToEditPageMetaData: (data) => {
+  //   console.log(data);
+  // },
+  // onSave: async (data) => {
+  //   console.log(data);
+  // },
+  // onRequestToCreatePullRequest: (from, to) => {
+  //   console.log(`PR request from branch "${from}" to branch "${to}"`);
 
-    return "https://github.com";
-  },
+  //   return "https://github.com";
+  // },
   loading: false,
   previewMode: false,
   pageMetaData: {
-    documentName: "Knowledge Template",
+    title: "Knowledge Template",
     reviewDate: dayjs().add(1, "month").toISOString(),
-    userFacingDocument: true,
+    userFacing: true,
   },
 };
 
 const PreviewDisabled = Template.bind({});
 
 PreviewDisabled.args = {
-  ...Template.args,
   ...PageHeaderStories.PreviewDisabled.args,
+  ...Template.args,
+  loading: false,
+  previewMode: false,
 };
 
 const Loading = Template.bind({});
