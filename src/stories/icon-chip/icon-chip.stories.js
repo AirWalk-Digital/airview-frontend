@@ -5,6 +5,21 @@ import WarningIcon from "@material-ui/icons/Warning";
 export default {
   title: "Modules/IconChip",
   component: IconChip,
+  argTypes: {
+    icon: {
+      control: false,
+    },
+    color: {
+      control: {
+        type: "color",
+      },
+    },
+    labelColor: {
+      control: {
+        type: "color",
+      },
+    },
+  },
 };
 
 function Template(args) {
@@ -17,22 +32,6 @@ Template.args = {
   color: "#000",
   labelColor: "#fff",
   dense: false,
-};
-
-Template.argTypes = {
-  icon: {
-    control: false,
-  },
-  color: {
-    control: {
-      type: "color",
-    },
-  },
-  labelColor: {
-    control: {
-      type: "color",
-    },
-  },
 };
 
 export const Default = {
