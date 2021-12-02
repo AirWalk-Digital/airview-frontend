@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Message } from "../../components/message";
 
-const config = {
+export default {
   title: "Modules/Message",
   component: Message,
   parameters: {
@@ -21,25 +21,16 @@ const config = {
       return <div className={classes.root}>{story()}</div>;
     },
   ],
-};
-
-function Template(args) {
-  return <Message {...args} />;
-}
-
-Template.argTypes = {
-  children: {
-    control: false,
-    table: {
-      disable: true,
-    },
-  },
   borderColor: {
     control: {
       type: "color",
     },
   },
 };
+
+function Template(args) {
+  return <Message {...args} />;
+}
 
 Template.args = {
   borderColor: "#000",
@@ -48,15 +39,6 @@ Template.args = {
     "Proin elementum mollis libero, sit amet venenatis ipsum dapibus ut. Curabitur nec nulla id ante aliquet vehicula. Aenean posuere vulputate felis, sit amet congue sem vestibulum et.",
 };
 
-const Default = Template.bind({});
-
-Default.argTypes = {
-  ...Template.argTypes,
+export const Default = {
+  ...Template,
 };
-
-Default.args = {
-  ...Template.args,
-};
-
-export default config;
-export { Default };
