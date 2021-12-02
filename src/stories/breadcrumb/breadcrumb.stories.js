@@ -17,7 +17,6 @@ function Template(args) {
 
 Template.args = {
   activeRoute: "Current Route",
-  maxItems: 5,
 };
 
 export const Loading = {

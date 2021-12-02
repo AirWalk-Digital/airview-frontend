@@ -9,18 +9,16 @@ import { Link } from "../link";
 export function Breadcrumb({ links, activeRoute, loading, ...rest }) {
   const classes = useStyles();
 
-  const maxItems = 5;
-
   return (
     <Breadcrumbs
-      maxItems={maxItems}
+      maxItems={5}
       aria-label="Breadcrumb"
       aria-live="polite"
       aria-busy={loading}
       {...rest}
     >
       {loading
-        ? [...Array(maxItems)].map((item, index) => (
+        ? [...Array(5)].map((item, index) => (
             <Skeleton
               key={index}
               className={classes.loadingBreadCrumbItem}
@@ -45,7 +43,7 @@ const useStyles = makeStyles({
 
 Breadcrumb.propTypes = {
   /**
-   * Presents the breadcrumbs in a lodaing state (for when fetching data async)
+   * Presents the breadcrumbs in a loading state (for when fetching data async)
    */
   loading: PropTypes.bool.isRequired,
   /**
