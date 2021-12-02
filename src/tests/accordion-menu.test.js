@@ -6,23 +6,6 @@ import userEvent from "@testing-library/user-event";
 
 const { Loading, Loaded } = composeStories(stories);
 
-const getNavItems = (navItems) => {
-  const output = [];
-
-  navItems.forEach((navItem) => {
-    if (navItem?.children) {
-      output.push(...getNavItems(navItem.children));
-    } else {
-      output.push({
-        name: navItem.name,
-        url: navItem.url,
-      });
-    }
-  });
-
-  return output;
-};
-
 describe("AccordionMenu", () => {
   test("in a loading state, it renders correctly", () => {
     render(<Loading />);
