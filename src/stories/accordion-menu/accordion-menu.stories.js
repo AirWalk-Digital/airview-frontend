@@ -1,9 +1,4 @@
 import React from "react";
-import {
-  userEvent,
-  within,
-  waitForElementToBeRemoved,
-} from "@storybook/testing-library";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccordionMenu } from "../../components/accordion-menu";
 
@@ -45,7 +40,7 @@ export const Loading = {
   },
 };
 
-export const LoadedDefault = {
+export const Loaded = {
   ...Template,
   args: {
     ...Template.args,
@@ -110,25 +105,5 @@ export const LoadedDefault = {
       },
     ],
     loading: false,
-  },
-};
-
-export const LoadedWithExpandedChildren = {
-  ...LoadedDefault,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Open sub navigation nodes
-    await userEvent.click(
-      canvas.getByRole("button", {
-        name: LoadedWithExpandedChildren.args.navItems[1].name,
-      })
-    );
-
-    await userEvent.click(
-      canvas.getByRole("button", {
-        name: LoadedWithExpandedChildren.args.navItems[1].children[2].name,
-      })
-    );
   },
 };
