@@ -19,11 +19,7 @@ export function Breadcrumb({ links, activeRoute, loading, ...rest }) {
     >
       {loading
         ? [...Array(5)].map((item, index) => (
-            <Skeleton
-              key={index}
-              className={classes.loadingBreadCrumbItem}
-              aria-label="Breadcrumb item placeholder"
-            />
+            <Skeleton key={index} className={classes.loadingBreadCrumbItem} />
           ))
         : links?.map((link) => (
             <Link href={link.url} key={link.url}>
