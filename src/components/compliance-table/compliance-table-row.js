@@ -121,7 +121,7 @@ function ComplianceTableRow({
         </TableCell>
       </TableRow>
 
-      <TableRow>
+      <TableRow aria-hidden={!open}>
         <TableCell padding="none" colSpan={5}>
           <Collapse in={open} timeout="auto">
             {children}
