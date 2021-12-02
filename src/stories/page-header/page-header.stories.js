@@ -49,7 +49,7 @@ Template.args = {
   siteTitle: "AirView",
   version: "1.0",
   logoSrc: logo,
-  navItems: [...AccordionMenuStories.LoadedDefault.args.navItems],
+  navItems: [...AccordionMenuStories.Loaded.args.navItems],
   onQueryChange: SearchStories.SingleResultFound.args.onQueryChange,
 };
 
