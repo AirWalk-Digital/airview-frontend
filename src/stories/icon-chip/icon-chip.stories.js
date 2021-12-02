@@ -2,7 +2,7 @@ import React from "react";
 import { IconChip } from "../../components/icon-chip";
 import WarningIcon from "@material-ui/icons/Warning";
 
-const config = {
+export default {
   title: "Modules/IconChip",
   component: IconChip,
 };
@@ -35,24 +35,14 @@ Template.argTypes = {
   },
 };
 
-const Default = Template.bind({});
-Default.args = {
-  ...Template.args,
+export const Default = {
+  ...Template,
 };
 
-Default.argTypes = {
-  ...Template.argTypes,
+export const Dense = {
+  ...Template,
+  args: {
+    ...Template.args,
+    dense: true,
+  },
 };
-
-const Dense = Template.bind({});
-Dense.args = {
-  ...Template.args,
-  dense: true,
-};
-
-Dense.argTypes = {
-  ...Template.argTypes,
-};
-
-export { Default, Dense };
-export default config;
