@@ -55,16 +55,7 @@ export const LoadedWithSingleIssue = {
   args: {
     ...Template.args,
     loading: false,
-    applications: [applicationsData[0]],
-  },
-};
-
-export const LoadedWithSinglePendingIssue = {
-  ...Template,
-  args: {
-    ...Template.args,
-    loading: false,
-    applications: [applicationsData[1]],
+    applications: [applicationsData[3]],
   },
 };
 
