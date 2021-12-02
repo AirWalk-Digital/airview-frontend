@@ -36,11 +36,11 @@ IconChip.propTypes = {
   /**
    * The icon to display in the chip, accepts one [Material-UI SVG Icon](https://material-ui.com/components/material-icons/)
    */
-  icon: PropTypes.oneOfType([PropTypes.node]).isRequired,
+  icon: PropTypes.node.isRequired,
   /**
    * The content of the chip label text
    */
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  label: PropTypes.string.isRequired,
   /**
    * The color of the chip, should be a valid [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)
    */
