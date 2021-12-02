@@ -55,7 +55,7 @@ export const LoadedWithSingleIssue = {
   args: {
     ...Template.args,
     loading: false,
-    applications: [applicationsData[3]],
+    applications: [applicationsData[0]],
   },
 };
 
