@@ -1,13 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  data,
-  messages,
-  useComplianceTableDemoController,
-} from "./compliance-table-demo-controller";
 import { ComplianceTable } from "../../components/compliance-table";
+import { applicationsData } from "./applications-data";
 
-const config = {
+export default {
   title: "Modules/Compliance Table",
   component: ComplianceTable,
   parameters: {
@@ -28,74 +24,80 @@ const config = {
   ],
 };
 
-function Default() {
-  const {
-    applicationData,
-    handleOnAcceptOfRisk,
-  } = useComplianceTableDemoController([...data]);
-
-  return (
-    <ComplianceTable
-      title="Compliance Table"
-      applications={applicationData}
-      onAcceptOfRisk={handleOnAcceptOfRisk}
-      noDataMessage={messages.noDataMessage}
-      invalidPermissionsMessage={messages.invalidPermissionsMessage}
-    />
-  );
+function Template(args) {
+  return <ComplianceTable {...args} />;
 }
 
-function WithNoData() {
-  const {
-    applicationData,
-    handleOnAcceptOfRisk,
-  } = useComplianceTableDemoController([]);
+Template.args = {
+  title: "Compliance Table",
+  noDataMessage: {
+    title: "No issues",
+    message: "There are no issues to display for this application",
+  },
+  invalidPermissionsMessage: {
+    title: "Notice",
+    message:
+      "You do not have the required permissions to view the data for this application",
+  },
+};
 
-  return (
-    <ComplianceTable
-      title="Compliance Table"
-      applications={applicationData}
-      onAcceptOfRisk={handleOnAcceptOfRisk}
-      noDataMessage={messages.noDataMessage}
-      invalidPermissionsMessage={messages.invalidPermissionsMessage}
-    />
-  );
-}
+export const Loading = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: true,
+    applications: [],
+  },
+};
 
-function WithoutRequiredPermissions() {
-  const {
-    applicationData,
-    handleOnAcceptOfRisk,
-  } = useComplianceTableDemoController(null);
+export const LoadedWithSingleIssue = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    applications: [applicationsData[0]],
+  },
+};
 
-  return (
-    <ComplianceTable
-      title="Compliance Table"
-      applications={applicationData}
-      onAcceptOfRisk={handleOnAcceptOfRisk}
-      noDataMessage={messages.noDataMessage}
-      invalidPermissionsMessage={messages.invalidPermissionsMessage}
-    />
-  );
-}
+export const LoadedWithSinglePendingIssue = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    applications: [applicationsData[1]],
+  },
+};
 
-function Loading() {
-  const {
-    applicationData,
-    handleOnAcceptOfRisk,
-  } = useComplianceTableDemoController(null);
+export const LoadedWithMultipleIssues = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    applications: applicationsData,
+  },
+};
 
-  return (
-    <ComplianceTable
-      title="Compliance Table"
-      applications={applicationData}
-      loading={true}
-      onAcceptOfRisk={handleOnAcceptOfRisk}
-      noDataMessage={messages.noDataMessage}
-      invalidPermissionsMessage={messages.invalidPermissionsMessage}
-    />
-  );
-}
+export const LoadedWithNoIssues = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    applications: [],
+  },
+};
 
-export default config;
-export { Default, WithNoData, WithoutRequiredPermissions, Loading };
+export const WithoutRequiredPermissions = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    applications: null,
+  },
+};
+
+/*
+
+WithIssues
+WithoutIssues
+WithoutRequiredPermissions
+*/
