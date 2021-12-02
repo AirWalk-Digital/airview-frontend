@@ -214,21 +214,20 @@ export function ComplianceTableAcceptRiskDialog({
             <FormLabel
               required
               className={classes.inputLabel}
-              htmlFor={`probability-${applicationId}`}
+              id={`probability-${applicationId}`}
             >
               Probability
             </FormLabel>
 
             <ButtonGroup
               color="primary"
-              aria-label="Probability selection"
               disableElevation
               disableRipple
               size="small"
               variant="outlined"
               name="probability"
-              id={`probability-${applicationId}`}
               disabled={submitting}
+              aria-labelledby={`probability-${applicationId}`}
             >
               {probabilities.map((probability) => (
                 <Button
@@ -260,19 +259,18 @@ export function ComplianceTableAcceptRiskDialog({
             <FormLabel
               required
               className={classes.inputLabel}
-              htmlFor={`impact-${applicationId}`}
+              id={`impact-${applicationId}`}
             >
               Impact
             </FormLabel>
 
             <ButtonGroup
               color="primary"
-              aria-label="Impact selection"
               disableElevation
               disableRipple
               size="small"
               name="impact"
-              id={`impact-${applicationId}`}
+              aria-labelledby={`impact-${applicationId}`}
               disabled={submitting}
             >
               {impacts.map((impact) => (
@@ -320,13 +318,12 @@ export function ComplianceTableAcceptRiskDialog({
               variant="outlined"
               required
             >
-              <InputLabel htmlFor={`resources-${applicationId}`}>
+              <InputLabel id={`resources-${applicationId}`}>
                 Resources
               </InputLabel>
               <Select
                 labelId={`resources-${applicationId}`}
                 label="Resources"
-                id={`resources-${applicationId}`}
                 multiple
                 value={formData.resources.value}
                 onChange={(event) =>
