@@ -1,15 +1,12 @@
+/* eslint storybook/story-exports: 0 */
 import React from "react";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 import { makeStyles } from "@material-ui/core/styles";
 import * as PageHeaderStories from "../page-header/page-header.stories";
 import { ApplicationsTemplate } from "../../components/applications-template";
 import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
-import {
-  data,
-  messages,
-  useComplianceTableDemoController,
-} from "../compliance-table/compliance-table-demo-controller";
 import markdownContent from "../__resources/markdown-content.md";
+import { applicationsData } from "../compliance-table/applications-data";
 
 const config = {
   title: "Templates/Applications Template",
@@ -115,10 +112,16 @@ const Template = (args) => {
     });
   };
 
-  const {
-    applicationData,
-    handleOnAcceptOfRisk,
-  } = useComplianceTableDemoController([...data]);
+  const noDataMessage = {
+    title: "No issues",
+    message: "There are no issues to display for this application",
+  };
+
+  const invalidPermissionsMessage = {
+    title: "Notice",
+    message:
+      "You do not have the required permissions to view the data for this application",
+  };
 
   return (
     <ApplicationsTemplate
@@ -130,17 +133,16 @@ const Template = (args) => {
       onResourceExemptionDelete={handleOnResourceExemptionDelete}
       onResourceExemptionSave={handleOnResourceExemptionSave}
       complianceTableTitle="Compliance Table"
-      complianceTableApplications={applicationData}
-      complianceTableOnAcceptOfRisk={handleOnAcceptOfRisk}
-      complianceTableNoDataMessage={messages.noDataMessage}
-      complianceTableInvalidPermissionsMessage={
-        messages.invalidPermissionsMessage
-      }
+      complianceTableApplications={[...applicationsData]}
+      complianceTableOnAcceptOfRisk={() => {}}
+      complianceTableNoDataMessage={noDataMessage}
+      complianceTableInvalidPermissionsMessage={invalidPermissionsMessage}
     />
   );
 };
 
 Template.args = {
+  pageTitle: "Knowledge Template",
   currentRoute: "/applications/application-template",
   breadcrumbLinks: [
     {
