@@ -125,5 +125,7 @@ describe("ComplianceTable", () => {
     userEvent.click(within(dialog).getByRole("button", { name: /submit/i }));
 
     expect(onAcceptOfRisk).toHaveBeenCalledTimes(1);
+
+    // To do, check correct data was passed with call
   });
 });
