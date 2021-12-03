@@ -6,7 +6,7 @@ import {
 } from "../../components/control-overview";
 import docs from "./control-overview.docs.md";
 
-const config = {
+export default {
   title: "Modules/Control Overview",
   component: ControlOverview,
   decorators: [
@@ -37,7 +37,7 @@ const config = {
   },
 };
 
-function Default() {
+export const WithControls = () => {
   const [
     state,
     setControlsData,
@@ -120,9 +120,9 @@ function Default() {
       onResourceExemptionSave={handleOnResourceExemptionSave}
     />
   );
-}
+};
 
-function WithNoControls() {
+export const WithNoControls = () => {
   const data = {
     groups: [],
     controls: undefined,
@@ -137,9 +137,9 @@ function WithNoControls() {
       onRequestOfResourcesData={() => {}}
     />
   );
-}
+};
 
-function WithError() {
+export const WithError = () => {
   const data = {
     groups: "error",
     controls: undefined,
@@ -154,9 +154,9 @@ function WithError() {
       onRequestOfResourcesData={() => {}}
     />
   );
-}
+};
 
-function WithoutRequiredPermissions() {
+export const WithoutRequiredPermissions = () => {
   const data = {
     groups: null,
     controls: undefined,
@@ -171,9 +171,9 @@ function WithoutRequiredPermissions() {
       onRequestOfResourcesData={() => {}}
     />
   );
-}
+};
 
-function Loading() {
+export const Loading = () => {
   const data = {
     groups: undefined,
     controls: undefined,
@@ -189,13 +189,4 @@ function Loading() {
       onRequestOfResourcesData={() => {}}
     />
   );
-}
-
-export default config;
-export {
-  Default,
-  WithNoControls,
-  WithError,
-  WithoutRequiredPermissions,
-  Loading,
 };
