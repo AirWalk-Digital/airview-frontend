@@ -92,19 +92,17 @@ export const WithControls = () => {
     });
   };
 
-  const handleOnResourceExemptionDelete = (data) => {
+  const handleOnResourceExemptionDelete = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        console.log(data);
         resolve();
       }, [1000]);
     });
   };
 
-  const handleOnResourceExemptionSave = (data) => {
+  const handleOnResourceExemptionSave = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        console.log(data);
         resolve();
       }, [1000]);
     });
