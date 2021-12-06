@@ -37,7 +37,7 @@ Template.args = {
   },
 };
 
-export const Disabled = {
+export const CloseDisabled = {
   ...Template,
   args: {
     ...Template.args,
@@ -45,7 +45,7 @@ export const Disabled = {
   },
 };
 
-export const Closed = {
+export const ClosedNotDisabled = {
   ...Template,
 };
 
