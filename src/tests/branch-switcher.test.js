@@ -16,6 +16,9 @@ describe("BranchSwitcher", () => {
     await waitFor(() => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
       expect(onSubmitSpy).toHaveBeenCalledWith("development");
+      expect(
+        screen.queryByRole("dialog", /switch working branch/i)
+      ).not.toBeInTheDocument();
     });
 
     onSubmitSpy.mockRestore();
