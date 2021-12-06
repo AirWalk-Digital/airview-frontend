@@ -15,7 +15,7 @@ describe("BranchSwitcher", () => {
 
     await waitFor(() => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
-      expect(onSubmitSpy).toHaveBeenCalledWith(expect.any(String));
+      expect(onSubmitSpy).toHaveBeenCalledWith("development");
     });
 
     onSubmitSpy.mockRestore();
@@ -29,8 +29,6 @@ describe("BranchSwitcher", () => {
     await WithError.play({ canvasElement: container });
 
     await waitFor(() => {
-      expect(onSubmitSpy).toHaveBeenCalledTimes(1);
-      expect(onSubmitSpy).toHaveBeenCalledWith(expect.any(String));
       expect(screen.getByRole("alert")).toBeInTheDocument();
     });
 
