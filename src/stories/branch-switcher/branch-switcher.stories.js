@@ -70,7 +70,7 @@ export const InitialOpen = {
   },
 };
 
-export const WithSuccess = {
+export const WithSubmissionSuccess = {
   ...Template,
   play: async (context) => {
     await InitialOpen.play(context);
@@ -97,7 +97,7 @@ export const WithSuccess = {
   },
 };
 
-export const WithError = {
+export const WithSubmissionError = {
   ...Template,
   args: {
     onSubmit: async (branchName) => {
@@ -113,6 +113,6 @@ export const WithError = {
     },
   },
   play: async (context) => {
-    await WithSuccess.play(context);
+    await WithSubmissionSuccess.play(context);
   },
 };

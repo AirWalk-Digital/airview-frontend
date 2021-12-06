@@ -3,15 +3,15 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/branch-switcher/branch-switcher.stories";
 
-const { WithSuccess, WithError } = composeStories(stories);
+const { WithSubmissionSuccess, WithSubmissionError } = composeStories(stories);
 
 describe("BranchSwitcher", () => {
   test("a user can switch working branch", async () => {
-    const onSubmitSpy = jest.spyOn(WithSuccess.args, "onSubmit");
+    const onSubmitSpy = jest.spyOn(WithSubmissionSuccess.args, "onSubmit");
 
-    const { container } = render(<WithSuccess />);
+    const { container } = render(<WithSubmissionSuccess />);
 
-    await WithSuccess.play({ canvasElement: container });
+    await WithSubmissionSuccess.play({ canvasElement: container });
 
     await waitFor(() => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
@@ -25,11 +25,11 @@ describe("BranchSwitcher", () => {
   });
 
   test("a user is alerted to an error, if thrown", async () => {
-    const onSubmitSpy = jest.spyOn(WithError.args, "onSubmit");
+    const onSubmitSpy = jest.spyOn(WithSubmissionError.args, "onSubmit");
 
-    const { container } = render(<WithError />);
+    const { container } = render(<WithSubmissionError />);
 
-    await WithError.play({ canvasElement: container });
+    await WithSubmissionError.play({ canvasElement: container });
 
     await waitFor(() => {
       expect(screen.getByRole("alert")).toBeInTheDocument();
