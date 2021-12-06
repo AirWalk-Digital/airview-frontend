@@ -15,10 +15,8 @@ describe("BranchCreator", () => {
 
     await waitFor(() => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
-      expect(onSubmitSpy).toHaveBeenCalledWith("new-feature");
-      expect(
-        screen.queryByRole("dialog", /create branch/i)
-      ).not.toBeInTheDocument();
+      expect(onSubmitSpy).toHaveBeenCalledWith(expect.any(String));
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
     onSubmitSpy.mockRestore();
