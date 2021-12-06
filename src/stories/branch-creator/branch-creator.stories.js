@@ -48,6 +48,25 @@ export const InitialOpen = {
   },
 };
 
+export const WithValidBranchName = {
+  ...Template,
+  play: async (context) => {
+    await InitialOpen.play(context);
+
+    const dialog = await screen.findByRole("dialog", {
+      name: /create branch/i,
+    });
+
+    await userEvent.type(
+      within(dialog).getByLabelText(/branch name/i),
+      "new-feature",
+      {
+        delay: inputDelay,
+      }
+    );
+  },
+};
+
 export const WithInvalidBranchName = {
   ...Template,
   play: async (context) => {
@@ -59,7 +78,7 @@ export const WithInvalidBranchName = {
 
     await userEvent.type(
       within(dialog).getByLabelText(/branch name/i),
-      "invalid-branch-name*",
+      "new-feature*",
       {
         delay: inputDelay,
       }
@@ -67,22 +86,14 @@ export const WithInvalidBranchName = {
   },
 };
 
-export const WithSuccess = {
+export const WithSubmissionSuccess = {
   ...Template,
   play: async (context) => {
-    await InitialOpen.play(context);
+    await WithValidBranchName.play(context);
 
-    const dialog = await screen.findByRole("dialog", {
+    const dialog = screen.getByRole("dialog", {
       name: /create branch/i,
     });
-
-    await userEvent.type(
-      within(dialog).getByLabelText(/branch name/i),
-      "test-branch",
-      {
-        delay: inputDelay,
-      }
-    );
 
     await userEvent.click(
       within(dialog).getByRole("button", { name: /create/i })
@@ -90,7 +101,7 @@ export const WithSuccess = {
   },
 };
 
-export const WithError = {
+export const WithSubmissionError = {
   ...Template,
   args: {
     onSubmit: async (branchName) => {
@@ -106,6 +117,6 @@ export const WithError = {
     },
   },
   play: async (context) => {
-    await WithSuccess.play(context);
+    await WithSubmissionSuccess.play(context);
   },
 };
