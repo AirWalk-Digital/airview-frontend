@@ -3,30 +3,33 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/branch-creator/branch-creator.stories";
 
-const { WithSuccess, WithError } = composeStories(stories);
+const { WithSubmissionSuccess, WithSubmissionError } = composeStories(stories);
 
 describe("BranchCreator", () => {
   test("a user can create a new branch", async () => {
-    const onSubmitSpy = jest.spyOn(WithSuccess.args, "onSubmit");
+    const onSubmitSpy = jest.spyOn(WithSubmissionSuccess.args, "onSubmit");
 
-    const { container } = render(<WithSuccess />);
+    const { container } = render(<WithSubmissionSuccess />);
 
-    await WithSuccess.play({ canvasElement: container });
+    await WithSubmissionSuccess.play({ canvasElement: container });
 
     await waitFor(() => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
-      expect(onSubmitSpy).toHaveBeenCalledWith("test-branch");
+      expect(onSubmitSpy).toHaveBeenCalledWith("new-feature");
+      expect(
+        screen.queryByRole("dialog", /create branch/i)
+      ).not.toBeInTheDocument();
     });
 
     onSubmitSpy.mockRestore();
   });
 
   test("a user is alerted to an error, if thrown", async () => {
-    const onSubmitSpy = jest.spyOn(WithError.args, "onSubmit");
+    const onSubmitSpy = jest.spyOn(WithSubmissionError.args, "onSubmit");
 
-    const { container } = render(<WithError />);
+    const { container } = render(<WithSubmissionError />);
 
-    await WithError.play({ canvasElement: container });
+    await WithSubmissionError.play({ canvasElement: container });
 
     await waitFor(() => {
       expect(screen.getByRole("alert")).toBeInTheDocument();
