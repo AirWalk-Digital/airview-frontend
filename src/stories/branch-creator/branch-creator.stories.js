@@ -48,6 +48,25 @@ export const InitialOpen = {
   },
 };
 
+export const WithInvalidBranchName = {
+  ...Template,
+  play: async (context) => {
+    await InitialOpen.play(context);
+
+    const dialog = await screen.findByRole("dialog", {
+      name: /create branch/i,
+    });
+
+    await userEvent.type(
+      within(dialog).getByLabelText(/branch name/i),
+      "invalid-branch-name*",
+      {
+        delay: inputDelay,
+      }
+    );
+  },
+};
+
 export const WithSuccess = {
   ...Template,
   play: async (context) => {
