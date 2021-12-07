@@ -15,7 +15,7 @@ describe("BranchSwitcher", () => {
 
     await waitFor(() => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
-      expect(onSubmitSpy).toHaveBeenCalledWith(expect.any(String));
+      expect(onSubmitSpy).toHaveBeenCalledWith("main");
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
@@ -23,8 +23,6 @@ describe("BranchSwitcher", () => {
   });
 
   test("a user is alerted to an error, if thrown", async () => {
-    const onSubmitSpy = jest.spyOn(WithSubmissionError.args, "onSubmit");
-
     const { container } = render(<WithSubmissionError />);
 
     await WithSubmissionError.play({ canvasElement: container });
@@ -32,7 +30,5 @@ describe("BranchSwitcher", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toBeInTheDocument();
     });
-
-    onSubmitSpy.mockRestore();
   });
 });
