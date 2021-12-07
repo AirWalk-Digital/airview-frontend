@@ -1,4 +1,5 @@
 import React from "react";
+import { screen, userEvent, within } from "@storybook/testing-library";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccordionMenu } from "../../components/accordion-menu";
 
@@ -105,5 +106,24 @@ export const Loaded = {
       },
     ],
     loading: false,
+  },
+};
+
+export const LoadedExpanded = {
+  ...Loaded,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(
+      canvas.getByRole("button", {
+        name: /navigation item 2 - parent/i,
+      })
+    );
+
+    await userEvent.click(
+      await canvas.findByRole("button", {
+        name: /child navigation item 2:3 - parent/i,
+      })
+    );
   },
 };
