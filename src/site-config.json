@@ -7,7 +7,7 @@
   },
   "contentRepositories": {
     "application": {
-      "workingRepoName": "AirWalk-Digital/airview_demo_applications",
+      "workingRepoName": "airview_demo_applications",
       "workingBranchName": "main",
       "staticStorageFolderName": "/storage/applications/"
     }

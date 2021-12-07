@@ -14,7 +14,8 @@
     "lint-js": "eslint './src/**/*.{js, jsx}'",
     "lint-js:fix": "npm run lint-js -- --fix",
     "format": "prettier --check './src/'",
-    "format:fix": "npm run format -- --write"
+    "format:fix": "npm run format -- --write",
+    "cypress": "concurrently --names 'APP,CYPRESS' --prefix-colors 'yellow,blue' --kill-others 'react-scripts start' 'cypress open'"
   },
   "dependencies": {
     "@date-io/dayjs": "^1.3.13",
@@ -69,6 +70,7 @@
     "@storybook/react": "^6.2.8",
     "@storybook/storybook-deployer": "^2.8.10",
     "@storybook/testing-react": "0.0.22",
+    "@testing-library/cypress": "^8.0.2",
     "@testing-library/dom": "^7.29.4",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
@@ -76,6 +78,9 @@
     "@testing-library/user-event": "^12.6.3",
     "@types/js-cookie": "^2.2.7",
     "babel-jest": "^26.6.3",
+    "concurrently": "^6.4.0",
+    "crypto-js": "^4.1.1",
+    "cypress": "^9.1.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-jest": "^24.7.0",
@@ -83,6 +88,7 @@
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-testing-library": "^3.10.2",
+    "express": "^4.17.1",
     "faker": "^5.5.3",
     "git-clone": "^0.1.0",
     "mockdate": "^3.0.2",
