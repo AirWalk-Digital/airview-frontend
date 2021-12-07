@@ -18,16 +18,16 @@ describe("ApplicationCreator", () => {
 
       expect(onSubmitSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          applicationTypeId: expect.any(Number),
-          environmentId: expect.any(Number),
-          name: expect.any(String),
-          parentId: expect.any(Number),
-          references: expect.arrayContaining([
-            expect.objectContaining({
-              reference: expect.any(String),
-              type: expect.any(String),
-            }),
-          ]),
+          applicationTypeId: 1,
+          environmentId: 1,
+          name: "Test application name",
+          parentId: 1,
+          references: [
+            {
+              reference: "Test reference label",
+              type: "Reference Type One",
+            },
+          ],
         })
       );
     });
