@@ -252,6 +252,7 @@ export function ApplicationCreator({
           <Typography
             color={state.errorMessage ? "error" : "initial"}
             variant="body2"
+            role={state.errorMessage ? "alert" : null}
           >
             {state.errorMessage ?? (
               <span>
