@@ -1,5 +1,5 @@
 import React from "react";
-import { screen, userEvent, within } from "@storybook/testing-library";
+import { userEvent, within } from "@storybook/testing-library";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccordionMenu } from "../../components/accordion-menu";
 
