@@ -15,7 +15,7 @@ describe("PageSectionCreator", () => {
 
     await waitFor(() => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
-      expect(onSubmitSpy).toHaveBeenCalledWith(expect.any(String));
+      expect(onSubmitSpy).toHaveBeenCalledWith("Test Page Section");
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
@@ -23,8 +23,6 @@ describe("PageSectionCreator", () => {
   });
 
   test("a user is alerted to an error, if thrown", async () => {
-    const onSubmitSpy = jest.spyOn(WithSubmissionError.args, "onSubmit");
-
     const { container } = render(<WithSubmissionError />);
 
     await WithSubmissionError.play({ canvasElement: container });
@@ -32,7 +30,5 @@ describe("PageSectionCreator", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toBeInTheDocument();
     });
-
-    onSubmitSpy.mockRestore();
   });
 });
