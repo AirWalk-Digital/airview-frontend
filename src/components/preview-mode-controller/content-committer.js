@@ -84,6 +84,7 @@ export function ContentCommitter({ disabled = false, onSubmit }) {
             paragraph
             variant="body2"
             color={state.errorMessage ? "error" : "initial"}
+            role={state.errorMessage ? "alert" : null}
           >
             {state.errorMessage ?? "Enter a commit message for your changes"}
           </Typography>
