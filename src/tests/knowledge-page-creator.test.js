@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/knowledge-page-creator/knowledge-page-creator.stories";
+import dayjs from "dayjs";
 
 const { WithSubmissionSuccess, WithSubmissionError } = composeStories(stories);
 
@@ -17,9 +18,9 @@ describe("KnowledgePageCreator", () => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
       expect(onSubmitSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          title: expect.any(String),
-          reviewDate: expect.any(String),
-          userFacing: expect.any(Boolean),
+          title: "Test Knowledge Page",
+          reviewDate: dayjs("2021-12-09").toISOString(),
+          userFacing: true,
         })
       );
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -29,8 +30,6 @@ describe("KnowledgePageCreator", () => {
   });
 
   test("a user is alerted to an error, if thrown", async () => {
-    const onSubmitSpy = jest.spyOn(WithSubmissionError.args, "onSubmit");
-
     const { container } = render(<WithSubmissionError />);
 
     await WithSubmissionError.play({ canvasElement: container });
@@ -38,7 +37,5 @@ describe("KnowledgePageCreator", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toBeInTheDocument();
     });
-
-    onSubmitSpy.mockRestore();
   });
 });
