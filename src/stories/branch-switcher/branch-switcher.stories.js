@@ -25,7 +25,8 @@ export default {
             protected: false,
           },
         ],
-        workingBranch: "main",
+        workingBranch: "development",
+        baseBranch: "main",
       };
 
       return (
@@ -88,7 +89,7 @@ export const WithSubmissionSuccess = {
     });
 
     await userEvent.click(
-      within(branches).getByRole("option", { name: /development/i })
+      within(branches).getByRole("option", { name: /main/i })
     );
 
     await userEvent.click(
