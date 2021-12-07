@@ -5,7 +5,7 @@ import { KnowledgePageCreator } from "../../components/preview-mode-controller";
 import dayjs from "dayjs";
 
 export default {
-  title: "Modules/Preview Mode Controller/Knowledge Page Creator",
+  title: "Modules/Preview Mode Controller/Widgets/Knowledge Page Creator",
   component: KnowledgePageCreator,
   parameters: {
     layout: "centered",

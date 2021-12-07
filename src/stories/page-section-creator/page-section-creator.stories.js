@@ -4,7 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { PageSectionCreator } from "../../components/preview-mode-controller";
 
 export default {
-  title: "Modules/Preview Mode Controller/Page Section Creator ",
+  title: "Modules/Preview Mode Controller/Widgets/Page Section Creator ",
   component: PageSectionCreator,
   parameters: {
     layout: "centered",

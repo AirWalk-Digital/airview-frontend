@@ -5,7 +5,7 @@ import { KnowledgePageMetaEditor } from "../../components/preview-mode-controlle
 import dayjs from "dayjs";
 
 export default {
-  title: "Modules/Preview Mode Controller/Knowledge Page Meta Editor",
+  title: "Modules/Preview Mode Controller/Widgets/Knowledge Page Meta Editor",
   component: KnowledgePageMetaEditor,
   parameters: {
     layout: "centered",

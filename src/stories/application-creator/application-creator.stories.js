@@ -4,7 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { ApplicationCreator } from "../../components/preview-mode-controller";
 
 export default {
-  title: "Modules/Preview Mode Controller/Application Creator",
+  title: "Modules/Preview Mode Controller/Widgets/Application Creator",
   component: ApplicationCreator,
   parameters: {
     layout: "centered",

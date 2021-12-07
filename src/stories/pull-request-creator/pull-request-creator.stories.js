@@ -5,7 +5,7 @@ import * as branchSwitcherStories from "../branch-switcher/branch-switcher.stori
 import { PullRequestCreator } from "../../components/preview-mode-controller";
 
 export default {
-  title: "Modules/Preview Mode Controller/Pull Request Creator",
+  title: "Modules/Preview Mode Controller/Widgets/Pull Request Creator",
   component: PullRequestCreator,
   parameters: {
     layout: "centered",

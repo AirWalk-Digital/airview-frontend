@@ -5,7 +5,7 @@ import * as branchSwitcherStories from "../branch-switcher/branch-switcher.stori
 import { BranchCreator } from "../../components/preview-mode-controller";
 
 export default {
-  title: "Modules/Preview Mode Controller/Branch Creator",
+  title: "Modules/Preview Mode Controller/Widgets/Branch Creator",
   component: BranchCreator,
   parameters: {
     layout: "centered",

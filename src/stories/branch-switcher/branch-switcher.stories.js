@@ -5,7 +5,7 @@ import { PreviewModeControllerContext } from "../../components/preview-mode-cont
 import { BranchSwitcher } from "../../components/preview-mode-controller";
 
 export default {
-  title: "Modules/Preview Mode Controller/Branch Switcher",
+  title: "Modules/Preview Mode Controller/Widgets/Branch Switcher",
   component: BranchSwitcher,
   parameters: {
     layout: "centered",

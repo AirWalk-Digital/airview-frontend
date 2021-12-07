@@ -4,7 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { ContentCommitter } from "../../components/preview-mode-controller";
 
 export default {
-  title: "Modules/Preview Mode Controller/Content Committer",
+  title: "Modules/Preview Mode Controller/Widgets/Content Committer",
   component: ContentCommitter,
   parameters: {
     layout: "centered",
