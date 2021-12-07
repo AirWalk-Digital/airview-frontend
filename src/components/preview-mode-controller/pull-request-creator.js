@@ -81,7 +81,7 @@ export function PullRequestCreator({ onSubmit }) {
         <WidgetDialogContent>
           {state.status === "error" && (
             <React.Fragment>
-              <Typography paragraph variant="body2" color="error">
+              <Typography paragraph variant="body2" color="error" role="alert">
                 {state.errorMessage}
               </Typography>
             </React.Fragment>
