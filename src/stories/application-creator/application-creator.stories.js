@@ -180,14 +180,6 @@ export const WithSubmissionError = {
     },
   },
   play: async (context) => {
-    await WithValidFormData.play(context);
-
-    const dialog = screen.getByRole("dialog", {
-      name: /create new application/i,
-    });
-
-    await userEvent.click(
-      within(dialog).getByRole("button", { name: /create/i })
-    );
+    await WithSubmissionSuccess.play(context);
   },
 };

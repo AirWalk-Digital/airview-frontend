@@ -47,7 +47,7 @@ export const InitialOpen = {
   },
 };
 
-export const WithValidBranchName = {
+export const WithValidFormData = {
   ...Template,
   play: async (context) => {
     await InitialOpen.play(context);
@@ -66,7 +66,7 @@ export const WithValidBranchName = {
   },
 };
 
-export const WithInvalidBranchName = {
+export const WithInvalidFormData = {
   ...Template,
   play: async (context) => {
     await InitialOpen.play(context);
@@ -88,7 +88,7 @@ export const WithInvalidBranchName = {
 export const WithSubmissionSuccess = {
   ...Template,
   play: async (context) => {
-    await WithValidBranchName.play(context);
+    await WithValidFormData.play(context);
 
     const dialog = screen.getByRole("dialog", {
       name: /create branch/i,

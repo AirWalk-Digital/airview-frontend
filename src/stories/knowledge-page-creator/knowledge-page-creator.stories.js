@@ -5,7 +5,7 @@ import { KnowledgePageCreator } from "../../components/preview-mode-controller";
 import dayjs from "dayjs";
 
 export default {
-  title: "Modules/Preview Mode Controller/Knowledge Creator",
+  title: "Modules/Preview Mode Controller/Knowledge Page Creator",
   component: KnowledgePageCreator,
   parameters: {
     layout: "centered",
@@ -148,14 +148,6 @@ export const WithSubmissionError = {
     },
   },
   play: async (context) => {
-    await WithValidFormData.play(context);
-
-    const dialog = screen.getByRole("dialog", {
-      name: /create knowledge/i,
-    });
-
-    await userEvent.click(
-      within(dialog).getByRole("button", { name: /create/i })
-    );
+    await WithSubmissionSuccess.play(context);
   },
 };

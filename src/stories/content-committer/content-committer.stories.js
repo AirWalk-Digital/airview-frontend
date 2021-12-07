@@ -120,14 +120,6 @@ export const WithSubmissionError = {
     },
   },
   play: async (context) => {
-    await WithValidFormData.play(context);
-
-    const dialog = screen.getByRole("dialog", {
-      name: /commit changes/i,
-    });
-
-    await userEvent.click(
-      within(dialog).getByRole("button", { name: /commit/i })
-    );
+    await WithSubmissionSuccess.play(context);
   },
 };

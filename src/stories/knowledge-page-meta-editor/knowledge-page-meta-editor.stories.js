@@ -163,14 +163,6 @@ export const WithSubmissionError = {
     },
   },
   play: async (context) => {
-    await WithValidFormData.play(context);
-
-    const dialog = screen.getByRole("dialog", {
-      name: /edit knowledge/i,
-    });
-
-    await userEvent.click(
-      within(dialog).getByRole("button", { name: /save/i })
-    );
+    await WithSubmissionSuccess.play(context);
   },
 };
