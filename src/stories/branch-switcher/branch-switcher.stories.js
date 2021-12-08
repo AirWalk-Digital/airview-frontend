@@ -71,8 +71,15 @@ export const InitialOpen = {
   },
 };
 
-export const WithSubmissionSuccess = {
+export const Submitting = {
   ...Template,
+  args: {
+    ...Template.args,
+    onSubmit: async (branchName) => {
+      action("onSubmit")(branchName);
+      return new Promise(() => {});
+    },
+  },
   play: async (context) => {
     await InitialOpen.play(context);
 
@@ -98,6 +105,13 @@ export const WithSubmissionSuccess = {
   },
 };
 
+export const WithSubmissionSuccess = {
+  ...Template,
+  play: async (context) => {
+    await Submitting.play(context);
+  },
+};
+
 export const WithSubmissionError = {
   ...Template,
   args: {
@@ -114,6 +128,6 @@ export const WithSubmissionError = {
     },
   },
   play: async (context) => {
-    await WithSubmissionSuccess.play(context);
+    await Submitting.play(context);
   },
 };
