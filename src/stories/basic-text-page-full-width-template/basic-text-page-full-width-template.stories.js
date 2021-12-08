@@ -5,7 +5,7 @@ import * as PageHeaderStories from "../page-header/page-header.stories";
 import { BasicTextPageFullWidthTemplate } from "../../components/basic-text-page-full-width-template";
 import exampleMarkdownContent from "./example-markdown-content.md";
 
-const config = {
+export default {
   title: "Templates/Basic Text Page Full Width Template",
   component: BasicTextPageFullWidthTemplate,
   parameters: {
@@ -17,6 +17,13 @@ const config = {
           <ArgsTable />
         </>
       ),
+    },
+  },
+  argTypes: {
+    previewMode: {
+      table: {
+        disable: true,
+      },
     },
   },
   decorators: [
@@ -51,35 +58,18 @@ Template.args = {
   bodyContent: exampleMarkdownContent,
 };
 
-Template.argTypes = {
-  previewMode: {
-    table: {
-      disable: true,
-    },
+export const Loading = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.Loading.args,
   },
 };
 
-const Loaded = Template.bind({});
-Loaded.args = {
-  ...Template.args,
-  ...PageHeaderStories.PreviewDisabled.args,
+export const Loaded = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.PreviewDisabled.args,
+  },
 };
-
-Loaded.argTypes = {
-  ...Template.argTypes,
-};
-
-const Loading = Template.bind({});
-
-Loading.args = {
-  ...Template.args,
-  ...PageHeaderStories.Loading.args,
-};
-
-Loading.argTypes = {
-  ...Template.argTypes,
-};
-
-export { Loaded, Loading };
-
-export default config;
