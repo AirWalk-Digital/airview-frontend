@@ -1,5 +1,13 @@
 describe("My First Test", () => {
   it("Visits the Kitchen Sink", () => {
+    const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
+    cy.on("uncaught:exception", (err) => {
+      /* returning false here prevents Cypress from failing the test */
+      if (resizeObserverLoopErrRe.test(err.message)) {
+        return false;
+      }
+    });
+
     // mock the oauth flow
     cy.intercept(
       { method: "GET", url: "/mock-auth/.well-known/openid-configuration" },
@@ -124,7 +132,7 @@ describe("My First Test", () => {
     cy.intercept(
       {
         method: "GET", // Route all GET requests
-        url: "https://dev.azure.com/mdrnwrk-ado/airview/_apis/git/repositories/?api-version=6.1-preview.1",
+        url: "https://dev.azure.com/my-org/my-project/_apis/git/repositories/?api-version=6.1-preview.1",
       },
       JSON.stringify({ count: 1 })
     ).as("getContent"); // and assign an alias
@@ -132,20 +140,73 @@ describe("My First Test", () => {
     cy.intercept(
       {
         method: "GET", // Route all GET requests
-        url: "https://dev.azure.com/mdrnwrk-ado/airview/_apis/git/repositories/airview_demo_applications/items?versionType=Branch&version=main&path=listing.json&includeContent=false&api-version=6.1-preview.1",
+        url: "https://dev.azure.com/my-org/my-project/_apis/git/repositories/airview_demo_applications/items?versionType=Branch&version=main&path=listing.json&includeContent=false&api-version=6.1-preview.1",
       },
-      JSON.stringify({})
+      JSON.stringify({
+        url: "https://dev.azure.com/my-org/my-id/_apis/git/repositories/repo-id/items?path=%2Flisting.json&versionType=Branch&version=main&versionOptions=None",
+      })
     ).as("getContent"); // and assign an alias
 
     cy.intercept(
       "GET", // Route all GET requests
-      "https://dev.azure.com/mdrnwrk-ado/airview/_apis/git/repositories/airview_demo_applications/items?versionType=Branch&version=main&path=test_app/_index.md&includeContent=false&api-version=6.1-preview.1",
-      { statusCode: 404, body: "{}" }
+      "https://dev.azure.com/my-org/my-id/_apis/git/repositories/repo-id/items?path=%2Flisting.json&versionType=Branch&version=main&versionOptions=None&includeContent=false",
+      { statusCode: 200, body: "{}" }
+    ).as("getListingRepoData"); // and assign an alias
+
+    cy.intercept(
+      "GET", // Route all GET requests
+      "https://dev.azure.com/my-org/my-id/_apis/git/repositories/repo-id/items?path=%2Flisting.json&versionType=Branch&version=main&versionOptions=None",
+      { statusCode: 200, body: "{}" }
+    ).as("getListingRepoContent"); // and assign an alias
+
+    cy.intercept(
+      "GET", // Route all GET requests
+      "https://dev.azure.com/my-org/my-id/_apis/git/repositories/repo-id/items?path=%2Flisting.json&versionType=Branch&version=main&versionOptions=None",
+      { statusCode: 200, body: "{}" }
+    ).as("getListingRepoContent"); // and assign an alias
+
+    cy.intercept(
+      "GET", // Route all GET requests
+      "https://dev.azure.com/my-org/my-project/_apis/git/repositories/airview_demo_applications/refs?filter=heads/&api-version=6.1-preview.1",
+      {
+        statusCode: 200,
+        body: JSON.stringify({
+          value: [
+            {
+              name: "refs/heads/main",
+              url: "https://dev.azure.com/my-org/my-id/_apis/git/repositories/repo-id/refs?filter=heads%2Fmain",
+            },
+            {
+              name: "refs/heads/other",
+              url: "https://dev.azure.com/my-org/my-id/_apis/git/repositories/repo-id/refs?filter=heads%2Ftemp-3",
+            },
+          ],
+          count: 2,
+        }),
+      }
+    ).as("getRepoBranches"); // and assign an alias
+
+    cy.intercept(
+      "GET", // Route all GET requests
+      "https://dev.azure.com/my-org/my-project/_apis/git/policy/**",
+      { statusCode: 200, body: JSON.stringify({ count: 0, value: [] }) }
+    ).as("getConfigurations"); // and assign an alias
+
+    cy.intercept(
+      "GET", // Route all GET requests
+      "https://dev.azure.com/my-org/my-project/_apis/git/repositories/airview_demo_applications/items?versionType=Branch&version=main&path=test_app/_index.md&includeContent=false&api-version=6.1-preview.1",
+      {
+        statusCode: 404,
+
+        body: "{}",
+      }
     ).as("getContent"); // and assign an alias
 
     cy.visit("http://localhost:3000/applications/test_app");
 
     cy.findByRole("generic", { name: "Enable Preview Mode" }).click();
+    cy.wait(100);
+    cy.findByRole("button", { name: "Switch Working Branch" }).click();
     /* cy.contains("View").click(); */
     //    cy.root().first("MuiTypography-root").contains("Other Demo Application");
   });
