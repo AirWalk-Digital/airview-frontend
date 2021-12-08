@@ -22,6 +22,7 @@ export default {
 };
 
 const delay = process.env.NODE_ENV === "test" ? 0 : 1000;
+const inputDelay = process.env.NODE_ENV === "test" ? 0 : 100;
 
 function Template(args) {
   return <Search {...args} />;
@@ -60,7 +61,7 @@ export const SearchInProgress = {
   play: async ({ searchQuery = "ipsum" }) => {
     const searchDialog = await screen.findByRole("searchbox");
 
-    await userEvent.type(searchDialog, searchQuery);
+    await userEvent.type(searchDialog, searchQuery, { delay: inputDelay });
   },
 };
 
