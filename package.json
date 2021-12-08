@@ -15,7 +15,7 @@
     "lint-js:fix": "npm run lint-js -- --fix",
     "format": "prettier --check './src/'",
     "format:fix": "npm run format -- --write",
-    "cypress": "concurrently --names 'APP,CYPRESS' --prefix-colors 'yellow,blue' --kill-others 'react-scripts start' 'cypress open'"
+    "cypress": "REACT_APP_CONTENT_BACKEND=ado REACT_APP_CONTENT_ORGANISATION=my-org REACT_APP_CONTENT_PROJECT=my-project  concurrently --names 'APP,CYPRESS' --prefix-colors 'yellow,blue' --kill-others 'react-scripts start' 'cypress open'"
   },
   "dependencies": {
     "@date-io/dayjs": "^1.3.13",
