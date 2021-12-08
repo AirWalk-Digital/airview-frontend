@@ -19,7 +19,9 @@ describe("KnowledgePageMetaEditor", () => {
       expect(onSubmitSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           title: "Test Knowledge Page Amended",
-          reviewDate: dayjs("2021-12-09").toISOString(),
+          reviewDate: expect.stringContaining(
+            dayjs().add(2, "day").format("YYYY-MM-DD")
+          ),
           userFacing: false,
         })
       );
