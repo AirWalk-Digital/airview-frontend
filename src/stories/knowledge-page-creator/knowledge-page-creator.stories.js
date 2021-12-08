@@ -116,8 +116,15 @@ export const WithInvalidFormData = {
   },
 };
 
-export const WithSubmissionSuccess = {
+export const Submitting = {
   ...Template,
+  args: {
+    ...Template.args,
+    onSubmit: async (formData) => {
+      action("onSubmit")(formData);
+      return new Promise(() => {});
+    },
+  },
   play: async (context) => {
     await WithValidFormData.play(context);
 
@@ -128,6 +135,13 @@ export const WithSubmissionSuccess = {
     await userEvent.click(
       within(dialog).getByRole("button", { name: /create/i })
     );
+  },
+};
+
+export const WithSubmissionSuccess = {
+  ...Template,
+  play: async (context) => {
+    await Submitting.play(context);
   },
 };
 
@@ -148,6 +162,6 @@ export const WithSubmissionError = {
     },
   },
   play: async (context) => {
-    await WithSubmissionSuccess.play(context);
+    await Submitting.play(context);
   },
 };
