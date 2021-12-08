@@ -1,4 +1,5 @@
 import React from "react";
+import { userEvent, within } from "@storybook/testing-library";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
 import WarningIcon from "@material-ui/icons/Warning";
@@ -16,7 +17,7 @@ import {
 import { ProgressBar } from "../../components/progress-bar";
 import docs from "./application-tile.docs.md";
 
-const config = {
+export default {
   title: "Modules/Application Tile",
   component: ApplicationTile,
   subcomponents: {
@@ -25,6 +26,7 @@ const config = {
     ApplicationTileContent,
     ApplicationTileContentRow,
     ApplicationTileCallToActionButton,
+    ApplicationTileChip,
   },
   parameters: {
     docs: {
@@ -32,6 +34,7 @@ const config = {
         component: docs,
       },
     },
+    controls: false,
   },
   decorators: [
     (story) => {
@@ -54,24 +57,33 @@ const config = {
   ],
 };
 
-const defaultArgTypes = {
-  children: {
-    control: false,
-  },
-  classNames: {
-    control: false,
-  },
+export const WithNoData = () => {
+  return (
+    <ApplicationTile>
+      <ApplicationTileHeader
+        leftContent={
+          <ApplicationTileTitle>Application One</ApplicationTileTitle>
+        }
+        rightContent={
+          <ApplicationTileCallToActionButton href="/" label="View" />
+        }
+      />
+      <ApplicationTileContent>
+        <ApplicationTileContentRow>
+          <Typography align="center" variant="body2">
+            You do not have the required permissions to view this data
+          </Typography>
+        </ApplicationTileContentRow>
+      </ApplicationTileContent>
+    </ApplicationTile>
+  );
 };
 
-function WithoutCollapsibleContent(args) {
-  /*
-  Use React hook to require the Material-UI theme object
-  to provide colors to IconChip and ProgressBar sub-components
-  */
+export const WithDataNotCollapsible = () => {
   const theme = useTheme();
 
   return (
-    <ApplicationTile gutter={args.gutter} classNames={args.classNames}>
+    <ApplicationTile>
       <ApplicationTileHeader
         leftContent={
           <ApplicationTileTitle>Application One</ApplicationTileTitle>
@@ -124,21 +136,13 @@ function WithoutCollapsibleContent(args) {
       </ApplicationTileContent>
     </ApplicationTile>
   );
-}
-
-WithoutCollapsibleContent.argTypes = {
-  ...defaultArgTypes,
 };
 
-function WithCollapsibleContent(args) {
-  /*
-  Use React hook to require the Material-UI theme object
-  to provide colors to IconChip and ProgressBar sub-components
-  */
+export const WithDataCollapsed = () => {
   const theme = useTheme();
 
   return (
-    <ApplicationTile gutter={args.gutter} classNames={args.classNames}>
+    <ApplicationTile>
       <ApplicationTileHeader
         leftContent={
           <ApplicationTileTitle>Application One</ApplicationTileTitle>
@@ -312,33 +316,14 @@ function WithCollapsibleContent(args) {
       </ApplicationTileContent>
     </ApplicationTile>
   );
-}
-
-WithCollapsibleContent.argTypes = {
-  ...defaultArgTypes,
 };
 
-function WithNoData() {
-  return (
-    <ApplicationTile>
-      <ApplicationTileHeader
-        leftContent={
-          <ApplicationTileTitle>Application One</ApplicationTileTitle>
-        }
-        rightContent={
-          <ApplicationTileCallToActionButton href="/" label="View" />
-        }
-      />
-      <ApplicationTileContent>
-        <ApplicationTileContentRow>
-          <Typography align="center" variant="body2">
-            You do not have the required permissions to view this data
-          </Typography>
-        </ApplicationTileContentRow>
-      </ApplicationTileContent>
-    </ApplicationTile>
-  );
-}
+export const WithDataExpanded = WithDataCollapsed.bind({});
 
-export default config;
-export { WithoutCollapsibleContent, WithCollapsibleContent, WithNoData };
+WithDataExpanded.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+
+  await userEvent.click(
+    canvas.getByRole("button", { name: /expand content/i })
+  );
+};

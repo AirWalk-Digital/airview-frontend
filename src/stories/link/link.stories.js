@@ -2,7 +2,7 @@ import React from "react";
 import { LocationProvider } from "../../hooks/use-location";
 import { Link } from "../../components/link";
 
-const config = {
+export default {
   title: "Modules/Link",
   component: Link,
   decorators: [
@@ -28,60 +28,56 @@ Template.args = {
   activeClassName: "test-active-classname",
 };
 
-const InternalLinkNonActiveMuiStyled = Template.bind({});
-
-InternalLinkNonActiveMuiStyled.args = {
-  ...Template.args,
-  href: "/some-internal-link",
-  noLinkStyle: false,
+export const InternalLinkNonActiveMuiStyled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    href: "/some-internal-link",
+    noLinkStyle: false,
+  },
 };
 
-const InternalLinkNonActiveNonMuiStyled = Template.bind({});
-
-InternalLinkNonActiveNonMuiStyled.args = {
-  ...Template.args,
-  href: "/some-internal-link",
-  noLinkStyle: true,
+export const InternalLinkNonActiveNonMuiStyled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    href: "/some-internal-link",
+    noLinkStyle: true,
+  },
 };
 
-const InternalLinkActiveMuiStyled = Template.bind({});
-
-InternalLinkActiveMuiStyled.args = {
-  ...Template.args,
-  href: "/",
-  noLinkStyle: false,
+export const InternalLinkActiveMuiStyled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    href: "/",
+    noLinkStyle: false,
+  },
 };
 
-const InternalLinkActiveNonMuiStyled = Template.bind({});
-
-InternalLinkActiveNonMuiStyled.args = {
-  ...Template.args,
-  href: "/",
-  noLinkStyle: true,
+export const InternalLinkActiveNonMuiStyled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    href: "/",
+    noLinkStyle: true,
+  },
 };
 
-const ExternalLinkMuiStyled = Template.bind({});
-
-ExternalLinkMuiStyled.args = {
-  ...Template.args,
-  href: "https://google.co.uk",
-  noLinkStyle: false,
+export const ExternalLinkMuiStyled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    href: "https://google.co.uk",
+    noLinkStyle: false,
+  },
 };
 
-const ExternalLinkNonMuiStyled = Template.bind({});
-
-ExternalLinkNonMuiStyled.args = {
-  ...Template.args,
-  href: "https://google.co.uk",
-  noLinkStyle: true,
-};
-
-export default config;
-export {
-  InternalLinkNonActiveMuiStyled,
-  InternalLinkNonActiveNonMuiStyled,
-  InternalLinkActiveMuiStyled,
-  InternalLinkActiveNonMuiStyled,
-  ExternalLinkMuiStyled,
-  ExternalLinkNonMuiStyled,
+export const ExternalLinkNonMuiStyled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    href: "https://google.co.uk",
+    noLinkStyle: true,
+  },
 };

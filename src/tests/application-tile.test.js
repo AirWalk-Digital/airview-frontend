@@ -1,21 +1,29 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { ApplicationTile } from "../components/application-tile";
+import { render, screen, waitFor } from "@testing-library/react";
+import { composeStories } from "@storybook/testing-react";
+import * as stories from "../stories/application-tile/application-tile.stories";
+import userEvent from "@testing-library/user-event";
 
-describe("ApplicationTile - with values passed to the children props", () => {
-  it("should pass through all values without side effects", () => {
-    render(<ApplicationTile>Test content</ApplicationTile>);
+const { WithDataExpanded } = composeStories(stories);
 
-    expect(screen.getByText("Test content")).toBeInTheDocument();
-  });
-});
+describe("ApplicationTile", () => {
+  test("a user can toggle the expansion of collapsed content", async () => {
+    const { container } = render(<WithDataExpanded />);
 
-describe("ApplicationTile - with a value passed to the classNames prop", () => {
-  it("should output the passed classnames to the root node", () => {
-    const { container } = render(
-      <ApplicationTile classNames="test-css-classname" />
-    );
+    await WithDataExpanded.play({ canvasElement: container });
 
-    expect(container.firstChild).toHaveClass("test-css-classname");
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { level: 4, name: /production/i })
+      ).toBeInTheDocument();
+    });
+
+    userEvent.click(screen.getByRole("button", { name: /collapse content/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("heading", { level: 4, name: /production/i })
+      ).not.toBeInTheDocument();
+    });
   });
 });

@@ -3,11 +3,22 @@ import { MarkdownContent } from "../../components/markdown-content";
 import { makeStyles } from "@material-ui/core/styles";
 import markdownContent from "../__resources/markdown-content.md";
 
-const config = {
+export default {
   title: "Modules/Markdown Content",
   component: MarkdownContent,
   parameters: {
     layout: "fullscreen",
+  },
+  argsTypes: {
+    defaultValue: {
+      control: false,
+    },
+    ref: {
+      control: false,
+    },
+    classNames: {
+      control: false,
+    },
   },
   decorators: [
     (story) => {
@@ -34,53 +45,29 @@ Template.args = {
   onChange: (data) => console.log(data),
 };
 
-Template.argTypes = {
-  defaultValue: {
-    control: false,
-  },
-  ref: {
-    control: false,
-  },
-  classNames: {
-    control: false,
+export const Loading = {
+  ...Template,
+  args: {
+    ...Template.args,
+    readOnly: true,
+    loading: true,
   },
 };
 
-const ReadOnly = Template.bind({});
-
-ReadOnly.args = {
-  ...Template.args,
-  readOnly: true,
-  loading: false,
+export const ReadOnly = {
+  ...Template,
+  args: {
+    ...Template.args,
+    readOnly: true,
+    loading: false,
+  },
 };
 
-ReadOnly.argTypes = {
-  ...Template.argTypes,
+export const EditMode = {
+  ...Template,
+  args: {
+    ...Template.args,
+    readOnly: false,
+    loading: false,
+  },
 };
-
-const Loading = Template.bind({});
-
-Loading.args = {
-  ...Template.args,
-  readOnly: true,
-  loading: true,
-};
-
-Loading.argTypes = {
-  ...Template.argTypes,
-};
-
-const EditMode = Template.bind({});
-
-EditMode.args = {
-  ...Template.args,
-  readOnly: false,
-  loading: false,
-};
-
-EditMode.argTypes = {
-  ...Template.argTypes,
-};
-
-export default config;
-export { ReadOnly, Loading, EditMode };

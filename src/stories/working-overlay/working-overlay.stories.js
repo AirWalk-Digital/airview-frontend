@@ -2,9 +2,16 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { WorkingOverlay } from "../../components/working-overlay";
 
-const config = {
+export default {
   title: "Modules/WorkingOverlay",
   component: WorkingOverlay,
+  argTypes: {
+    color: {
+      control: {
+        type: "color",
+      },
+    },
+  },
   decorators: [
     (story) => {
       const classes = makeStyles(() => ({
@@ -35,34 +42,14 @@ Template.args = {
   color: null,
 };
 
-Template.argTypes = {
-  color: {
-    control: {
-      type: "color",
-    },
+export const Visible = {
+  ...Template,
+};
+
+export const NotVisible = {
+  ...Template,
+  args: {
+    ...Template.args,
+    open: false,
   },
 };
-
-const Visible = Template.bind({});
-
-Visible.args = {
-  ...Template.args,
-};
-
-Visible.argTypes = {
-  ...Template.argTypes,
-};
-
-const NotVisible = Template.bind({});
-
-NotVisible.args = {
-  ...Template.args,
-  open: false,
-};
-
-NotVisible.argTypes = {
-  ...Template.argTypes,
-};
-
-export { Visible, NotVisible };
-export default config;

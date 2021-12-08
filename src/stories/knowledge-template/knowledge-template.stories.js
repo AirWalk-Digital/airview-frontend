@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { KnowledgeTemplate } from "../../components/knowledge-template";
 import markdownContent from "../__resources/markdown-content.md";
 
-const config = {
+export default {
   title: "Templates/Knowledge Template",
   component: KnowledgeTemplate,
   parameters: {
@@ -81,52 +81,53 @@ Template.args = {
       protected: false,
     },
   ],
-  onRequestToSwitchBranch: () => {},
-  onRequestToCreateBranch: () => {},
-  onRequestToCreatePage: (data) => {
-    console.log(data);
-  },
-  onRequestToEditPageMetaData: (data) => {
-    console.log(data);
-  },
-  onSave: async (data) => {
-    console.log(data);
-  },
-  onRequestToCreatePullRequest: (from, to) => {
-    console.log(`PR request from branch "${from}" to branch "${to}"`);
+  //onRequestToSwitchBranch: () => {},
+  //onRequestToCreateBranch: () => {},
+  // onRequestToCreatePage: (data) => {
+  //   console.log(data);
+  // },
+  // onRequestToEditPageMetaData: (data) => {
+  //   console.log(data);
+  // },
+  // onSave: async (data) => {
+  //   console.log(data);
+  // },
+  // onRequestToCreatePullRequest: (from, to) => {
+  //   console.log(`PR request from branch "${from}" to branch "${to}"`);
 
-    return "https://github.com";
-  },
+  //   return "https://github.com";
+  // },
   loading: false,
   previewMode: false,
   pageMetaData: {
-    documentName: "Knowledge Template",
+    title: "Knowledge Template",
     reviewDate: dayjs().add(1, "month").toISOString(),
-    userFacingDocument: true,
+    userFacing: true,
   },
 };
 
-const PreviewDisabled = Template.bind({});
-
-PreviewDisabled.args = {
-  ...Template.args,
-  ...PageHeaderStories.PreviewDisabled.args,
+export const Loading = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.Loading.args,
+  },
 };
 
-const Loading = Template.bind({});
-
-Loading.args = {
-  ...Template.args,
-  ...PageHeaderStories.Loading.args,
+export const PreviewDisabled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.PreviewDisabled.args,
+    loading: false,
+    previewMode: false,
+  },
 };
 
-const PreviewEnabled = Template.bind({});
-
-PreviewEnabled.args = {
-  ...Template.args,
-  ...PageHeaderStories.PreviewEnabled.args,
+export const PreviewEnabled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.PreviewEnabled.args,
+  },
 };
-
-export { PreviewDisabled, Loading, PreviewEnabled };
-
-export default config;

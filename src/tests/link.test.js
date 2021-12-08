@@ -22,15 +22,17 @@ describe("Link", () => {
       name: InternalLinkNonActiveMuiStyled.args.children,
     });
 
-    expect(linkElement).toBeInTheDocument();
     expect(linkElement).not.toHaveClass(
       InternalLinkNonActiveMuiStyled.args.activeClassName
     );
+
     expect(linkElement).toHaveAttribute(
       "href",
       InternalLinkNonActiveMuiStyled.args.href
     );
+
     expect(linkElement).not.toHaveAttribute("rel", "noreferrer");
+
     expect(linkElement).not.toHaveAttribute("target", "_blank");
   });
 
@@ -41,15 +43,16 @@ describe("Link", () => {
       name: InternalLinkNonActiveNonMuiStyled.args.children,
     });
 
-    expect(linkElement).toBeInTheDocument();
     expect(linkElement).not.toHaveClass(
       InternalLinkNonActiveNonMuiStyled.args.activeClassName
     );
+
     expect(linkElement).toHaveAttribute(
       "href",
       InternalLinkNonActiveNonMuiStyled.args.href
     );
     expect(linkElement).not.toHaveAttribute("rel", "noreferrer");
+
     expect(linkElement).not.toHaveAttribute("target", "_blank");
   });
 
@@ -60,15 +63,17 @@ describe("Link", () => {
       name: ExternalLinkMuiStyled.args.children,
     });
 
-    expect(linkElement).toBeInTheDocument();
     expect(linkElement).not.toHaveClass(
       ExternalLinkMuiStyled.args.activeClassName
     );
+
     expect(linkElement).toHaveAttribute(
       "href",
       ExternalLinkMuiStyled.args.href
     );
+
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
+
     expect(linkElement).toHaveAttribute("target", "_blank");
   });
 
@@ -79,15 +84,17 @@ describe("Link", () => {
       name: ExternalLinkNonMuiStyled.args.children,
     });
 
-    expect(linkElement).toBeInTheDocument();
     expect(linkElement).not.toHaveClass(
       ExternalLinkNonMuiStyled.args.activeClassName
     );
+
     expect(linkElement).toHaveAttribute(
       "href",
       ExternalLinkNonMuiStyled.args.href
     );
+
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
+
     expect(linkElement).toHaveAttribute("target", "_blank");
   });
 
@@ -123,6 +130,7 @@ describe("Link", () => {
     });
 
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
+
     expect(linkElement).toHaveAttribute("target", "_blank");
   });
 
@@ -134,6 +142,7 @@ describe("Link", () => {
     });
 
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
+
     expect(linkElement).toHaveAttribute("target", "_blank");
   });
 
@@ -145,6 +154,7 @@ describe("Link", () => {
     });
 
     expect(linkElement).toHaveAttribute("rel", "noreferrer");
+
     expect(linkElement).toHaveAttribute("target", "_blank");
   });
 

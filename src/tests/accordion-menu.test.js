@@ -1,10 +1,10 @@
 import React from "react";
-import { render, screen, within, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, waitFor } from "@testing-library/react";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/accordion-menu/accordion-menu.stories";
+import userEvent from "@testing-library/user-event";
 
-const { Loading, Loaded } = composeStories(stories);
+const { Loading, Loaded, LoadedExpanded } = composeStories(stories);
 
 describe("AccordionMenu", () => {
   test("in a loading state, it renders correctly", () => {
@@ -12,119 +12,61 @@ describe("AccordionMenu", () => {
 
     const navigation = screen.getByRole("navigation");
 
-    // It should have required accessibility attributes
-    expect(navigation).toHaveAttribute("aria-live", "polite");
+    // It adds the correct loading accessibility attribute
     expect(navigation).toHaveAttribute("aria-busy", "true");
 
-    // It does not render menu title
-    expect(
-      within(navigation).queryByRole("heading", {
-        name: Loading.args.menuTitle,
-      })
-    ).not.toBeInTheDocument();
+    // It renders no title
+    expect(screen.getByRole("heading")).toHaveTextContent("");
 
-    // It renders a loading skeleton title
-    expect(within(navigation).getByRole("heading")).toBeInTheDocument();
-
-    // It should not output any navigation links
-    expect(within(navigation).queryAllByRole("link")).toHaveLength(0);
+    // It renders no links
+    expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 
-  test("in a loaded state, it renders correctly", () => {
+  test("in a default loaded state, it renders correctly", () => {
     render(<Loaded />);
 
-    const navigation = screen.getByRole("navigation", {
-      name: Loaded.args.menuTitle,
-    });
+    const navigation = screen.getByRole("navigation");
 
-    // It should have required accessibility attributes
-    expect(navigation).toHaveAttribute("aria-live", "polite");
+    // It adds the correct loading accessibility attribute
     expect(navigation).toHaveAttribute("aria-busy", "false");
 
-    // It renders the menu title
+    // It renders the title
     expect(
-      within(navigation).queryByRole("heading", {
-        name: Loaded.args.menuTitle,
-      })
+      screen.getByRole("heading", { name: /menu title/i })
     ).toBeInTheDocument();
 
-    // It should initially render the top level navigation nodes by default
-    const topLevelNavItems = Loaded.args.navItems.filter(
-      ({ children }) => !children
-    );
+    const links = screen.getAllByRole("link");
 
-    const topLevelLinks = within(navigation).queryAllByRole("link");
+    // It renders top level links
+    expect(links).toHaveLength(3);
 
-    expect(topLevelLinks.length).toBe(topLevelNavItems.length);
-
-    topLevelLinks.forEach((link, index) => {
-      expect(link).toHaveTextContent(topLevelNavItems[index].name);
-      expect(link).toHaveAttribute("href", topLevelNavItems[index].url);
-    });
-
-    // It should initially render the top level parents by default
-    const topLevelParentNavItems = Loaded.args.navItems.filter(
-      ({ children }) => children
-    );
-
-    const topLevelParents = within(navigation).queryAllByRole("button");
-
-    expect(topLevelParents.length).toBe(topLevelParentNavItems.length);
-
-    topLevelParents.forEach((parent, index) => {
-      expect(parent).toHaveTextContent(topLevelParentNavItems[index].name);
-    });
+    // It applies the correct label and url to the link items
+    expect(links[0]).toHaveTextContent(/navigation item 1/i);
+    expect(links[0]).toHaveAttribute("href", "/");
   });
 
-  test("a user can toggle visibility of nested child links", async () => {
-    render(<Loaded />);
+  test("a user can toggle the expansion of nested child links", async () => {
+    const { container } = render(<LoadedExpanded />);
 
-    const navigation = screen.getByRole("navigation", {
-      name: Loading.args.menuTitle,
-    });
+    LoadedExpanded.play({ canvasElement: container });
 
-    const topLevelNavParent = Loaded.args.navItems
-      .filter(({ children }) => children)
-      .shift();
+    // It renders all child links
+    await waitFor(() => expect(screen.getAllByRole("link")).toHaveLength(7));
 
-    // Click on the parent naviagtion node to reveal sub level links
+    // Close top level link parent
     userEvent.click(
-      within(navigation).getByRole("button", {
-        name: topLevelNavParent.name,
+      screen.getByRole("button", {
+        name: /navigation item 2 - parent/i,
       })
     );
 
-    const subNavigationLinks = topLevelNavParent.children.filter(
-      ({ children }) => !children
-    );
-
-    // It should render sub level links
-    subNavigationLinks.forEach(({ name, url }) => {
-      const linkItem = screen.getByRole("link", { name });
-
-      expect(linkItem).toBeInTheDocument();
-      expect(linkItem).toHaveAttribute("href", url);
-    });
-
-    // Click on the parent naviagtion node to hide sub level links
-    userEvent.click(
-      within(navigation).getByRole("button", {
-        name: topLevelNavParent.name,
-      })
-    );
-
-    // It should remove all sub level links
-    await Promise.all(
-      subNavigationLinks.map(async ({ name }) => {
-        await waitFor(() => {
-          expect(screen.queryByRole("link", { name })).not.toBeInTheDocument();
-        });
-      })
-    );
+    // It only renders top level link items
+    await waitFor(() => expect(screen.getAllByRole("link")).toHaveLength(3));
   });
 
-  test("it should spread other props to the component root DOM node", () => {
-    const testId = "accordion-menu";
+  test("it spreads rest props to the root node", () => {
+    const testId = "test-id";
+
     render(<Loading data-testid={testId} />);
 
     expect(screen.getByRole("navigation")).toHaveAttribute(

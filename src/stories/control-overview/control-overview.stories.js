@@ -6,7 +6,7 @@ import {
 } from "../../components/control-overview";
 import docs from "./control-overview.docs.md";
 
-const config = {
+export default {
   title: "Modules/Control Overview",
   component: ControlOverview,
   decorators: [
@@ -37,7 +37,7 @@ const config = {
   },
 };
 
-function Default() {
+export const WithControls = () => {
   const [
     state,
     setControlsData,
@@ -54,7 +54,7 @@ function Default() {
     } catch (error) {
       return "error";
     }
-  });
+  }, 1);
 
   const handleOnRequestOfControlsData = (id) => {
     setControlsData(id, async () => {
@@ -92,19 +92,17 @@ function Default() {
     });
   };
 
-  const handleOnResourceExemptionDelete = (data) => {
+  const handleOnResourceExemptionDelete = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        console.log(data);
         resolve();
       }, [1000]);
     });
   };
 
-  const handleOnResourceExemptionSave = (data) => {
+  const handleOnResourceExemptionSave = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        console.log(data);
         resolve();
       }, [1000]);
     });
@@ -120,9 +118,9 @@ function Default() {
       onResourceExemptionSave={handleOnResourceExemptionSave}
     />
   );
-}
+};
 
-function WithNoControls() {
+export const WithNoControls = () => {
   const data = {
     groups: [],
     controls: undefined,
@@ -137,9 +135,9 @@ function WithNoControls() {
       onRequestOfResourcesData={() => {}}
     />
   );
-}
+};
 
-function WithError() {
+export const WithError = () => {
   const data = {
     groups: "error",
     controls: undefined,
@@ -154,9 +152,9 @@ function WithError() {
       onRequestOfResourcesData={() => {}}
     />
   );
-}
+};
 
-function WithoutRequiredPermissions() {
+export const WithoutRequiredPermissions = () => {
   const data = {
     groups: null,
     controls: undefined,
@@ -171,9 +169,9 @@ function WithoutRequiredPermissions() {
       onRequestOfResourcesData={() => {}}
     />
   );
-}
+};
 
-function Loading() {
+export const Loading = () => {
   const data = {
     groups: undefined,
     controls: undefined,
@@ -189,13 +187,4 @@ function Loading() {
       onRequestOfResourcesData={() => {}}
     />
   );
-}
-
-export default config;
-export {
-  Default,
-  WithNoControls,
-  WithError,
-  WithoutRequiredPermissions,
-  Loading,
 };

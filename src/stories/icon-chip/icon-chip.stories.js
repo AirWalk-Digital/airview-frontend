@@ -2,9 +2,24 @@ import React from "react";
 import { IconChip } from "../../components/icon-chip";
 import WarningIcon from "@material-ui/icons/Warning";
 
-const config = {
+export default {
   title: "Modules/IconChip",
   component: IconChip,
+  argTypes: {
+    icon: {
+      control: false,
+    },
+    color: {
+      control: {
+        type: "color",
+      },
+    },
+    labelColor: {
+      control: {
+        type: "color",
+      },
+    },
+  },
 };
 
 function Template(args) {
@@ -19,40 +34,14 @@ Template.args = {
   dense: false,
 };
 
-Template.argTypes = {
-  icon: {
-    control: false,
-  },
-  color: {
-    control: {
-      type: "color",
-    },
-  },
-  labelColor: {
-    control: {
-      type: "color",
-    },
+export const Default = {
+  ...Template,
+};
+
+export const Dense = {
+  ...Template,
+  args: {
+    ...Template.args,
+    dense: true,
   },
 };
-
-const Default = Template.bind({});
-Default.args = {
-  ...Template.args,
-};
-
-Default.argTypes = {
-  ...Template.argTypes,
-};
-
-const Dense = Template.bind({});
-Dense.args = {
-  ...Template.args,
-  dense: true,
-};
-
-Dense.argTypes = {
-  ...Template.argTypes,
-};
-
-export { Default, Dense };
-export default config;

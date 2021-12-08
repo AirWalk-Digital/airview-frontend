@@ -23,7 +23,6 @@ export function PageHeader({
   logoSrc,
   navItems,
   loading,
-  testid,
   onQueryChange,
   previewMode,
 }) {
@@ -65,7 +64,7 @@ export function PageHeader({
   }, [loading, previewMode, searchOpen]);
 
   return (
-    <header className={classes.root} data-testid={testid}>
+    <header className={classes.root}>
       <AppBar>
         <Toolbar>
           <div className={classes.toolBarContainerLeft}>
@@ -73,7 +72,9 @@ export function PageHeader({
               className={classes.revealMenuButton}
               edge="start"
               color="inherit"
-              aria-label="Show navigation menu"
+              aria-label={
+                drawerOpen ? "Close navigation menu" : "Open navigation menu"
+              }
               onClick={() => setDrawerOpen(!drawerOpen)}
             >
               <MenuIcon />
@@ -112,7 +113,7 @@ export function PageHeader({
       >
         <div className={classes.drawerTitle}>
           <Typography variant="h6">{siteTitle}</Typography>
-          <Typography className={classes.version}>v{version}</Typography>
+          <Typography className={classes.version}>{version}</Typography>
         </div>
 
         <AccordionMenu
@@ -137,7 +138,7 @@ PageHeader.propTypes = {
   /**
    * Presents the component in a loading state (for when fetching data async)
    */
-  loading: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
   /**
    * Sets the state of the preview mode
    */
@@ -145,25 +146,21 @@ PageHeader.propTypes = {
   /**
    * Sets the site title in the off canvas draw
    */
-  siteTitle: PropTypes.string,
+  siteTitle: PropTypes.string.isRequired,
   /**
    * Sets the version number in the off canvas draw
    */
-  version: PropTypes.string,
+  version: PropTypes.string.isRequired,
   /**
-   * Sets the src of the header logo, if not set no logo will render
+   * Sets the src of the header logo
    */
-  logoSrc: PropTypes.string,
+  logoSrc: PropTypes.string.isRequired,
   /**
    * Defines the menu structure of mainNavigation within side Drawer, (see [AccordionMenu](/?path=/docs/modules-accordion-menu--default) API for schema)
    */
-  navItems: PropTypes.array,
-  /**
-   * Sets a test id on the parent node of the component, for testing purposes
-   */
-  testid: PropTypes.string,
+  navItems: PropTypes.array.isRequired,
   /**
    * Callback fired when the user has changed the query input value of the search UI. see [Search](/?path=/docs/modules-search--single-result-found) `onQueryChange` API for details
    */
-  onQueryChange: PropTypes.func,
+  onQueryChange: PropTypes.func.isRequired,
 };

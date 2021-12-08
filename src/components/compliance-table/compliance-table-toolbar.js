@@ -106,11 +106,7 @@ function ComplianceTableToolbar({
                   />
                 </ListItemIcon>
 
-                <ListItemText
-                  id={filter}
-                  primary={filter}
-                  primaryTypographyProps={{ "aria-label": "Filter item" }}
-                />
+                <ListItemText id={filter} primary={filter} />
               </MenuItem>
             ))}
           </Menu>

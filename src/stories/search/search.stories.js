@@ -1,10 +1,11 @@
 import React from "react";
+import { screen, userEvent } from "@storybook/testing-library";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 import { action } from "@storybook/addon-actions";
 import { Search } from "../../components/search";
 import { responses } from "./responses";
 
-const config = {
+export default {
   title: "Modules/Search",
   component: Search,
   parameters: {
@@ -21,6 +22,7 @@ const config = {
 };
 
 const delay = process.env.NODE_ENV === "test" ? 0 : 1000;
+const inputDelay = process.env.NODE_ENV === "test" ? 0 : 100;
 
 function Template(args) {
   return <Search {...args} />;
@@ -30,83 +32,88 @@ Template.args = {
   open: true,
 };
 
-Template.argTypes = {};
+export const Default = {
+  ...Template,
+  args: {
+    ...Template.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
 
-const SingleResultFound = Template.bind({});
-
-SingleResultFound.args = {
-  ...Template.args,
-  onQueryChange: async (query) => {
-    action("onQueryChange")(query);
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([responses.resolved[0]]);
-      }, delay);
-    });
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([responses.resolved[0]]);
+        }, delay);
+      });
+    },
   },
 };
 
-SingleResultFound.argTypes = {
-  ...Template.argTypes,
-};
+export const SearchInProgress = {
+  ...Template,
+  args: {
+    ...Template.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
 
-const MultipleResultsFound = Template.bind({});
+      return new Promise(() => {});
+    },
+  },
+  play: async ({ searchQuery = "ipsum" }) => {
+    const searchDialog = await screen.findByRole("searchbox");
 
-MultipleResultsFound.args = {
-  ...Template.args,
-  onQueryChange: async (query) => {
-    action("onQueryChange")(query);
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(responses.resolved);
-      }, delay);
-    });
+    await userEvent.type(searchDialog, searchQuery, { delay: inputDelay });
   },
 };
 
-MultipleResultsFound.argTypes = {
-  ...Template.argTypes,
+export const SingleResultFound = {
+  ...Default,
+  play: SearchInProgress.play,
 };
 
-const NoResultsFound = Template.bind({});
+export const MultipleResultsFound = {
+  ...SingleResultFound,
+  args: {
+    ...SingleResultFound.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
 
-NoResultsFound.args = {
-  ...Template.args,
-  onQueryChange: async (query) => {
-    action("onQueryChange")(query);
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([]);
-      }, delay);
-    });
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(responses.resolved);
+        }, delay);
+      });
+    },
   },
 };
 
-NoResultsFound.argTypes = {
-  ...Template.argTypes,
-};
+export const NoResultsFound = {
+  ...SingleResultFound,
+  args: {
+    ...SingleResultFound.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
 
-const Error = Template.bind({});
-
-Error.args = {
-  ...Template.args,
-  onQueryChange: async (query) => {
-    action("onQueryChange")(query);
-
-    return new Promise((_, reject) => {
-      setTimeout(() => {
-        reject({ message: "There was an error" });
-      }, delay);
-    });
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([]);
+        }, delay);
+      });
+    },
   },
 };
 
-Error.argTypes = {
-  ...Template.argTypes,
-};
+export const Error = {
+  ...SingleResultFound,
+  args: {
+    ...SingleResultFound.args,
+    onQueryChange: async (query) => {
+      action("onQueryChange")(query);
 
-export default config;
-export { SingleResultFound, MultipleResultsFound, NoResultsFound, Error };
+      return new Promise((_, reject) => {
+        setTimeout(() => {
+          reject({ message: "There was an error" });
+        }, delay);
+      });
+    },
+  },
+};

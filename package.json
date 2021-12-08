@@ -8,8 +8,8 @@
     "test": "react-scripts test",
     "test:coverage": "npm test -- --coverage --watchAll=false",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -s public -p 6006",
-    "build-storybook": "build-storybook -s public",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages",
     "lint-js": "eslint './src/**/*.{js, jsx}'",
     "lint-js:fix": "npm run lint-js -- --fix",
@@ -62,13 +62,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "@storybook/addon-actions": "^6.2.8",
-    "@storybook/addon-controls": "^6.2.8",
-    "@storybook/addon-essentials": "^6.2.8",
-    "@storybook/addon-links": "^6.2.8",
-    "@storybook/react": "^6.2.8",
+    "@storybook/addon-actions": "^6.4.3",
+    "@storybook/addon-controls": "^6.4.3",
+    "@storybook/addon-essentials": "^6.4.3",
+    "@storybook/addon-interactions": "^6.4.3",
+    "@storybook/addon-links": "^6.4.3",
+    "@storybook/jest": "^0.0.5",
+    "@storybook/react": "^6.4.3",
     "@storybook/storybook-deployer": "^2.8.10",
-    "@storybook/testing-react": "0.0.22",
+    "@storybook/testing-library": "^0.0.7",
+    "@storybook/testing-react": "1.0.0",
     "@testing-library/dom": "^7.29.4",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
@@ -82,12 +85,13 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-storybook": "^0.5.1",
     "eslint-plugin-testing-library": "^3.10.2",
     "faker": "^5.5.3",
     "git-clone": "^0.1.0",
     "mockdate": "^3.0.2",
     "msw": "^0.35.0",
-    "msw-storybook-addon": "^1.4.1",
+    "msw-storybook-addon": "^1.5.0",
     "node-fetch": "^2.6.1",
     "prettier": "2.2.1",
     "stylelint": "^13.9.0",
@@ -95,6 +99,14 @@
     "stylelint-scss": "^3.18.0"
   },
   "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 86,
+        "functions": 90,
+        "lines": 92,
+        "statements": 91
+      }
+    },
     "testMatch": [
       "**/tests/**/*.test.js"
     ],

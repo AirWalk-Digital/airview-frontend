@@ -1,8 +1,9 @@
 import React from "react";
+import { userEvent, within } from "@storybook/testing-library";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccordionMenu } from "../../components/accordion-menu";
 
-const config = {
+export default {
   title: "Modules/Accordion Menu",
   component: AccordionMenu,
   parameters: {
@@ -22,89 +23,107 @@ const config = {
   ],
 };
 
-const testNavItems = [
-  {
-    id: "1",
-    name: "Navigation Item 1",
-    url: "/one",
-  },
-  {
-    id: "2",
-    name: "Navigation Item Parent 1",
-    children: [
-      {
-        id: "3",
-        name: "Sub Navigation Item 1",
-        url: "/two",
-      },
-      {
-        id: "4",
-        name: "Sub Navigation Item 2",
-        url: "/three",
-      },
-      {
-        id: "5",
-        name: "Navigation Item Parent 2",
-        children: [
-          {
-            id: "6",
-            name: "Sub Navigation Item 1",
-            url: "/four",
-          },
-          {
-            id: "7",
-            name: "Sub Navigation Item 2",
-            url: "/five",
-          },
-        ],
-      },
-      {
-        id: "6",
-        name: "Sub Navigation Item 3",
-        url: "/six",
-      },
-      {
-        id: "7",
-        name: "Sub Navigation Item 4",
-        url: "/seven",
-      },
-    ],
-  },
-  {
-    id: "8",
-    name: "Navigation Item 2",
-    url: "/eight",
-  },
-  {
-    id: "9",
-    name: "Navigation Item 3",
-    url: "/nine",
-  },
-];
-
 function Template(args) {
   return <AccordionMenu {...args} />;
 }
 
 Template.args = {
-  menuTitle: "Menu Title",
-  navItems: [...testNavItems],
   id: "accordion-nav",
 };
 
-const Loading = Template.bind({});
-
-Loading.args = {
-  ...Template.args,
-  loading: true,
+export const Loading = {
+  ...Template,
+  args: {
+    ...Template.args,
+    menuTitle: "",
+    navItems: [],
+    loading: true,
+  },
 };
 
-const Loaded = Template.bind({});
-Loaded.args = {
-  ...Template.args,
-  loading: false,
+export const Loaded = {
+  ...Template,
+  args: {
+    ...Template.args,
+    menuTitle: "Menu Title",
+    navItems: [
+      {
+        id: "1",
+        name: "Navigation Item 1",
+        url: "/",
+      },
+      {
+        id: "2",
+        name: "Navigation Item 2 - Parent",
+        children: [
+          {
+            id: "3",
+            name: "Child Navigation Item 2:1",
+            url: "/",
+          },
+          {
+            id: "4",
+            name: "Child Navigation Item 2:2",
+            url: "/",
+          },
+          {
+            id: "5",
+            name: "Child Navigation Item 2:3 - Parent",
+            children: [
+              {
+                id: "6",
+                name: "Child Navigation Item 3:1",
+                url: "/",
+              },
+              {
+                id: "7",
+                name: "Child Navigation Item 3:2",
+                url: "/",
+              },
+            ],
+          },
+          {
+            id: "6",
+            name: "Child Navigation Item 2:4",
+            url: "/",
+          },
+          {
+            id: "7",
+            name: "Child Navigation Item 2:5",
+            url: "/",
+          },
+        ],
+      },
+      {
+        id: "8",
+        name: "Navigation Item 3",
+        url: "/",
+      },
+      {
+        id: "9",
+        name: "Navigation Item 4",
+        url: "/",
+      },
+    ],
+    loading: false,
+  },
 };
 
-export { Loading, Loaded };
+export const LoadedExpanded = {
+  ...Loaded,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-export default config;
+    await userEvent.click(
+      canvas.getByRole("button", {
+        name: /navigation item 2 - parent/i,
+      })
+    );
+
+    await userEvent.click(
+      await canvas.findByRole("button", {
+        name: /child navigation item 2:3 - parent/i,
+      })
+    );
+  },
+};

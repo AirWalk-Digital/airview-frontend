@@ -1,20 +1,18 @@
-import { useState } from "react";
-
-export const data = [
+export const applicationsData = [
   {
     id: 1,
-    controlType: "security",
-    severity: "high",
-    name: "Donec consectetuer ligula vulputate sem tristique cursus",
+    controlType: "operational",
+    severity: "medium",
+    name: "Vivamus vestibulum ntulla nec ante",
     tickets: [
       {
-        reference: "INC12345678",
-        type: "incident",
+        reference: "PRB12345678",
+        type: "problem",
       },
     ],
     raisedDateTime: (function () {
       const now = new Date();
-      now.setMinutes(now.getMinutes() - 10);
+      now.setHours(now.getHours() - 1);
       return now.toISOString();
     })(),
     environment: "Production",
@@ -23,16 +21,6 @@ export const data = [
         {
           id: 1,
           name: "Server Instance 1",
-          status: "pending",
-        },
-        {
-          id: 2,
-          name: "Server Instance 2",
-          status: "none",
-        },
-        {
-          id: 3,
-          name: "Server Instance 3",
           status: "none",
         },
       ],
@@ -63,18 +51,18 @@ export const data = [
   },
   {
     id: 2,
-    controlType: "operational",
-    severity: "medium",
-    name: "Vivamus vestibulum ntulla nec ante",
+    controlType: "security",
+    severity: "high",
+    name: "Donec consectetuer ligula vulputate sem tristique cursus",
     tickets: [
       {
-        reference: "PRB12345678",
-        type: "problem",
+        reference: "INC12345678",
+        type: "incident",
       },
     ],
     raisedDateTime: (function () {
       const now = new Date();
-      now.setHours(now.getHours() - 1);
+      now.setMinutes(now.getMinutes() - 10);
       return now.toISOString();
     })(),
     environment: "Production",
@@ -83,7 +71,7 @@ export const data = [
         {
           id: 1,
           name: "Server Instance 1",
-          status: "none",
+          status: "pending",
         },
       ],
       control: {
@@ -192,11 +180,11 @@ export const data = [
         {
           id: 1,
           name: "Server Instance 1",
-          status: "none",
+          status: "pending",
         },
       ],
       control: {
-        name: "AWS ECS Pattern  CPU Monitoring",
+        name: "AWS ECS Pattern CPU Monitoring",
         url: "/",
       },
       frameworks: [
@@ -271,53 +259,3 @@ export const data = [
     },
   },
 ];
-
-export const messages = {
-  noDataMessage: {
-    title: "No issues",
-    message: "There are no issues to display for this application",
-  },
-  invalidPermissionsMessage: {
-    title: "Notice",
-    message:
-      "You do not have the required permissions to view the data for this application",
-  },
-};
-
-export function useComplianceTableDemoController(initialState) {
-  const [applicationData, setApplicationData] = useState(initialState);
-
-  const handleOnAcceptOfRisk = async (formData) => {
-    console.log("Form data", formData);
-
-    const moddifiedApplicationData = applicationData.map((data) => {
-      if (data.id === formData.applicationId.value) {
-        return {
-          ...data,
-          applicationDetailData: {
-            ...data.applicationDetailData,
-            instances: data.applicationDetailData.instances.map((instance) => ({
-              ...instance,
-              status: formData.resources.value.includes(instance.name)
-                ? "pending"
-                : instance.status,
-            })),
-          },
-        };
-      }
-      return data;
-    });
-
-    return new Promise((resolve) =>
-      setTimeout(() => {
-        setApplicationData([...moddifiedApplicationData]);
-        resolve();
-      }, 2500)
-    );
-  };
-
-  return {
-    applicationData,
-    handleOnAcceptOfRisk,
-  };
-}

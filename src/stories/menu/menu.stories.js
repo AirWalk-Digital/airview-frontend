@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Menu } from "../../components/menu";
 
-const config = {
+export default {
   title: "Modules/Menu",
   component: Menu,
   decorators: [
@@ -45,59 +45,54 @@ Template.args = {
   id: "menu-component",
 };
 
-const LoadingDefault = Template.bind({});
-
-LoadingDefault.args = {
-  ...Template.args,
-  loading: true,
+export const LoadingDefault = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: true,
+  },
 };
 
-const LoadingInitialCollapsed = Template.bind({});
-
-LoadingInitialCollapsed.args = {
-  ...Template.args,
-  loading: true,
-  initialCollapsed: true,
+export const LoadingInitialCollapsed = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: true,
+    initialCollapsed: true,
+  },
 };
 
-const LoadingNotCollapsible = Template.bind({});
-
-LoadingNotCollapsible.args = {
-  ...Template.args,
-  loading: true,
-  collapsible: false,
+export const LoadingNotCollapsible = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: true,
+    collapsible: false,
+  },
 };
 
-const LoadedDefault = Template.bind({});
-
-LoadedDefault.args = {
-  ...Template.args,
-  loading: false,
+export const LoadedDefault = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+  },
 };
 
-const LoadedInitialCollapsed = Template.bind({});
-
-LoadedInitialCollapsed.args = {
-  ...Template.args,
-  loading: false,
-  initialCollapsed: true,
+export const LoadedInitialCollapsed = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    initialCollapsed: true,
+  },
 };
 
-const LoadedNotCollapsible = Template.bind({});
-
-LoadedNotCollapsible.args = {
-  ...Template.args,
-  loading: false,
-  collapsible: false,
+export const LoadedNotCollapsible = {
+  ...Template,
+  args: {
+    ...Template.args,
+    loading: false,
+    collapsible: false,
+  },
 };
-
-export {
-  LoadingDefault,
-  LoadingInitialCollapsed,
-  LoadingNotCollapsible,
-  LoadedDefault,
-  LoadedInitialCollapsed,
-  LoadedNotCollapsible,
-};
-
-export default config;

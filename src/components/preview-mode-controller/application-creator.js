@@ -252,6 +252,7 @@ export function ApplicationCreator({
           <Typography
             color={state.errorMessage ? "error" : "initial"}
             variant="body2"
+            role={state.errorMessage ? "alert" : null}
           >
             {state.errorMessage ?? (
               <span>
@@ -386,7 +387,7 @@ export function ApplicationCreator({
                       disabled={state.working}
                     >
                       <InputLabel id={`reference-type-label-${index}`}>
-                        Type
+                        Reference Type
                       </InputLabel>
 
                       <Select
@@ -396,7 +397,7 @@ export function ApplicationCreator({
                         onChange={(event) =>
                           handleOnReferenceInputChange(index, "type", event)
                         }
-                        label="Type"
+                        label="Reference Type"
                       >
                         {referenceTypes.map((referenceType, index) => {
                           return (
@@ -409,7 +410,7 @@ export function ApplicationCreator({
                     </FormControl>
 
                     <TextField
-                      label="Reference"
+                      label="Reference Label"
                       id={`reference-${index}`}
                       placeholder="Reference"
                       size="small"

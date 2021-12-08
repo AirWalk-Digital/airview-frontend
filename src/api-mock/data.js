@@ -131,12 +131,7 @@ export const resources = {
       environment: "Development",
       lastSeen: dayjs().subtract(1, "year").toISOString(),
       status: "Exempt",
-      pending: false,
-      exemptionData: {
-        ticket: "Ticket label for test instance 4",
-        expires: dayjs().add(2, "day").toISOString(),
-        resources: ["Resource One", "Resource Two", "Resource Three"],
-      },
+      pending: true,
     },
     {
       id: 5,
