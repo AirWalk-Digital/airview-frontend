@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { KnowledgeTemplate } from "../../components/knowledge-template";
 import markdownContent from "../__resources/markdown-content.md";
 
-const config = {
+export default {
   title: "Templates/Knowledge Template",
   component: KnowledgeTemplate,
   parameters: {
@@ -106,29 +106,28 @@ Template.args = {
   },
 };
 
-const PreviewDisabled = Template.bind({});
-
-PreviewDisabled.args = {
-  ...PageHeaderStories.PreviewDisabled.args,
-  ...Template.args,
-  loading: false,
-  previewMode: false,
+export const Loading = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.Loading.args,
+  },
 };
 
-const Loading = Template.bind({});
-
-Loading.args = {
-  ...Template.args,
-  ...PageHeaderStories.Loading.args,
+export const PreviewDisabled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.PreviewDisabled.args,
+    loading: false,
+    previewMode: false,
+  },
 };
 
-const PreviewEnabled = Template.bind({});
-
-PreviewEnabled.args = {
-  ...Template.args,
-  ...PageHeaderStories.PreviewEnabled.args,
+export const PreviewEnabled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.PreviewEnabled.args,
+  },
 };
-
-export { PreviewDisabled, Loading, PreviewEnabled };
-
-export default config;
