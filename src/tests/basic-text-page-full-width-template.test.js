@@ -3,7 +3,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import { composeStories } from "@storybook/testing-react";
-import * as stories from "../stories/basic-text-page-full-width-template/basic-text-page-full-width-tempate.stories";
+import * as stories from "../stories/basic-text-page-full-width-template/basic-text-page-full-width-template.stories";
 
 const { Loaded, Loading } = composeStories(stories);
 
