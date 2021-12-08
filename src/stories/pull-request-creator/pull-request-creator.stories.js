@@ -46,8 +46,15 @@ export const InitialOpen = {
   },
 };
 
-export const WithSubmissionSuccess = {
+export const Submitting = {
   ...Template,
+  args: {
+    ...Template.args,
+    onSubmit: async (fromBranch, toBranch) => {
+      action("onSubmit")(fromBranch, toBranch);
+      return new Promise(() => {});
+    },
+  },
   play: async (context) => {
     await InitialOpen.play(context);
 
@@ -58,6 +65,13 @@ export const WithSubmissionSuccess = {
     await userEvent.click(
       within(dialog).getByRole("button", { name: /create/i })
     );
+  },
+};
+
+export const WithSubmissionSuccess = {
+  ...Template,
+  play: async (context) => {
+    await Submitting.play(context);
   },
 };
 
@@ -78,6 +92,6 @@ export const WithSubmissionError = {
     },
   },
   play: async (context) => {
-    await WithSubmissionSuccess.play(context);
+    await Submitting.play(context);
   },
 };
