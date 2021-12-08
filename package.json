@@ -99,6 +99,14 @@
     "stylelint-scss": "^3.18.0"
   },
   "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 86,
+        "functions": 90,
+        "lines": 92,
+        "statements": 91
+      }
+    },
     "testMatch": [
       "**/tests/**/*.test.js"
     ],
