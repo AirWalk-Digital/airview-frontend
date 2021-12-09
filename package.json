@@ -140,7 +140,9 @@
   },
   "lint-staged": {
     "*.js": "eslint",
-    "*./src/": "prettier",
-    "*": "detect-secrets-hook --baseline .secrets.baseline"
+    "*": [
+      "prettier --ignore-unknown --write",
+      "detect-secrets-hook --baseline .secrets.baseline"
+    ]
   }
 }
