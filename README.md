@@ -2,21 +2,28 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Required dependencies
+
+### Detect Secrets
+
+The project has a dependency on `detect-secrets` version 1.0.3 for a pre-commit hook. This specific version must be installed at present to prevent a known bug with version 1.1.0.
+
 ## Required configurtion
+
 Environment variables should be set for the following:
 
-| Key                            | Description     | Example       |
-|--------------------------------|-----------------|---------------|
-| REACT_APP_AUTH_AUTHORITY       | Oauth authority | https://login.microsoftonline.com/xyz123/v2.0/|
-| REACT_APP_AUTH_CLIENT_ID       | Oauth client id | abc-123       |
-| REACT_APP_AUTH_REDIRECT_URI    | Oauth redirct page| https://mysite.com/signin-callback|
-| REACT_APP_AUTH_SCOPE           | Scope for Oauth token request | api://myapi/.default |
-| REACT_APP_API_HOST             | API host | https://myapi.com
-| REACT_APP_CONTENT_BACKEND      | Backend type (github or ado) | github|
-| REACT_APP_CONTENT_CLIENT_ID    | Oauth client id for content backend (github, ado)| xyz-789
-| REACT_APP_CONTENT_CALLBACK_URL | Callback url for content backend token exchange| https://mysite.com/github/authorizing
-| REACT_APP_CONTENT_ORGANISATION | ADO organisation (ado only) |my org
-| REACT_APP_CONTENT_PROJECT      | ADO project (ado only) | my project
+| Key                            | Description                                       | Example                                        |
+| ------------------------------ | ------------------------------------------------- | ---------------------------------------------- |
+| REACT_APP_AUTH_AUTHORITY       | Oauth authority                                   | https://login.microsoftonline.com/xyz123/v2.0/ |
+| REACT_APP_AUTH_CLIENT_ID       | Oauth client id                                   | abc-123                                        |
+| REACT_APP_AUTH_REDIRECT_URI    | Oauth redirct page                                | https://mysite.com/signin-callback             |
+| REACT_APP_AUTH_SCOPE           | Scope for Oauth token request                     | api://myapi/.default                           |
+| REACT_APP_API_HOST             | API host                                          | https://myapi.com                              |
+| REACT_APP_CONTENT_BACKEND      | Backend type (github or ado)                      | github                                         |
+| REACT_APP_CONTENT_CLIENT_ID    | Oauth client id for content backend (github, ado) | xyz-789                                        |
+| REACT_APP_CONTENT_CALLBACK_URL | Callback url for content backend token exchange   | https://mysite.com/github/authorizing          |
+| REACT_APP_CONTENT_ORGANISATION | ADO organisation (ado only)                       | my org                                         |
+| REACT_APP_CONTENT_PROJECT      | ADO project (ado only)                            | my project                                     |
 
 ## Available Scripts
 
