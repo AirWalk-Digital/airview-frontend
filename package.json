@@ -141,8 +141,7 @@
   "lint-staged": {
     "*.js": "eslint",
     "*": [
-      "prettier --ignore-unknown --write",
-      "detect-secrets-hook --baseline .secrets.baseline"
+      "prettier --ignore-unknown --write"
     ]
   }
 }
