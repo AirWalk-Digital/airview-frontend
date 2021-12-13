@@ -426,10 +426,6 @@ export function ApplicationsPage() {
           (application) => !application.parentId
         );
 
-        /* const applicationTypes = JSON.parse(
-         *   await (await apiService("/api/application-types/")).data.text()
-         * ); */
-
         const applicationTypes = [
           { id: "BUSINESS_APPLICATION", name: "Business Application" },
           { id: "APPLICATION_SERVICE", name: "Application Service" },
