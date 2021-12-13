@@ -130,29 +130,27 @@ export function ApplicationsPage() {
       console.error(error);
     }
   };
-  const [
-    controlOverviewState,
-    setControlsData,
-    setResourcesData,
-  ] = useControlOverviewController(async () => {
-    if (state.applicationId == undefined) {
-      return [];
-    }
-    const models = JSON.parse(
-      await (
-        await apiService(
-          `/api/applications/${state.applicationId}/quality-models`
-        )
-      ).data.text()
-    );
-    return models.map((item, index) => {
-      return {
-        id: index,
-        title:
-          item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase(),
-      };
-    });
-  }, state.applicationId);
+  const [controlOverviewState, setControlsData, setResourcesData] =
+    useControlOverviewController(async () => {
+      if (state.applicationId == undefined) {
+        return [];
+      }
+      const models = JSON.parse(
+        await (
+          await apiService(
+            `/api/applications/${state.applicationId}/quality-models`
+          )
+        ).data.text()
+      );
+      return models.map((item, index) => {
+        return {
+          id: index,
+          title:
+            item.name.charAt(0).toUpperCase() +
+            item.name.slice(1).toLowerCase(),
+        };
+      });
+    }, state.applicationId);
 
   const handleOnRequestOfControlsData = (id) => {
     setControlsData(id, async () => {
@@ -428,9 +426,15 @@ export function ApplicationsPage() {
           (application) => !application.parentId
         );
 
-        const applicationTypes = JSON.parse(
-          await (await apiService("/api/application-types/")).data.text()
-        );
+        /* const applicationTypes = JSON.parse(
+         *   await (await apiService("/api/application-types/")).data.text()
+         * ); */
+
+        const applicationTypes = [
+          { id: "BUSINESS_APPLICATION", name: "Business Application" },
+          { id: "APPLICATION_SERVICE", name: "Application Service" },
+          { id: "TECHINCAL_SERVICE", name: "Technical Service" },
+        ];
 
         const environments = JSON.parse(
           await (await apiService("/api/environments/")).data.text()
