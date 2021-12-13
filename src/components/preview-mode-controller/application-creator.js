@@ -34,7 +34,7 @@ const setInitialState = () => {
       value: "",
       valid: false,
     },
-    applicationTypeId: {
+    applicationType: {
       value: "",
       valid: false,
     },
@@ -92,7 +92,7 @@ export function ApplicationCreator({
 
     setState((prevState) => ({
       ...prevState,
-      applicationTypeId: {
+      applicationType: {
         value,
         valid: true,
       },
@@ -169,7 +169,7 @@ export function ApplicationCreator({
 
     if (
       !state.name.valid ||
-      !state.applicationTypeId.valid ||
+      !state.applicationType.valid ||
       !state.environmentId.valid ||
       !state.references.length
     ) {
@@ -189,7 +189,7 @@ export function ApplicationCreator({
     return formValid;
   }, [
     state.name,
-    state.applicationTypeId,
+    state.applicationType,
     state.environmentId,
     state.references,
   ]);
@@ -203,7 +203,7 @@ export function ApplicationCreator({
       }));
 
       await onSubmit({
-        applicationTypeId: state.applicationTypeId.value,
+        applicationType: state.applicationType.value,
         name: state.name.value,
         environmentId: state.environmentId.value,
         references: state.references.map((reference) => ({
@@ -323,7 +323,7 @@ export function ApplicationCreator({
             <Select
               labelId="application-type-select-label"
               id="application-type"
-              value={state.applicationTypeId.value}
+              value={state.applicationType.value}
               onChange={handleOnApplicationTypeChange}
               label="Application Type"
             >
