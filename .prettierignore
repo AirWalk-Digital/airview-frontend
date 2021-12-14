@@ -1,0 +1,6 @@
+.cache
+coverage
+node_modules
+public
+storybook-static
+build

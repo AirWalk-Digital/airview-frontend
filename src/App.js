@@ -25,7 +25,7 @@ import { PrivateRoute } from "./components/private-route";
 import { AuthProvider } from "oidc-react";
 import { getContentBackendConfig } from "./lib/markdown-backend-config";
 
-// Move into lib
+// Move into lib - test
 function getOidcConfig(history, location) {
   return {
     authority: process.env.REACT_APP_AUTH_AUTHORITY,

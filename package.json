@@ -4,17 +4,18 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false && react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "npm test -- --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages",
-    "lint-js": "eslint './src/**/*.{js, jsx}'",
-    "lint-js:fix": "npm run lint-js -- --fix",
+    "lint": "eslint './src/**/*.{js, jsx}'",
+    "lint:fix": "npm run lint -- --fix",
     "format": "prettier --check './src/'",
-    "format:fix": "npm run format -- --write"
+    "format:fix": "npm run format -- --write",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@date-io/dayjs": "^1.3.13",
@@ -89,6 +90,8 @@
     "eslint-plugin-testing-library": "^3.10.2",
     "faker": "^5.5.3",
     "git-clone": "^0.1.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.2",
     "mockdate": "^3.0.2",
     "msw": "^0.35.0",
     "msw-storybook-addon": "^1.5.0",
@@ -134,5 +137,11 @@
   ],
   "msw": {
     "workerDirectory": "public"
+  },
+  "lint-staged": {
+    "*.js": "eslint",
+    "*": [
+      "prettier --ignore-unknown --write"
+    ]
   }
 }
