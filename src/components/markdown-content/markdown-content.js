@@ -23,6 +23,8 @@ export const MarkdownContent = React.forwardRef(
       defaultValue,
       classNames,
       onRequestToUploadImage,
+      placeholder,
+      headingsOffset,
     },
     ref
   ) => {
@@ -51,9 +53,11 @@ export const MarkdownContent = React.forwardRef(
         onChange={(value) => handleOnChange(value())}
         onClickLink={handleOnLinkClick}
         uploadImage={onRequestToUploadImage}
+        placeholder={placeholder}
         ref={ref}
         className={clsx(styles.editor, classNames)}
         disableExtensions={["container_notice"]}
+        headingsOffset={headingsOffset}
       />
     );
   }
@@ -79,6 +83,10 @@ MarkdownContent.propTypes = {
    */
   defaultValue: PropTypes.string,
   /**
+   * Sets the placeholder for Markdown editor content
+   */
+  placeholder: PropTypes.string,
+  /**
    * Adds passed classNames to the root node for styling
    */
   classNames: PropTypes.string,
@@ -86,6 +94,10 @@ MarkdownContent.propTypes = {
    * Callback when Markdown editor has had a user upload an image. **Singnature: `function(file: Blob) : Promise`
    */
   onRequestToUploadImage: PropTypes.func,
+  /**
+   * allow headings only under a given level
+   */
+  headingsOffset: PropTypes.int,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -265,9 +277,10 @@ const useStyles = makeStyles((theme) => ({
           minWidth: 100,
         },
 
-        "& thead th, & thead td, & tbody th, & tbody td, & tfoot th, & tfoot td": {
-          padding: `${theme.spacing(1)}px ${theme.spacing(1)}px`,
-        },
+        "& thead th, & thead td, & tbody th, & tbody td, & tfoot th, & tfoot td":
+          {
+            padding: `${theme.spacing(1)}px ${theme.spacing(1)}px`,
+          },
 
         "& thead, & tbody tr:nth-child(even)": {
           backgroundColor: theme.palette.grey["100"],

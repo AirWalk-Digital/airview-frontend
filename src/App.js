@@ -24,6 +24,7 @@ import { ControllerProvider } from "./providers/controller-provider";
 import { PrivateRoute } from "./components/private-route";
 import { AuthProvider } from "oidc-react";
 import { getContentBackendConfig } from "./lib/markdown-backend-config";
+import { StructuredPage } from "./pages/structured-page";
 
 // Move into lib
 function getOidcConfig(history, location) {
@@ -75,6 +76,9 @@ function App() {
             <Switch>
               <PrivateRoute path="/" exact>
                 <HomePage />
+              </PrivateRoute>
+              <PrivateRoute path="/test" exact>
+                <StructuredPage />
               </PrivateRoute>
 
               <PrivateRoute path="/applications" exact>
