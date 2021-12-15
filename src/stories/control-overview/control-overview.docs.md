@@ -98,7 +98,8 @@ The function should return data equal to the `resources` key within the `data` p
       ticket: string,
       expires: string // ISO Date String
       resources: [string]
-    }
+    },
+    evidence: string // Markdown
   },
 ] | "error";
 ```
