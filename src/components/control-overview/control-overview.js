@@ -98,9 +98,6 @@ export function ControlOverview({
   }, [data, exemptionManagerStatus]);
 
   const handleOnViewResourceEvidenceClick = (controlId, resourceId) => {
-    console.log("controlId:", controlId);
-    console.log("resourceId:", resourceId);
-
     setResourceEvidenceStatus({
       open: true,
       controlId,
