@@ -12,6 +12,7 @@ import { ControlOverviewItemDetail } from "./control-overview-item-detail";
 import { ControlOverviewItemResources } from "./control-overview-item-resources";
 import { ControlOverviewLoadingIndicator } from "./control-overview-loading-indicator";
 import { ControlOverviewResourceManager } from "./control-overview-resource-manager";
+import { ControlOverviewResourceEvidenceViewer } from "./control-overview-resource-evidence-viewer";
 
 export function ControlOverview({
   loading,
@@ -30,8 +31,18 @@ export function ControlOverview({
     resourceId: null,
   };
 
+  const initialResourceEvidenceStatus = {
+    open: false,
+    controlId: null,
+    resourceId: null,
+  };
+
   const [exemptionManagerStatus, setExemptionManagerStatus] = useState({
     ...initialResourceManagerStatus,
+  });
+
+  const [resourceEvidenceStatus, setResourceEvidenceStatus] = useState({
+    ...initialResourceEvidenceStatus,
   });
 
   const errorMessageFeedback = (
@@ -85,6 +96,28 @@ export function ControlOverview({
 
     return resourcesData;
   }, [data, exemptionManagerStatus]);
+
+  const handleOnViewResourceEvidenceClick = (controlId, resourceId) => {
+    setResourceEvidenceStatus({
+      open: true,
+      controlId,
+      resourceId,
+    });
+  };
+
+  const handleOnViewResourceEvidenceClose = () => {
+    setResourceEvidenceStatus({ ...initialResourceEvidenceStatus });
+  };
+
+  const resourceEvidenceData = useMemo(() => {
+    if (!resourceEvidenceStatus.open) return null;
+
+    return (
+      data.resources[resourceEvidenceStatus.controlId].filter(
+        (resource) => resource.id === resourceEvidenceStatus.resourceId
+      )[0].evidence ?? null
+    );
+  }, [data, resourceEvidenceStatus]);
 
   if (loading) {
     return <Skeleton variant="rect" width="100%" height={200} />;
@@ -212,6 +245,12 @@ export function ControlOverview({
                                       resourceId
                                     );
                                   }}
+                                  onViewResourceEvidence={(resourceId) => {
+                                    handleOnViewResourceEvidenceClick(
+                                      control.id,
+                                      resourceId
+                                    );
+                                  }}
                                 />
                               );
                             }
@@ -225,11 +264,18 @@ export function ControlOverview({
             );
           })}
         </Paper>
+
         <ControlOverviewResourceManager
           open={exemptionManagerStatus.open}
           onClose={handleOnResourceManagerClose}
           resourceData={resourceManagerData}
           {...{ onResourceExemptionDelete, onResourceExemptionSave }}
+        />
+
+        <ControlOverviewResourceEvidenceViewer
+          open={resourceEvidenceStatus.open}
+          onClose={handleOnViewResourceEvidenceClose}
+          resourceEvidenceData={resourceEvidenceData}
         />
       </React.Fragment>
     );

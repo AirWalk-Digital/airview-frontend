@@ -109,6 +109,7 @@ export const resources = {
       lastSeen: dayjs().subtract(1, "day").toISOString(),
       status: "Non-Compliant",
       pending: false,
+      evidence: `Markdown Content`,
     },
     {
       id: 3,
