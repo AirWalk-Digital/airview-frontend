@@ -23,12 +23,14 @@ import Box from "@material-ui/core/Box";
 import SettingsIcon from "@material-ui/icons/Settings";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+import InfoIcon from "@material-ui/icons/Info";
 import clsx from "clsx";
 import dayjs from "dayjs";
 
 export function ControlOverviewItemResources({
   resourcesData,
   onManageResourceClick,
+  onViewResourceEvidence,
 }) {
   const classes = useControlOverviewItemResourcesStyles();
 
@@ -238,6 +240,7 @@ export function ControlOverviewItemResources({
               <TableCell>Status</TableCell>
               <TableCell>Pending</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
 
@@ -286,6 +289,24 @@ export function ControlOverviewItemResources({
                       "-"
                     )}
                   </TableCell>
+                  <TableCell align="center">
+                    {resource?.evidence ? (
+                      <Tooltip title={"View Evidence"}>
+                        <span>
+                          <IconButton
+                            aria-label="View Evidence"
+                            color="primary"
+                            size="small"
+                            onClick={() => onViewResourceEvidence(resource.id)}
+                          >
+                            <InfoIcon fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    ) : (
+                      "-"
+                    )}
+                  </TableCell>
                 </TableRow>
               );
             })}
@@ -308,6 +329,7 @@ ControlOverviewItemResources.propTypes = {
     })
   ),
   onManageResourceClick: PropTypes.func.isRequired,
+  onViewResourceEvidence: PropTypes.func.isRequired,
 };
 
 const useControlOverviewItemResourcesStyles = makeStyles((theme) => {
