@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, within, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  within,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import { composeStories } from "@storybook/testing-react";
 import * as stories from "../stories/control-overview/control-overview.stories";
 import userEvent from "@testing-library/user-event";
@@ -143,5 +149,28 @@ describe("ControlOverview", () => {
     await waitFor(() => expect(manageExemptionDialog).not.toBeInTheDocument());
 
     // To do, assert onResourceExemptionDelete was called
+  });
+
+  test("a user can toggle the visibility of a resource supporting evidence", async () => {
+    const viewEvidenceBtn = await screen.findByRole("button", {
+      name: /view evidence/i,
+    });
+
+    // Click the view evidence button
+    userEvent.click(viewEvidenceBtn);
+
+    // Wait for the dialog to become visible
+    const evidenceDialog = await screen.findByRole("dialog");
+
+    // It should contain the correct content
+    expect(
+      within(evidenceDialog).getByText(/markdown content/i)
+    ).toBeInTheDocument();
+
+    // Click the close dialog button
+    userEvent.click(within(evidenceDialog).getByRole("button"));
+
+    // The dialog should not remain visible
+    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
   });
 });
