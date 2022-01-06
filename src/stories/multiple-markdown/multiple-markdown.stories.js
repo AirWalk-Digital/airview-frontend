@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import Editor from "rich-markdown-editor";
 import { action } from "@storybook/addon-actions";
 
@@ -15,6 +16,8 @@ function useArrayRef() {
 }
 
 function Template(args) {
+  const classes = useStyles();
+
   const { readOnly, onChange, uploadImage } = args;
 
   const [elements, ref] = useArrayRef();
@@ -38,11 +41,20 @@ function Template(args) {
         <Editor
           {...{ placeholder, defaultValue, readOnly, onChange, uploadImage }}
           ref={ref}
+          className={classes.root}
         />
       </div>
     );
   });
 }
+
+const useStyles = makeStyles({
+  root: {
+    "& .placeholder:before": {
+      display: "initial!important",
+    },
+  },
+});
 
 Template.args = {
   blocks: [
