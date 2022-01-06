@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import Editor from "rich-markdown-editor";
 import { action } from "@storybook/addon-actions";
 
@@ -9,28 +9,27 @@ export default {
   },
 };
 
+function useArrayRef() {
+  const refs = [];
+  return [refs, (el) => el && refs.push(el)];
+}
+
 function Template(args) {
   const { readOnly, onChange, uploadImage } = args;
 
-  const editorRefs = useRef([]);
+  const [elements, ref] = useArrayRef();
 
   useEffect(() => {
-    console.log(editorRefs);
+    console.log(elements);
 
-    const headings = editorRefs.current.reduce((prevValue, currentValue) => {
-      if (!currentValue) return prevValue;
+    const headings = elements.reduce((prevValue, currentValue) => {
       return [...prevValue, ...currentValue.getHeadings()];
     }, []);
 
     console.log(headings);
-  });
 
-  useEffect(() => {
-    if (editorRefs?.current.length > 0) {
-      editorRefs.current = [];
-      console.log("resetting");
-    }
-  }, [readOnly, args.blocks]);
+    args.getHeadings = () => headings;
+  });
 
   return args.blocks.map(({ title, placeholder, defaultValue }, index) => {
     return (
@@ -38,7 +37,7 @@ function Template(args) {
         <h2>{title}</h2>
         <Editor
           {...{ placeholder, defaultValue, readOnly, onChange, uploadImage }}
-          ref={(ref) => editorRefs.current.push(ref)}
+          ref={ref}
         />
       </div>
     );
@@ -68,6 +67,7 @@ Template.args = {
 
     return URL.createObjectURL(file);
   },
+  getHeadings: (headings) => action("Headings")(headings()),
 };
 
 export const Default = Template.bind({});
