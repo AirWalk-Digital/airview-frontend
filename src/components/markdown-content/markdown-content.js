@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import red from "@material-ui/core/colors/red";
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import Editor from "rich-markdown-editor";
 import { useHistory } from "react-router-dom";
 import { MarkdownContentLoading } from "./markdown-content-loading";
@@ -24,15 +25,13 @@ export const MarkdownContent = React.forwardRef(
     const [elements, arrayRef] = useArrayRef();
 
     useEffect(() => {
-      console.log(elements);
-
       const headings = elements.reduce((prevValue, currentValue) => {
         return [...prevValue, ...currentValue.getHeadings()];
       }, []);
 
-      console.log(headings);
-
-      if (ref?.current) ref.current = { headings };
+      if (ref) {
+        ref.current = headings;
+      }
     });
 
     const handleOnChange = (markdown) => {
@@ -57,7 +56,9 @@ export const MarkdownContent = React.forwardRef(
           <React.Fragment key={index}>
             {(defaultValue && readOnly) || !readOnly ? (
               <>
-                <h2>{title}</h2>
+                <Typography variant="h2" paragraph>
+                  {title}
+                </Typography>
                 <Editor
                   {...{ readOnly, placeholder, defaultValue }}
                   onChange={(value) => handleOnChange(value())}
