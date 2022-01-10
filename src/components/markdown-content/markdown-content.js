@@ -1,37 +1,42 @@
-import React, { useRef } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import red from "@material-ui/core/colors/red";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Editor from "rich-markdown-editor";
 import { useHistory } from "react-router-dom";
 import { MarkdownContentLoading } from "./markdown-content-loading";
 
-// Move out to hook
 function isExternalLink(link) {
   const tmp = document.createElement("a");
   tmp.href = link;
   return tmp.host !== window.location.host;
 }
 
+function useArrayRef() {
+  const refs = [];
+  return [refs, (el) => el && refs.push(el)];
+}
+
 export const MarkdownContent = React.forwardRef(
-  (
-    {
-      loading,
-      readOnly,
-      onChange,
-      defaultValue,
-      classNames,
-      onRequestToUploadImage,
-    },
-    ref
-  ) => {
+  ({ loading, readOnly, onChange, onUploadImage, content }, ref) => {
     const styles = useStyles();
     let history = useHistory();
-    const uploadedImages = useRef([]);
+    const [elements, arrayRef] = useArrayRef();
+
+    useEffect(() => {
+      console.log(elements);
+
+      const headings = elements.reduce((prevValue, currentValue) => {
+        return [...prevValue, ...currentValue.getHeadings()];
+      }, []);
+
+      console.log(headings);
+
+      if (ref?.current) ref.current = { headings };
+    });
 
     const handleOnChange = (markdown) => {
-      onChange({ markdown, images: uploadedImages.current });
+      onChange({ markdown });
     };
 
     const handleOnLinkClick = (href) => {
@@ -44,17 +49,31 @@ export const MarkdownContent = React.forwardRef(
 
     if (loading) return <MarkdownContentLoading />;
 
-    return (
-      <Editor
-        {...{ readOnly }}
-        defaultValue={defaultValue}
-        onChange={(value) => handleOnChange(value())}
-        onClickLink={handleOnLinkClick}
-        uploadImage={onRequestToUploadImage}
-        ref={ref}
-        className={clsx(styles.editor, classNames)}
-        disableExtensions={["container_notice"]}
-      />
+    if (!content) return null;
+
+    return content.map(
+      ({ title, placeholder, defaultValue, additionalContent }, index) => {
+        return (
+          <React.Fragment key={index}>
+            {(defaultValue && readOnly) || !readOnly ? (
+              <>
+                <h2>{title}</h2>
+                <Editor
+                  {...{ readOnly, placeholder, defaultValue }}
+                  onChange={(value) => handleOnChange(value())}
+                  onClickLink={handleOnLinkClick}
+                  uploadImage={onUploadImage}
+                  ref={arrayRef}
+                  className={styles.editor}
+                  disableExtensions={["container_notice"]}
+                />
+              </>
+            ) : null}
+
+            {additionalContent}
+          </React.Fragment>
+        );
+      }
     );
   }
 );
@@ -71,25 +90,32 @@ MarkdownContent.propTypes = {
    */
   readOnly: PropTypes.bool.isRequired,
   /**
-   * Callback for when a change is made in edit mode, calls with object containing edited markdown string, any user added images and cleanup function to remove images from memory. **signature:** `function({ markdown: string, images: array}) => void `
+   * Callback for when a change is made in edit mode, calls with object containing edited markdown string, any user added images and cleanup function to remove images from memory. **signature:** `function({ markdown: String}) => void `
    */
   onChange: PropTypes.func,
   /**
-   * Sets the default value of the Markdown editor content
+   * Callback when Markdown editor has had a user upload an image. **Signature: `function(file: Blob) => Promise`
    */
-  defaultValue: PropTypes.string,
+  onUploadImage: PropTypes.func,
   /**
-   * Adds passed classNames to the root node for styling
+   * Sets the content of the Markdown editor content
    */
-  classNames: PropTypes.string,
-  /**
-   * Callback when Markdown editor has had a user upload an image. **Singnature: `function(file: Blob) : Promise`
-   */
-  onRequestToUploadImage: PropTypes.func,
+  content: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      placeholder: PropTypes.string,
+      defaultValue: PropTypes.string,
+      additionalContent: PropTypes.node,
+    })
+  ),
 };
 
 const useStyles = makeStyles((theme) => ({
   editor: {
+    "& .placeholder:before": {
+      display: "initial!important",
+    },
+
     "& > div": {
       backgroundColor: "inherit",
     },
