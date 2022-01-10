@@ -41,7 +41,7 @@ function Template(args) {
 
 Template.args = {
   currentRoute: "/",
-  pageTitle: "Layout Base",
+  pageTitle: "Page Title",
 };
 
 export const Loading = {
