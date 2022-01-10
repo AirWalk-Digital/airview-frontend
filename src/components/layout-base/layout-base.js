@@ -49,9 +49,7 @@ export function LayoutBase({
         />
       </Container>
 
-      {children && (
-        <Container className={styles.mainContainer}>{children}</Container>
-      )}
+      <div className={styles.mainContainer}>{children}</div>
     </LocationProvider>
   );
 }
