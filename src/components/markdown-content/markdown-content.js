@@ -34,8 +34,11 @@ export const MarkdownContent = React.forwardRef(
       }
     });
 
-    const handleOnChange = (markdown) => {
-      onChange({ markdown });
+    const handleOnChange = (changes, index) => {
+      onChange({
+        markdown: changes.includes("\\", 0) ? "" : changes,
+        index,
+      });
     };
 
     const handleOnLinkClick = (href) => {
@@ -61,7 +64,7 @@ export const MarkdownContent = React.forwardRef(
                 </Typography>
                 <Editor
                   {...{ readOnly, placeholder, defaultValue }}
-                  onChange={(value) => handleOnChange(value())}
+                  onChange={(value) => handleOnChange(value(), index)}
                   onClickLink={handleOnLinkClick}
                   uploadImage={onUploadImage}
                   ref={arrayRef}
@@ -71,7 +74,7 @@ export const MarkdownContent = React.forwardRef(
               </>
             ) : null}
 
-            {additionalContent}
+            <div className={styles.additionalContent}>{additionalContent}</div>
           </React.Fragment>
         );
       }
@@ -341,5 +344,8 @@ const useStyles = makeStyles((theme) => ({
         marginTop: "-64px",
       },
     },
+  },
+  additionalContent: {
+    marginBottom: "1em",
   },
 }));
