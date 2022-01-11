@@ -7,6 +7,15 @@ import Typography from "@material-ui/core/Typography";
 import { LayoutBase } from "../layout-base";
 import { Menu } from "../menu";
 import { MarkdownContent } from "../markdown-content";
+import {
+  PreviewModeController,
+  //BranchSwitcher,
+  //BranchCreator,
+  //KnowledgePageCreator,
+  //KnowledgePageMetaEditor,
+  ContentCommitter,
+  //PullRequestCreator,
+} from "../preview-mode-controller";
 
 /*
 To do
@@ -27,19 +36,18 @@ export function TextPageTemplate({
   previewMode,
   breadcrumbLinks,
   mainContent,
-  onEditorChange,
   onEditorUploadImage,
+  onSave,
   asideAndMain = true,
   tableOfContents = true,
 }) {
   const styles = useStyles();
-
   const editorRef = useRef();
-
+  const editorChanges = useRef([]);
   const [tableOfContentsData, setTableOfContentsData] = useState([]);
+  const [canSave, setCanSave] = useState(false);
 
   useEffect(() => {
-    console.log(editorRef.current);
     const headings = editorRef.current;
 
     if (headings) {
@@ -50,9 +58,29 @@ export function TextPageTemplate({
         }))
       );
     }
+
+    setCanSave(false);
   }, [mainContent]);
 
-  console.log(tableOfContentsData);
+  const handleOnEditorChange = ({ markdown, index }) => {
+    if (mainContent[index]?.defaultValue === markdown) {
+      setCanSave(false);
+    } else {
+      setCanSave(true);
+    }
+
+    editorChanges.current[index] = markdown;
+  };
+
+  const handleOnSave = async (commitMessage) => {
+    try {
+      await onSave({ edits: editorChanges.current, commitMessage });
+      editorChanges.current = [];
+      setCanSave(false);
+    } catch (error) {
+      console.error("there was an error attempting to save your changes");
+    }
+  };
 
   return (
     <LayoutBase
@@ -69,6 +97,18 @@ export function TextPageTemplate({
         breadcrumbLinks,
       }}
     >
+      <PreviewModeController
+        enabled={previewMode}
+        loading={loading}
+        onToggle={() => {}}
+        branches={[{ name: "main", protected: false }]}
+        workingRepo="test-org/test-repository"
+        workingBranch="main"
+        baseBranch="main"
+      >
+        <ContentCommitter disabled={!canSave} onSubmit={handleOnSave} />
+      </PreviewModeController>
+
       <Container>
         <Grid
           container
@@ -85,7 +125,7 @@ export function TextPageTemplate({
             <MarkdownContent
               loading={loading}
               readOnly={!previewMode}
-              onChange={onEditorChange}
+              onChange={handleOnEditorChange}
               onUploadImage={onEditorUploadImage}
               content={mainContent}
               ref={editorRef}
@@ -163,6 +203,7 @@ TextPageTemplate.propTypes = {
   mainContent: PropTypes.array.isRequired,
   onEditorChange: PropTypes.func.isRequired,
   onEditorUploadImage: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
   asideAndMain: PropTypes.bool,
   tableOfContents: PropTypes.bool,
 };

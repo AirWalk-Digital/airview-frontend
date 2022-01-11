@@ -4,6 +4,7 @@ import { action } from "@storybook/addon-actions";
 import { makeStyles } from "@material-ui/core/styles";
 import * as LayoutBaseStories from "../layout-base/layout-base.stories";
 import { TextPageTemplate } from "../../components/text-page-template";
+import { Message } from "../../components/message";
 
 export default {
   title: "Templates/Text Page Template",
@@ -61,13 +62,21 @@ Template.args = {
     },
     {
       title: "Content Block Two",
-      defaultValue: "#### Default value two ",
-      additionalContent: <span>Component test</span>,
+      defaultValue: `#### Some default title and content \n Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?`,
+      placeholder:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
+      additionalContent: (
+        <Message
+          title="Injected component"
+          message="This component has been injected into the main content"
+        />
+      ),
     },
     {
       title: "Content Block Three",
-      defaultValue: "#### Default value three",
-      additionalContent: <span>Component test two</span>,
+      defaultValue: "",
+      placeholder:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
     },
   ],
   onEditorChange: (markdown) => action("onChange")(markdown),
@@ -75,6 +84,9 @@ Template.args = {
     action("onEditorUploadImage")(file);
 
     return URL.createObjectURL(file);
+  },
+  onSave: async (data) => {
+    action("onSave")(data);
   },
 };
 
