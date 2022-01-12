@@ -1,12 +1,12 @@
 import React from "react";
 import { screen, userEvent, within } from "@storybook/testing-library";
 import { action } from "@storybook/addon-actions";
-import { KnowledgePageCreator } from "../../components/preview-mode-controller";
+import { PageCreator } from "../../components/preview-mode-controller";
 import dayjs from "dayjs";
 
 export default {
-  title: "Modules/Preview Mode Controller/Widgets/Knowledge Page Creator",
-  component: KnowledgePageCreator,
+  title: "Modules/Preview Mode Controller/Widgets/Page Creator",
+  component: PageCreator,
   parameters: {
     layout: "centered",
   },
@@ -16,7 +16,7 @@ const callbackDelay = process.env.NODE_ENV === "test" ? 0 : 1000;
 const inputDelay = process.env.NODE_ENV === "test" ? 0 : 100;
 
 function Template(args) {
-  return <KnowledgePageCreator {...args} />;
+  return <PageCreator {...args} />;
 }
 
 Template.args = {
@@ -29,6 +29,7 @@ Template.args = {
       }, callbackDelay);
     });
   },
+  userFacing: true,
 };
 
 export const Closed = {
@@ -40,9 +41,7 @@ export const InitialOpen = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(
-      canvas.getByRole("button", { name: /create knowledge page/i })
-    );
+    await userEvent.click(canvas.getByRole("button", { name: /create page/i }));
   },
 };
 
@@ -52,12 +51,12 @@ export const WithValidFormData = {
     await InitialOpen.play(context);
 
     const dialog = await screen.findByRole("dialog", {
-      name: /create knowledge/i,
+      name: /create page/i,
     });
 
     await userEvent.type(
       within(dialog).getByLabelText(/title/i),
-      "Test Knowledge Page",
+      "Test Page Title",
       {
         delay: inputDelay,
       }
@@ -87,12 +86,12 @@ export const WithInvalidFormData = {
     await InitialOpen.play(context);
 
     const dialog = await screen.findByRole("dialog", {
-      name: /create knowledge/i,
+      name: /create page/i,
     });
 
     await userEvent.type(
       within(dialog).getByLabelText(/title/i),
-      "Test Knowledge Page*",
+      "Test Page Title*",
       {
         delay: inputDelay,
       }
@@ -129,7 +128,7 @@ export const Submitting = {
     await WithValidFormData.play(context);
 
     const dialog = screen.getByRole("dialog", {
-      name: /create knowledge/i,
+      name: /create page/i,
     });
 
     await userEvent.click(
@@ -148,6 +147,7 @@ export const WithSubmissionSuccess = {
 export const WithSubmissionError = {
   ...Template,
   args: {
+    ...Template.args,
     onSubmit: async (formData) => {
       action("onSubmit")(formData);
 

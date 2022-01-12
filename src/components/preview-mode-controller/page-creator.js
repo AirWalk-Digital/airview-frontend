@@ -22,7 +22,7 @@ import {
   WidgetDialogActions,
 } from "./widget-dialog";
 
-function KnowledgePageCreatorBase({
+function PageCreatorBase({
   onSubmit,
   initialData,
   presentErrorsOnMount = false,
@@ -58,7 +58,7 @@ function KnowledgePageCreatorBase({
 
   const [state, setState] = useState({ ...initialState });
 
-  const styles = useKnowledgePageCreatorStyles();
+  const styles = usePageCreatorStyles();
 
   const handleOnTitleChange = (event) => {
     const value = event.target.value.trimStart();
@@ -129,21 +129,11 @@ function KnowledgePageCreatorBase({
       : true;
   };
 
-  // const validateUserFacing = () => {
-  //   return typeof state.formData.userFacing === "undefined" ||
-  //     state.formData.userFacing === null
-  //     ? false
-  //     : true;
-  // };
-
   const validateForm = () => {
     if (!state.shouldValidate) return;
 
     const title = validateTitle();
     const reviewDate = validateReviewDate();
-    //const userFacing = validateUserFacing();
-
-    // const formValid = title && reviewDate && userFacing;
     const formValid = title && reviewDate;
 
     setState((prevState) => ({
@@ -152,7 +142,6 @@ function KnowledgePageCreatorBase({
         ...prevState.formErrors,
         title: !title,
         reviewDate: !reviewDate,
-        //userFacing: !userFacing,
       },
       formValid,
       shouldValidate: false,
@@ -336,7 +325,7 @@ function KnowledgePageCreatorBase({
   );
 }
 
-const useKnowledgePageCreatorStyles = makeStyles(() => ({
+const usePageCreatorStyles = makeStyles(() => ({
   dialogContainer: {
     position: "relative",
   },
@@ -345,7 +334,7 @@ const useKnowledgePageCreatorStyles = makeStyles(() => ({
   },
 }));
 
-KnowledgePageCreatorBase.propTypes = {
+PageCreatorBase.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   initialData: PropTypes.shape({
     title: PropTypes.string.isRequired,
@@ -361,7 +350,7 @@ KnowledgePageCreatorBase.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-export function KnowledgePageCreator({ onSubmit, userFacing }) {
+export function PageCreator({ onSubmit, userFacing }) {
   const initialData = {
     title: "",
     reviewDate: dayjs().add(6, "month").toISOString(),
@@ -369,7 +358,7 @@ export function KnowledgePageCreator({ onSubmit, userFacing }) {
   };
 
   return (
-    <KnowledgePageCreatorBase
+    <PageCreatorBase
       widgetDialogTitle="Create Page"
       widgetButtonTitle="Create Page"
       widgetButtonIcon={<InsertDriveFileIcon />}
@@ -380,17 +369,20 @@ export function KnowledgePageCreator({ onSubmit, userFacing }) {
   );
 }
 
-KnowledgePageCreator.propTypes = {
+PageCreator.propTypes = {
   /**
-   * Fired when a user requests to create a Knowledge Page. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:object) => Promise.resolve() || Promise.reject(errorMessage: String)`
+   * Fired when a user requests to create a Page. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:object) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
+  /**
+   * Pass a boolean to set a default value for the user facing form value or pass undefined to not render the form input
+   */
   userFacing: PropTypes.bool,
 };
 
-export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
+export function PageMetaEditor({ onSubmit, initialData, disabled }) {
   return (
-    <KnowledgePageCreatorBase
+    <PageCreatorBase
       widgetDialogTitle="Edit Page Meta Data"
       widgetButtonTitle="Edit Page Meta Data"
       widgetButtonIcon={<ListIcon />}
@@ -402,7 +394,7 @@ export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
   );
 }
 
-KnowledgePageMetaEditor.propTypes = {
+PageMetaEditor.propTypes = {
   /**
    * Sets the widget to a disabled state
    */
@@ -412,7 +404,7 @@ KnowledgePageMetaEditor.propTypes = {
    */
   onSubmit: PropTypes.func.isRequired,
   /**
-   * Requied form data to pre-populate the form **Note:** `reviewDate` should be ISO date string
+   * Requied form data to pre-populate the form **Note:** `reviewDate` should be ISO date string. Pass a boolean to set a default value for the user facing form value or pass undefined to not render the form input
    */
   initialData: PropTypes.shape({
     title: PropTypes.string.isRequired,
