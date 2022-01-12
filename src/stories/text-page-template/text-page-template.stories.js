@@ -1,4 +1,5 @@
 import React from "react";
+import dayjs from "dayjs";
 import { Title, ArgsTable } from "@storybook/addon-docs";
 import { action } from "@storybook/addon-actions";
 import { makeStyles } from "@material-ui/core/styles";
@@ -79,14 +80,59 @@ Template.args = {
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
     },
   ],
-  onEditorChange: (markdown) => action("onChange")(markdown),
   onEditorUploadImage: async (file) => {
     action("onEditorUploadImage")(file);
 
     return URL.createObjectURL(file);
   },
-  onSave: async (data) => {
-    action("onSave")(data);
+  previewModeController: true,
+  workingRepo: "test-org/test-repository",
+  workingBranch: "development",
+  baseBranch: "main",
+  branches: [
+    { name: "main", protected: true },
+    { name: "development", protected: false },
+  ],
+  pageMetaData: {
+    title: "Text Page Template",
+    reviewDate: dayjs().add(1, "month").toISOString(),
+    userFacing: true,
+  },
+  applications: [
+    {
+      name: "Application One",
+      id: 1,
+    },
+    {
+      name: "Application Two",
+      id: 2,
+    },
+  ],
+  applicationTypes: [
+    {
+      name: "Type One",
+      id: 1,
+    },
+    {
+      name: "Type Two",
+      id: 2,
+    },
+  ],
+  environments: [
+    {
+      name: "Environment One",
+      id: 1,
+    },
+    {
+      name: "Environment Two",
+      id: 2,
+    },
+  ],
+  referenceTypes: ["type_one", "type_two"],
+  onRequestToCreatePullRequest: async (from, to) => {
+    action("onRequestToCreatePullRequest")(from, to);
+
+    return Promise.resolve("https://github.com");
   },
 };
 

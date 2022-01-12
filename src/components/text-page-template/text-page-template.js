@@ -9,12 +9,13 @@ import { Menu } from "../menu";
 import { MarkdownContent } from "../markdown-content";
 import {
   PreviewModeController,
-  //BranchSwitcher,
-  //BranchCreator,
-  //KnowledgePageCreator,
-  //KnowledgePageMetaEditor,
+  BranchSwitcher,
+  BranchCreator,
+  KnowledgePageCreator,
+  KnowledgePageMetaEditor,
   ContentCommitter,
-  //PullRequestCreator,
+  PullRequestCreator,
+  ApplicationCreator,
 } from "../preview-mode-controller";
 
 /*
@@ -37,9 +38,29 @@ export function TextPageTemplate({
   breadcrumbLinks,
   mainContent,
   onEditorUploadImage,
-  onSave,
   asideAndMain = true,
   tableOfContents = true,
+  previewModeController = true,
+  onTogglePreviewMode,
+  workingRepo,
+  workingBranch,
+  baseBranch,
+  branches,
+  onSave,
+  onRequestToSwitchBranch,
+  onRequestToCreateBranch,
+  onRequestToCreatePage,
+  onRequestToEditPageMetaData,
+  onRequestToCreatePullRequest,
+  onRequestToCreateApplication,
+  pageCreatorWidget = true,
+  pageMetaEditorWidget = true,
+  applicationEditorWidget = true,
+  pageMetaData,
+  applicationTypes,
+  applications,
+  environments,
+  referenceTypes,
 }) {
   const styles = useStyles();
   const editorRef = useRef();
@@ -74,7 +95,10 @@ export function TextPageTemplate({
 
   const handleOnSave = async (commitMessage) => {
     try {
-      await onSave({ edits: editorChanges.current, commitMessage });
+      await onSave({
+        edits: editorChanges.current,
+        commitMessage,
+      });
       editorChanges.current = [];
       setCanSave(false);
     } catch (error) {
@@ -97,17 +121,47 @@ export function TextPageTemplate({
         breadcrumbLinks,
       }}
     >
-      <PreviewModeController
-        enabled={previewMode}
-        loading={loading}
-        onToggle={() => {}}
-        branches={[{ name: "main", protected: false }]}
-        workingRepo="test-org/test-repository"
-        workingBranch="main"
-        baseBranch="main"
-      >
-        <ContentCommitter disabled={!canSave} onSubmit={handleOnSave} />
-      </PreviewModeController>
+      {previewModeController && (
+        <PreviewModeController
+          enabled={previewMode}
+          loading={loading}
+          onToggle={onTogglePreviewMode}
+          branches={branches}
+          workingRepo={workingRepo}
+          workingBranch={workingBranch}
+          baseBranch={baseBranch}
+        >
+          <BranchSwitcher onSubmit={onRequestToSwitchBranch} />
+          <BranchCreator onSubmit={onRequestToCreateBranch} />
+
+          {pageCreatorWidget && (
+            <KnowledgePageCreator onSubmit={onRequestToCreatePage} />
+          )}
+
+          {pageMetaEditorWidget && (
+            <KnowledgePageMetaEditor
+              onSubmit={onRequestToEditPageMetaData}
+              initialData={pageMetaData}
+              disabled={canSave}
+            />
+          )}
+
+          {applicationEditorWidget && (
+            <ApplicationCreator
+              {...{
+                applicationTypes,
+                applications,
+                environments,
+                referenceTypes,
+              }}
+              onSubmit={onRequestToCreateApplication}
+            />
+          )}
+
+          <ContentCommitter disabled={!canSave} onSubmit={handleOnSave} />
+          <PullRequestCreator onSubmit={onRequestToCreatePullRequest} />
+        </PreviewModeController>
+      )}
 
       <Container>
         <Grid
@@ -201,9 +255,29 @@ TextPageTemplate.propTypes = {
   previewMode: PropTypes.bool.isRequired,
   breadcrumbLinks: PropTypes.array.isRequired,
   mainContent: PropTypes.array.isRequired,
-  onEditorChange: PropTypes.func.isRequired,
-  onEditorUploadImage: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
+  onEditorChange: PropTypes.func,
+  onEditorUploadImage: PropTypes.func,
+  onSave: PropTypes.func,
+  onTogglePreviewMode: PropTypes.func,
   asideAndMain: PropTypes.bool,
   tableOfContents: PropTypes.bool,
+  onRequestToSwitchBranch: PropTypes.func,
+  onRequestToCreateBranch: PropTypes.func,
+  onRequestToCreatePage: PropTypes.func,
+  onRequestToEditPageMetaData: PropTypes.func,
+  onRequestToCreatePullRequest: PropTypes.func,
+  onRequestToCreateApplication: PropTypes.func,
+  previewModeController: PropTypes.bool,
+  workingRepo: PropTypes.string,
+  workingBranch: PropTypes.string,
+  baseBranch: PropTypes.string,
+  branches: PropTypes.array,
+  pageCreatorWidget: PropTypes.bool,
+  pageMetaEditorWidget: PropTypes.bool,
+  applicationEditorWidget: PropTypes.bool,
+  pageMetaData: PropTypes.object,
+  applicationTypes: PropTypes.array,
+  applications: PropTypes.array,
+  environments: PropTypes.array,
+  referenceTypes: PropTypes.array,
 };
