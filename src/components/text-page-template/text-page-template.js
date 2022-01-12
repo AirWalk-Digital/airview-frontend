@@ -11,8 +11,8 @@ import {
   PreviewModeController,
   BranchSwitcher,
   BranchCreator,
-  KnowledgePageCreator,
-  KnowledgePageMetaEditor,
+  PageCreator,
+  PageMetaEditor,
   ContentCommitter,
   PullRequestCreator,
   ApplicationCreator,
@@ -136,14 +136,14 @@ export function TextPageTemplate({
           <BranchCreator onSubmit={onRequestToCreateBranch} />
 
           {pageCreatorWidget && (
-            <KnowledgePageCreator
+            <PageCreator
               onSubmit={onRequestToCreatePage}
               userFacing={pageCreatorWidgetUserFacing}
             />
           )}
 
           {pageMetaEditorWidget && (
-            <KnowledgePageMetaEditor
+            <PageMetaEditor
               onSubmit={onRequestToEditPageMetaData}
               initialData={pageMetaData}
               disabled={canSave}
