@@ -98,6 +98,7 @@ Template.args = {
     reviewDate: dayjs().add(1, "month").toISOString(),
     userFacing: true,
   },
+  pageCreatorWidgetUserFacing: true,
   applications: [
     {
       name: "Application One",

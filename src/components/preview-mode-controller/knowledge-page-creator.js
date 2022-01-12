@@ -129,21 +129,22 @@ function KnowledgePageCreatorBase({
       : true;
   };
 
-  const validateUserFacing = () => {
-    return typeof state.formData.userFacing === "undefined" ||
-      state.formData.userFacing === null
-      ? false
-      : true;
-  };
+  // const validateUserFacing = () => {
+  //   return typeof state.formData.userFacing === "undefined" ||
+  //     state.formData.userFacing === null
+  //     ? false
+  //     : true;
+  // };
 
   const validateForm = () => {
     if (!state.shouldValidate) return;
 
     const title = validateTitle();
     const reviewDate = validateReviewDate();
-    const userFacing = validateUserFacing();
+    //const userFacing = validateUserFacing();
 
-    const formValid = title && reviewDate && userFacing;
+    // const formValid = title && reviewDate && userFacing;
+    const formValid = title && reviewDate;
 
     setState((prevState) => ({
       ...prevState,
@@ -151,7 +152,7 @@ function KnowledgePageCreatorBase({
         ...prevState.formErrors,
         title: !title,
         reviewDate: !reviewDate,
-        userFacing: !userFacing,
+        //userFacing: !userFacing,
       },
       formValid,
       shouldValidate: false,
@@ -286,19 +287,21 @@ function KnowledgePageCreatorBase({
             />
           </MuiPickersUtilsProvider>
 
-          <FormControl margin="normal">
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={state.formData.userFacing}
-                  onChange={handleOnUserFacingChange}
-                  name="userFacing"
-                />
-              }
-              disabled={state.working}
-              label="User Facing"
-            />
-          </FormControl>
+          {initialData?.userFacing !== undefined ? (
+            <FormControl margin="normal">
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={state.formData.userFacing}
+                    onChange={handleOnUserFacingChange}
+                    name="userFacing"
+                  />
+                }
+                disabled={state.working}
+                label="User Facing"
+              />
+            </FormControl>
+          ) : null}
         </WidgetDialogContent>
 
         <WidgetDialogActions>
@@ -347,7 +350,7 @@ KnowledgePageCreatorBase.propTypes = {
   initialData: PropTypes.shape({
     title: PropTypes.string.isRequired,
     reviewDate: PropTypes.string.isRequired,
-    userFacing: PropTypes.bool.isRequired,
+    userFacing: PropTypes.bool,
   }).isRequired,
   widgetDialogTitle: PropTypes.string.isRequired,
   widgetButtonIcon: PropTypes.node.isRequired,
@@ -358,20 +361,20 @@ KnowledgePageCreatorBase.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-export function KnowledgePageCreator({ onSubmit }) {
+export function KnowledgePageCreator({ onSubmit, userFacing }) {
   const initialData = {
     title: "",
     reviewDate: dayjs().add(6, "month").toISOString(),
-    userFacing: false,
+    userFacing,
   };
 
   return (
     <KnowledgePageCreatorBase
-      widgetDialogTitle="Create Knowledge Page"
-      widgetButtonTitle="Create Knowledge Page"
+      widgetDialogTitle="Create Page"
+      widgetButtonTitle="Create Page"
       widgetButtonIcon={<InsertDriveFileIcon />}
       submitButtonLabel="Create"
-      id="knowledge-page-creator"
+      id="page-creator"
       {...{ onSubmit, initialData }}
     />
   );
@@ -382,17 +385,18 @@ KnowledgePageCreator.propTypes = {
    * Fired when a user requests to create a Knowledge Page. Expects the return of a resolved or rejected promise, resolve with no arguments or reject with an error message (String). **Signature:** `function(formData:object) => Promise.resolve() || Promise.reject(errorMessage: String)`
    */
   onSubmit: PropTypes.func.isRequired,
+  userFacing: PropTypes.bool,
 };
 
 export function KnowledgePageMetaEditor({ onSubmit, initialData, disabled }) {
   return (
     <KnowledgePageCreatorBase
-      widgetDialogTitle="Edit Knowledge Page Meta Data"
-      widgetButtonTitle="Edit Knowledge Page Meta Data"
+      widgetDialogTitle="Edit Page Meta Data"
+      widgetButtonTitle="Edit Page Meta Data"
       widgetButtonIcon={<ListIcon />}
       submitButtonLabel="Save"
       presentErrorsOnMount={true}
-      id="knowledge-page-meta-editor"
+      id="page-meta-editor"
       {...{ onSubmit, initialData, disabled }}
     />
   );
@@ -413,6 +417,6 @@ KnowledgePageMetaEditor.propTypes = {
   initialData: PropTypes.shape({
     title: PropTypes.string.isRequired,
     reviewDate: PropTypes.string.isRequired,
-    userFacing: PropTypes.bool.isRequired,
+    userFacing: PropTypes.bool,
   }).isRequired,
 };

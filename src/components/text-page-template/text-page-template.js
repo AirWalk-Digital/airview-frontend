@@ -54,6 +54,7 @@ export function TextPageTemplate({
   onRequestToCreatePullRequest,
   onRequestToCreateApplication,
   pageCreatorWidget = true,
+  pageCreatorWidgetUserFacing = true,
   pageMetaEditorWidget = true,
   applicationEditorWidget = true,
   pageMetaData,
@@ -135,7 +136,10 @@ export function TextPageTemplate({
           <BranchCreator onSubmit={onRequestToCreateBranch} />
 
           {pageCreatorWidget && (
-            <KnowledgePageCreator onSubmit={onRequestToCreatePage} />
+            <KnowledgePageCreator
+              onSubmit={onRequestToCreatePage}
+              userFacing={pageCreatorWidgetUserFacing}
+            />
           )}
 
           {pageMetaEditorWidget && (
@@ -273,6 +277,7 @@ TextPageTemplate.propTypes = {
   baseBranch: PropTypes.string,
   branches: PropTypes.array,
   pageCreatorWidget: PropTypes.bool,
+  pageCreatorWidgetUserFacing: PropTypes.bool,
   pageMetaEditorWidget: PropTypes.bool,
   applicationEditorWidget: PropTypes.bool,
   pageMetaData: PropTypes.object,
