@@ -18,14 +18,7 @@ import {
   ApplicationCreator,
 } from "../preview-mode-controller";
 
-/*
-To do
-- PropTypes
-- Solution for PreviewModeController
-*/
-
 export function TextPageTemplate({
-  relatedContent,
   currentRoute,
   pageTitle,
   siteTitle,
@@ -36,32 +29,9 @@ export function TextPageTemplate({
   onQueryChange,
   previewMode,
   breadcrumbLinks,
-  mainContent,
-  onEditorUploadImage,
-  asideAndMain = true,
-  tableOfContents = true,
-  previewModeController = true,
-  onTogglePreviewMode,
-  workingRepo,
-  workingBranch,
-  baseBranch,
-  branches,
-  onSave,
-  onRequestToSwitchBranch,
-  onRequestToCreateBranch,
-  onRequestToCreatePage,
-  onRequestToEditPageMetaData,
-  onRequestToCreatePullRequest,
-  onRequestToCreateApplication,
-  pageCreatorWidget = true,
-  pageCreatorWidgetUserFacing = true,
-  pageMetaEditorWidget = true,
-  applicationEditorWidget = true,
-  pageMetaData,
-  applicationTypes,
-  applications,
-  environments,
-  referenceTypes,
+  mainContentProps,
+  asideContentProps,
+  previewModeControllerProps,
 }) {
   const styles = useStyles();
   const editorRef = useRef();
@@ -82,10 +52,10 @@ export function TextPageTemplate({
     }
 
     setCanSave(false);
-  }, [mainContent]);
+  }, [mainContentProps]);
 
   const handleOnEditorChange = ({ markdown, index }) => {
-    if (mainContent[index]?.defaultValue === markdown) {
+    if (mainContentProps?.content[index].defaultValue === markdown) {
       setCanSave(false);
     } else {
       setCanSave(true);
@@ -96,7 +66,7 @@ export function TextPageTemplate({
 
   const handleOnSave = async (commitMessage) => {
     try {
-      await onSave({
+      await previewModeControllerProps.onSave({
         edits: editorChanges.current,
         commitMessage,
       });
@@ -110,60 +80,57 @@ export function TextPageTemplate({
   return (
     <LayoutBase
       {...{
-        currentRoute,
+        loading,
+        previewMode,
         pageTitle,
         siteTitle,
         version,
         logoSrc,
         navItems,
-        loading,
         onQueryChange,
-        previewMode,
+        currentRoute,
         breadcrumbLinks,
       }}
     >
-      {previewModeController && (
+      {previewModeControllerProps && (
         <PreviewModeController
           enabled={previewMode}
           loading={loading}
-          onToggle={onTogglePreviewMode}
-          branches={branches}
-          workingRepo={workingRepo}
-          workingBranch={workingBranch}
-          baseBranch={baseBranch}
+          onToggle={previewModeControllerProps.onToggle}
+          branches={previewModeControllerProps.branches}
+          workingRepo={previewModeControllerProps.workingRepo}
+          workingBranch={previewModeControllerProps.workingBranch}
+          baseBranch={previewModeControllerProps.baseBranch}
         >
-          <BranchSwitcher onSubmit={onRequestToSwitchBranch} />
-          <BranchCreator onSubmit={onRequestToCreateBranch} />
+          <BranchSwitcher
+            onSubmit={previewModeControllerProps.onRequestToSwitchBranch}
+          />
+          <BranchCreator
+            onSubmit={previewModeControllerProps.onRequestToCreateBranch}
+          />
 
-          {pageCreatorWidget && (
-            <PageCreator
-              onSubmit={onRequestToCreatePage}
-              userFacing={pageCreatorWidgetUserFacing}
-            />
+          {previewModeControllerProps?.pageCreatorProps && (
+            <PageCreator {...previewModeControllerProps.pageCreatorProps} />
           )}
 
-          {pageMetaEditorWidget && (
+          {previewModeControllerProps?.pageMetaEditorProps && (
             <PageMetaEditor
-              onSubmit={onRequestToEditPageMetaData}
-              initialData={pageMetaData}
+              {...previewModeControllerProps.pageMetaEditorProps}
               disabled={canSave}
             />
           )}
 
-          {applicationEditorWidget && (
+          {previewModeControllerProps?.applicationCreatorProps && (
             <ApplicationCreator
-              {...{
-                applicationTypes,
-                applications,
-                environments,
-                referenceTypes,
-              }}
-              onSubmit={onRequestToCreateApplication}
+              {...previewModeControllerProps.applicationCreatorProps}
             />
           )}
 
           <ContentCommitter disabled={!canSave} onSubmit={handleOnSave} />
-          <PullRequestCreator onSubmit={onRequestToCreatePullRequest} />
+
+          <PullRequestCreator
+            onSubmit={previewModeControllerProps.onRequestToCreatePullRequest}
+          />
         </PreviewModeController>
       )}
 
@@ -174,7 +141,7 @@ export function TextPageTemplate({
           spacing={2}
           className={styles.gridContainerRoot}
         >
-          <Grid item xs={12} sm={asideAndMain ? 8 : 12} component="main">
+          <Grid item xs={12} sm={asideContentProps ? 8 : 12} component="main">
             {!loading && (
               <Typography variant="h1" paragraph>
                 {pageTitle}
@@ -184,13 +151,12 @@ export function TextPageTemplate({
               loading={loading}
               readOnly={!previewMode}
               onChange={handleOnEditorChange}
-              onUploadImage={onEditorUploadImage}
-              content={mainContent}
               ref={editorRef}
+              {...mainContentProps}
             />
           </Grid>
 
-          {asideAndMain && (
+          {asideContentProps && (
             <Grid
               item
               xs={12}
@@ -199,17 +165,16 @@ export function TextPageTemplate({
               component="aside"
               className={styles.asideContainer}
             >
-              {relatedContent && (
+              {asideContentProps?.relatedContent && (
                 <Menu
                   loading={loading}
-                  menuTitle={relatedContent.title}
-                  menuItems={relatedContent.links}
                   initialCollapsed
                   id="related-content"
+                  {...asideContentProps.relatedContent}
                 />
               )}
 
-              {tableOfContents &&
+              {asideContentProps?.tableOfContents &&
                 tableOfContentsData.length > 0 &&
                 !previewMode && (
                   <Menu
@@ -239,15 +204,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 TextPageTemplate.propTypes = {
-  relatedContent: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    links: PropTypes.arrayOf(
-      PropTypes.shape({
-        label: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-  }),
   currentRoute: PropTypes.string.isRequired,
   pageTitle: PropTypes.string.isRequired,
   siteTitle: PropTypes.string.isRequired,
@@ -258,31 +214,80 @@ TextPageTemplate.propTypes = {
   onQueryChange: PropTypes.func.isRequired,
   previewMode: PropTypes.bool.isRequired,
   breadcrumbLinks: PropTypes.array.isRequired,
-  mainContent: PropTypes.array.isRequired,
-  onEditorChange: PropTypes.func,
-  onEditorUploadImage: PropTypes.func,
-  onSave: PropTypes.func,
-  onTogglePreviewMode: PropTypes.func,
-  asideAndMain: PropTypes.bool,
-  tableOfContents: PropTypes.bool,
-  onRequestToSwitchBranch: PropTypes.func,
-  onRequestToCreateBranch: PropTypes.func,
-  onRequestToCreatePage: PropTypes.func,
-  onRequestToEditPageMetaData: PropTypes.func,
-  onRequestToCreatePullRequest: PropTypes.func,
-  onRequestToCreateApplication: PropTypes.func,
-  previewModeController: PropTypes.bool,
-  workingRepo: PropTypes.string,
-  workingBranch: PropTypes.string,
-  baseBranch: PropTypes.string,
-  branches: PropTypes.array,
-  pageCreatorWidget: PropTypes.bool,
-  pageCreatorWidgetUserFacing: PropTypes.bool,
-  pageMetaEditorWidget: PropTypes.bool,
-  applicationEditorWidget: PropTypes.bool,
-  pageMetaData: PropTypes.object,
-  applicationTypes: PropTypes.array,
-  applications: PropTypes.array,
-  environments: PropTypes.array,
-  referenceTypes: PropTypes.array,
+
+  mainContentProps: PropTypes.shape({
+    onUploadImage: PropTypes.func,
+    content: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        placeholder: PropTypes.string.isRequired,
+        defaultValue: PropTypes.string,
+        additionalContent: PropTypes.node,
+      })
+    ),
+  }),
+
+  asideContentProps: PropTypes.shape({
+    relatedContent: PropTypes.shape({
+      menuTitle: PropTypes.string.isRequired,
+      menuItems: PropTypes.arrayOf(
+        PropTypes.shape({
+          label: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+        })
+      ),
+    }),
+    tableOfContents: PropTypes.bool.isRequired,
+  }),
+
+  previewModeControllerProps: PropTypes.shape({
+    branches: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        protected: PropTypes.bool,
+      })
+    ).isRequired,
+    workingRepo: PropTypes.string.isRequired,
+    workingBranch: PropTypes.string.isRequired,
+    baseBranch: PropTypes.string.isRequired,
+    onToggle: PropTypes.func,
+    onRequestToSwitchBranch: PropTypes.func.isRequired,
+    onRequestToCreateBranch: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onRequestToCreatePullRequest: PropTypes.func.isRequired,
+    pageCreatorProps: PropTypes.shape({
+      onSubmit: PropTypes.func.isRequired,
+      userFacing: PropTypes.bool,
+    }),
+    pageMetaEditorProps: PropTypes.shape({
+      initialData: PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        reviewDate: PropTypes.string.isRequired,
+        userFacing: PropTypes.bool,
+      }).isRequired,
+      onSubmit: PropTypes.func.isRequired,
+    }),
+    applicationCreatorProps: PropTypes.shape({
+      applicationTypes: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          id: PropTypes.number.isRequired,
+        })
+      ).isRequired,
+      applications: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          id: PropTypes.number.isRequired,
+        })
+      ).isRequired,
+      environments: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          id: PropTypes.number.isRequired,
+        })
+      ).isRequired,
+      referenceTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+      onSubmit: PropTypes.func.isRequired,
+    }),
+  }),
 };

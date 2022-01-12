@@ -42,49 +42,133 @@ function Template(args) {
 }
 
 Template.args = {
-  relatedContent: {
-    title: "Related Content",
-    links: [
+  mainContentProps: {
+    onUploadImage: async (file) => {
+      action("onUploadImage")(file);
+
+      return URL.createObjectURL(file);
+    },
+    content: [
       {
-        label: "Related Link Item One",
-        url: "/",
+        title: "Content Block One",
+        placeholder:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
       },
       {
-        label: "Related Link Item Two",
-        url: "/",
+        title: "Content Block Two",
+        defaultValue: `#### Some default title and content \n Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?`,
+        placeholder:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
+        additionalContent: (
+          <Message
+            title="Injected component"
+            message="This component has been injected into the main content"
+          />
+        ),
+      },
+      {
+        title: "Content Block Three",
+        defaultValue: "",
+        placeholder:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
       },
     ],
   },
-  mainContent: [
-    {
-      title: "Content Block One",
-      placeholder:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
+  asideContentProps: {
+    relatedContent: {
+      menuTitle: "Related Content",
+      menuItems: [
+        {
+          label: "Related Link Item One",
+          url: "/",
+        },
+        {
+          label: "Related Link Item Two",
+          url: "/",
+        },
+      ],
     },
-    {
-      title: "Content Block Two",
-      defaultValue: `#### Some default title and content \n Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?`,
-      placeholder:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
-      additionalContent: (
-        <Message
-          title="Injected component"
-          message="This component has been injected into the main content"
-        />
-      ),
-    },
-    {
-      title: "Content Block Three",
-      defaultValue: "",
-      placeholder:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
-    },
-  ],
-  onEditorUploadImage: async (file) => {
-    action("onEditorUploadImage")(file);
-
-    return URL.createObjectURL(file);
+    tableOfContents: true,
   },
+  previewModeControllerProps: {
+    branches: [
+      { name: "main", protected: true },
+      { name: "development", protected: false },
+    ],
+    workingRepo: "test-org/test-repository",
+    workingBranch: "development",
+    baseBranch: "main",
+    onToggle: () => {
+      action("onTogglePreviewMode")();
+    },
+    onRequestToSwitchBranch: async (branchName) => {
+      action("onRequestToSwitchBranch")(branchName);
+    },
+    onRequestToCreateBranch: async (branchName) => {
+      action("onRequestToCreateBranch")(branchName);
+    },
+    onSave: async (data) => {
+      action("onSave")(data);
+    },
+    onRequestToCreatePullRequest: async (fromBranch, toBranch) => {
+      action("onRequestToCreatePullRequest")(fromBranch, toBranch);
+
+      return Promise.resolve("https://github.com");
+    },
+    pageCreatorProps: {
+      onSubmit: async (formData) => {
+        action("onSubmit")(formData);
+      },
+      userFacing: true,
+    },
+    pageMetaEditorProps: {
+      initialData: {
+        title: "Test Page Name",
+        reviewDate: dayjs().add(1, "month").toISOString(),
+        userFacing: true,
+      },
+      onSubmit: async (formData) => {
+        action("onSubmit")(formData);
+      },
+    },
+    applicationCreatorProps: {
+      applications: [
+        {
+          name: "Application One",
+          id: 1,
+        },
+        {
+          name: "Application Two",
+          id: 2,
+        },
+      ],
+      applicationTypes: [
+        {
+          name: "Type One",
+          id: 1,
+        },
+        {
+          name: "Type Two",
+          id: 2,
+        },
+      ],
+      environments: [
+        {
+          name: "Environment One",
+          id: 1,
+        },
+        {
+          name: "Environment Two",
+          id: 2,
+        },
+      ],
+      referenceTypes: ["type_one", "type_two"],
+      onSubmit: async (formData) => {
+        action("onSubmit")(formData);
+      },
+    },
+  },
+  /*
   previewModeController: true,
   workingRepo: "test-org/test-repository",
   workingBranch: "development",
@@ -135,6 +219,7 @@ Template.args = {
 
     return Promise.resolve("https://github.com");
   },
+  */
 };
 
 export const Default = {
