@@ -4,7 +4,7 @@ import isEmpty from "lodash/isEmpty";
 import { default as slugger } from "slug";
 import * as matter from "gray-matter";
 import siteConfig from "../../site-config.json";
-import { ApplicationsTemplate } from "../../components/applications-template";
+import { TextPageTemplate } from "../../components/text-page-template";
 import { useNav } from "../../hooks/use-nav";
 import { useController } from "../../hooks/use-controller";
 import { useResetScroll } from "../../hooks/useResetScroll/use-reset-scroll";
@@ -14,6 +14,19 @@ import { useApiService } from "../../hooks/use-api-service/use-api-service";
 import { useQuery } from "../../hooks/use-query";
 import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
 import { useSearch } from "../../hooks/use-search";
+import { ComplianceTable } from "../../components/compliance-table";
+import { ControlOverview } from "../../components/control-overview";
+
+/*
+Observations:
+- How to get to microsoft teams dummy data application (applications/microsoft_teams)
+- How to view an application table with data within /applications
+Bugs:
+- Table of contents link opens in new tab
+- Title property of markdown content should be optional
+- Components passed to mainContent need margin to space out
+- various prop-type errors
+*/
 
 export function ApplicationsPage() {
   const [state, setState] = useState({
@@ -352,8 +365,6 @@ export function ApplicationsPage() {
             `${application_id}/_index.md`
           );
 
-          console.log("markdown response", markdownResponse);
-
           bodyContent = await resolveInbound(
             markdownResponse.content,
             `${application_id}`,
@@ -486,58 +497,87 @@ export function ApplicationsPage() {
   ]);
 
   return (
-    <ApplicationsTemplate
+    <TextPageTemplate
       currentRoute={`/applications/${application_id}`}
-      siteTitle={siteConfig.siteTitle}
       pageTitle={state.pageTitle}
+      siteTitle={siteConfig.siteTitle}
       version={siteConfig.version}
       logoSrc={siteConfig.theme.logoSrc}
       navItems={navItems}
-      breadcrumbLinks={state.breadcrumbLinks}
-      bodyContent={state.bodyContent}
-      knowledgeLinks={state.knowledgeLinks}
-      complianceTableTitle={state.complianceTableTitle}
-      complianceTableApplications={state.complianceTableApplications}
-      complianceTableOnAcceptOfRisk={handleOnComplianceAcceptOfRisk}
-      complianceTableNoDataMessage={complianceTableNoDataMessage}
-      complianceTableInvalidPermissionsMessage={
-        complianceTableInvalidPermissionsMessage
-      }
-      workingRepo={controller.getWorkingRepoName("application")}
-      workingBranch={controller.getWorkingBranchName("application")}
-      branches={state.branches}
-      baseBranch={controller.getBaseBranchName("application")}
-      onRequestToSwitchBranch={(branchName) =>
-        controller.setWorkingBranchName("application", branchName)
-      }
-      onRequestToCreateBranch={(branchName) =>
-        controller.createBranch("application", branchName)
-      }
-      onRequestToCreatePullRequest={async (sourceBranch) =>
-        await controller.createPullRequest(
-          "application",
-          controller.getBaseBranchName("application"),
-          sourceBranch
-        )
-      }
-      onSave={handleOnSave}
-      applications={state.applications}
-      applicationTypes={state.applicationTypes}
-      environments={state.environments}
-      referenceTypes={state.referenceTypes}
-      onRequestToCreateApplication={handleOnRequestToCreateApplication}
-      previewMode={controller.getPreviewModeStatus()}
       loading={state.loading}
-      onTogglePreviewMode={controller.togglePreviewModeStatus}
-      onRequestToUploadImage={handleOnUploadImage}
-      onRequestToCreatePage={handleOnCreatePage}
-      controlOverviewTitle="Control Overview"
-      controlOverviewData={controlOverviewState}
-      onRequestOfControlsData={handleOnRequestOfControlsData}
-      onRequestOfResourcesData={handleOnRequestOfResourcesData}
-      onResourceExemptionDelete={() => {}}
-      onResourceExemptionSave={() => {}}
       onQueryChange={onQueryChange}
+      previewMode={controller.getPreviewModeStatus()}
+      breadcrumbLinks={state.breadcrumbLinks}
+      mainContentProps={{
+        onUploadImage: handleOnUploadImage,
+        content: [
+          {
+            defaultValue: state.bodyContent,
+            additionalContent: (
+              <>
+                <ComplianceTable
+                  title={state.complianceTableTitle}
+                  applications={state.complianceTableApplications}
+                  invalidPermissionsMessage={
+                    complianceTableInvalidPermissionsMessage
+                  }
+                  loading={state.loading}
+                  noDataMessage={complianceTableNoDataMessage}
+                  onAcceptOfRisk={handleOnComplianceAcceptOfRisk}
+                />
+                <ControlOverview
+                  loading={state.loading}
+                  title="Control Overview"
+                  data={controlOverviewState}
+                  onRequestOfControlsData={handleOnRequestOfControlsData}
+                  onRequestOfResourcesData={handleOnRequestOfResourcesData}
+                  onResourceExemptionDelete={() => {}}
+                  onResourceExemptionSave={() => {}}
+                />
+              </>
+            ),
+          },
+        ],
+      }}
+      asideContentProps={{
+        relatedContent: {
+          menuTitle: "Knowledge",
+          menuItems: state.knowledgeLinks,
+        },
+        tableOfContents: true,
+      }}
+      previewModeControllerProps={{
+        branches: state.branches,
+        workingRepo: controller.getWorkingRepoName("application"),
+        workingBranch: controller.getWorkingBranchName("application"),
+        baseBranch: controller.getBaseBranchName("application"),
+        onToggle: controller.togglePreviewModeStatus,
+        onRequestToSwitchBranch: (branchName) => {
+          controller.setWorkingBranchName("application", branchName);
+        },
+        onRequestToCreateBranch: (branchName) => {
+          controller.createBranch("application", branchName);
+        },
+        onSave: handleOnSave,
+        onRequestToCreatePullRequest: async (sourceBranch) => {
+          await controller.createPullRequest(
+            "application",
+            controller.getBaseBranchName("application"),
+            sourceBranch
+          );
+        },
+        pageCreatorProps: {
+          onSubmit: handleOnCreatePage,
+          userFacing: false,
+        },
+        applicationCreatorProps: {
+          applications: state.applications,
+          applicationTypes: state.applicationTypes,
+          environments: state.environments,
+          referenceTypes: state.referenceTypes,
+          onSubmit: handleOnRequestToCreateApplication,
+        },
+      }}
     />
   );
 }
