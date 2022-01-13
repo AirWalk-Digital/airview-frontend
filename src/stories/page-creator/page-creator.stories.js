@@ -29,7 +29,7 @@ Template.args = {
       }, callbackDelay);
     });
   },
-  userFacing: true,
+  userFacing: false,
 };
 
 export const Closed = {

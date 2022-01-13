@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { composeStories } from "@storybook/testing-react";
-import * as stories from "../stories/knowledge-page-creator/knowledge-page-creator.stories";
+import * as stories from "../stories/page-creator/page-creator.stories";
 import dayjs from "dayjs";
 
 const { WithSubmissionSuccess, WithSubmissionError } = composeStories(stories);
@@ -18,7 +18,7 @@ describe("KnowledgePageCreator", () => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
       expect(onSubmitSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          title: "Test Knowledge Page",
+          title: "Test Page Title",
           reviewDate: expect.stringContaining(
             dayjs().add(2, "day").format("YYYY-MM-DD")
           ),
