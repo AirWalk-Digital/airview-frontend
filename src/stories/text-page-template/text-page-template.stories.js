@@ -168,64 +168,28 @@ Template.args = {
       },
     },
   },
-  /*
-  previewModeController: true,
-  workingRepo: "test-org/test-repository",
-  workingBranch: "development",
-  baseBranch: "main",
-  branches: [
-    { name: "main", protected: true },
-    { name: "development", protected: false },
-  ],
-  pageMetaData: {
-    title: "Text Page Template",
-    reviewDate: dayjs().add(1, "month").toISOString(),
-    userFacing: true,
-  },
-  pageCreatorWidgetUserFacing: true,
-  applications: [
-    {
-      name: "Application One",
-      id: 1,
-    },
-    {
-      name: "Application Two",
-      id: 2,
-    },
-  ],
-  applicationTypes: [
-    {
-      name: "Type One",
-      id: 1,
-    },
-    {
-      name: "Type Two",
-      id: 2,
-    },
-  ],
-  environments: [
-    {
-      name: "Environment One",
-      id: 1,
-    },
-    {
-      name: "Environment Two",
-      id: 2,
-    },
-  ],
-  referenceTypes: ["type_one", "type_two"],
-  onRequestToCreatePullRequest: async (from, to) => {
-    action("onRequestToCreatePullRequest")(from, to);
-
-    return Promise.resolve("https://github.com");
-  },
-  */
 };
 
-export const Default = {
+export const Loading = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...LayoutBaseStories.Loading.args,
+  },
+};
+
+export const LoadedPreviewDisabled = {
   ...Template,
   args: {
     ...Template.args,
     ...LayoutBaseStories.LoadedPreviewDisabled.args,
+  },
+};
+
+export const LoadedPreviewEnabled = {
+  ...Template,
+  args: {
+    ...Template.args,
+    ...LayoutBaseStories.LoadedPreviewEnabled.args,
   },
 };
