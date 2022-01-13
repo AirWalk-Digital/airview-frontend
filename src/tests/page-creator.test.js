@@ -6,8 +6,8 @@ import dayjs from "dayjs";
 
 const { WithSubmissionSuccess, WithSubmissionError } = composeStories(stories);
 
-describe("KnowledgePageCreator", () => {
-  test("a user can create a new Knowledge page", async () => {
+describe("PageCreator", () => {
+  test("a user can create a new page", async () => {
     const onSubmitSpy = jest.spyOn(WithSubmissionSuccess.args, "onSubmit");
 
     const { container } = render(<WithSubmissionSuccess />);
