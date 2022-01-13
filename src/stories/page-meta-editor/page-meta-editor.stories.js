@@ -24,7 +24,7 @@ Template.args = {
   initialData: {
     title: "Test Page Title",
     reviewDate: dayjs().toISOString(),
-    userFacing: true,
+    userFacing: false,
   },
   onSubmit: async (formData) => {
     action("onSubmit")(formData);
