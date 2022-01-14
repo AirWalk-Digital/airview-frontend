@@ -7,12 +7,20 @@ import dayjs from "dayjs";
 import { useResetScroll } from "../../hooks/useResetScroll/use-reset-scroll";
 import { useController } from "../../hooks/use-controller";
 import siteConfig from "../../site-config.json";
-import { KnowledgeTemplate } from "../../components/knowledge-template/knowledge-template";
 import { useNav } from "../../hooks/use-nav";
 import { useResolveMarkdown } from "../../hooks/use-resolve-markdown";
 import { useQuery } from "../../hooks/use-query";
 import { useIsMounted } from "../../hooks/use-is-mounted";
 import { useSearch } from "../../hooks/use-search";
+import { TextPageTemplate } from "../../components/text-page-template";
+
+/*
+- Viewing a knowledge page (MS teams) throws 404
+- Table of contents link opens in new tab
+- Title property of markdown content should be optional
+- Components passed to mainContent need margin to space out
+- various prop-type errors
+*/
 
 export function KnowledgePage() {
   const { application_id, slug } = useParams();
@@ -319,40 +327,63 @@ export function KnowledgePage() {
   }, [pageData.shouldRefreshContent, isMounted]);
 
   return (
-    <KnowledgeTemplate
+    <TextPageTemplate
       currentRoute={`/applications/${application_id}/knowledge/${slug}`}
+      pageTitle={pageData.pageTitle}
       siteTitle={siteConfig.siteTitle}
       version={siteConfig.version}
       logoSrc={siteConfig.theme.logoSrc}
       navItems={navItems}
-      mediaPath={`/storage/applications/${application_id}/knowledge/${slug}/`}
-      workingRepo={controller.getWorkingRepoName("application")}
-      workingBranch={controller.getWorkingBranchName("application")}
-      onRequestToSwitchBranch={(branchName) =>
-        controller.setWorkingBranchName("application", branchName)
-      }
-      onRequestToCreateBranch={(branchName) =>
-        controller.createBranch("application", branchName)
-      }
-      baseBranch={controller.getBaseBranchName("application")}
-      onRequestToCreatePage={handleOnCreatePage}
-      onRequestToEditContent={() => {}}
-      onRequestToUploadImage={handleOnUploadImage}
-      previewMode={controller.getPreviewModeStatus()}
-      onTogglePreviewMode={controller.togglePreviewModeStatus}
-      onRequestToCreatePullRequest={async (sourceBranch) =>
-        await controller.createPullRequest(
-          "application",
-          controller.getBaseBranchName("application"),
-          sourceBranch
-        )
-      }
-      onSave={async (markdownData) =>
-        await onSave(markdownData, pageData.pageMetaData)
-      }
-      onRequestToEditPageMetaData={handleOnRequestToEditMetaData}
+      loading={pageData.loading}
       onQueryChange={onQueryChange}
-      {...pageData}
+      previewMode={controller.getPreviewModeStatus()}
+      breadcrumbLinks={pageData.breadcrumbLinks}
+      mainContentProps={{
+        onUploadImage: handleOnUploadImage,
+        content: [
+          {
+            defaultValue: pageData.bodyContent,
+          },
+        ],
+      }}
+      asideContentProps={{
+        relatedContent: {
+          menuTitle: "Related Knowledge",
+          menuItems: pageData.relatedKnowledge,
+        },
+        tableOfContents: true,
+      }}
+      previewModeControllerProps={{
+        branches: pageData.branches,
+        workingRepo: controller.getWorkingRepoName("application"),
+        workingBranch: controller.getWorkingBranchName("application"),
+        baseBranch: controller.getBaseBranchName("application"),
+        onToggle: controller.togglePreviewModeStatus,
+        onRequestToSwitchBranch: (branchName) => {
+          controller.setWorkingBranchName("application", branchName);
+        },
+        onRequestToCreateBranch: (branchName) => {
+          controller.createBranch("application", branchName);
+        },
+        onSave: async (markdownData) => {
+          await onSave(markdownData, pageData.pageMetaData);
+        },
+        onRequestToCreatePullRequest: async (sourceBranch) => {
+          await controller.createPullRequest(
+            "application",
+            controller.getBaseBranchName("application"),
+            sourceBranch
+          );
+        },
+        pageCreatorProps: {
+          onSubmit: handleOnCreatePage,
+          userFacing: false,
+        },
+        pageMetaEditorProps: {
+          initialData: pageData.pageMetaData,
+          onSubmit: handleOnRequestToEditMetaData,
+        },
+      }}
     />
   );
 }
