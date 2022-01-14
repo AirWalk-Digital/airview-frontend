@@ -15,7 +15,6 @@ import { useSearch } from "../../hooks/use-search";
 import { TextPageTemplate } from "../../components/text-page-template";
 
 /*
-- Viewing a knowledge page (MS teams) throws 404
 - Table of contents link opens in new tab
 - Title property of markdown content should be optional
 - Components passed to mainContent need margin to space out
