@@ -271,7 +271,7 @@ TextPageTemplate.propTypes = {
       applicationTypes: PropTypes.arrayOf(
         PropTypes.shape({
           name: PropTypes.string.isRequired,
-          id: PropTypes.number.isRequired,
+          id: PropTypes.string.isRequired,
         })
       ).isRequired,
       applications: PropTypes.arrayOf(

@@ -32,15 +32,15 @@ Template.args = {
   applicationTypes: [
     {
       name: "Application Type One",
-      id: 1,
+      id: "ONE",
     },
     {
       name: "Application Type Two",
-      id: 2,
+      id: "TWO",
     },
     {
       name: "Application Type Three",
-      id: 3,
+      id: "THREE",
     },
   ],
   environments: [
