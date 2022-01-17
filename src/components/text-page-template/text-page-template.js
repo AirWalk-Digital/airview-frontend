@@ -219,8 +219,8 @@ TextPageTemplate.propTypes = {
     onUploadImage: PropTypes.func,
     content: PropTypes.arrayOf(
       PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        placeholder: PropTypes.string.isRequired,
+        title: PropTypes.string,
+        placeholder: PropTypes.string,
         defaultValue: PropTypes.string,
         additionalContent: PropTypes.node,
       })
