@@ -16,7 +16,6 @@ import { TextPageTemplate } from "../../components/text-page-template";
 
 /*
 - Table of contents link opens in new tab
-- Title property of markdown content should be optional
 - Components passed to mainContent need margin to space out
 - various prop-type errors
 */
