@@ -21,8 +21,6 @@ import { ControlOverview } from "../../components/control-overview";
 Observations:
 - How to get to microsoft teams dummy data application (applications/microsoft_teams)
 - How to view an application table with data within /applications
-Bugs:
-- Table of contents link opens in new tab
 */
 
 export function ApplicationsPage() {

@@ -14,10 +14,6 @@ import { useIsMounted } from "../../hooks/use-is-mounted";
 import { useSearch } from "../../hooks/use-search";
 import { TextPageTemplate } from "../../components/text-page-template";
 
-/*
-- various prop-type errors
-*/
-
 export function KnowledgePage() {
   const { application_id, slug } = useParams();
   const location = useLocation();
@@ -26,6 +22,10 @@ export function KnowledgePage() {
   const [pageData, setPageData] = useState({
     loading: true,
     shouldRefreshContent: false,
+    pageTitle: "",
+    breadcrumbLinks: [],
+    relatedKnowledge: [],
+    branches: [],
   });
   const controller = useController();
   const navItems = useNav();

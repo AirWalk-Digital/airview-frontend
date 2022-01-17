@@ -102,35 +102,41 @@ export function TextPageTemplate({
           workingBranch={previewModeControllerProps.workingBranch}
           baseBranch={previewModeControllerProps.baseBranch}
         >
-          <BranchSwitcher
-            onSubmit={previewModeControllerProps.onRequestToSwitchBranch}
-          />
-          <BranchCreator
-            onSubmit={previewModeControllerProps.onRequestToCreateBranch}
-          />
+          {previewMode && (
+            <>
+              <BranchSwitcher
+                onSubmit={previewModeControllerProps.onRequestToSwitchBranch}
+              />
+              <BranchCreator
+                onSubmit={previewModeControllerProps.onRequestToCreateBranch}
+              />
 
-          {previewModeControllerProps?.pageCreatorProps && (
-            <PageCreator {...previewModeControllerProps.pageCreatorProps} />
+              {previewModeControllerProps?.pageCreatorProps && (
+                <PageCreator {...previewModeControllerProps.pageCreatorProps} />
+              )}
+
+              {previewModeControllerProps?.pageMetaEditorProps && (
+                <PageMetaEditor
+                  {...previewModeControllerProps.pageMetaEditorProps}
+                  disabled={canSave}
+                />
+              )}
+
+              {previewModeControllerProps?.applicationCreatorProps && (
+                <ApplicationCreator
+                  {...previewModeControllerProps.applicationCreatorProps}
+                />
+              )}
+
+              <ContentCommitter disabled={!canSave} onSubmit={handleOnSave} />
+
+              <PullRequestCreator
+                onSubmit={
+                  previewModeControllerProps.onRequestToCreatePullRequest
+                }
+              />
+            </>
           )}
-
-          {previewModeControllerProps?.pageMetaEditorProps && (
-            <PageMetaEditor
-              {...previewModeControllerProps.pageMetaEditorProps}
-              disabled={canSave}
-            />
-          )}
-
-          {previewModeControllerProps?.applicationCreatorProps && (
-            <ApplicationCreator
-              {...previewModeControllerProps.applicationCreatorProps}
-            />
-          )}
-
-          <ContentCommitter disabled={!canSave} onSubmit={handleOnSave} />
-
-          <PullRequestCreator
-            onSubmit={previewModeControllerProps.onRequestToCreatePullRequest}
-          />
         </PreviewModeController>
       )}
 
@@ -261,11 +267,11 @@ TextPageTemplate.propTypes = {
     }),
     pageMetaEditorProps: PropTypes.shape({
       initialData: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        reviewDate: PropTypes.string.isRequired,
+        title: PropTypes.string,
+        reviewDate: PropTypes.string,
         userFacing: PropTypes.bool,
-      }).isRequired,
-      onSubmit: PropTypes.func.isRequired,
+      }),
+      onSubmit: PropTypes.func,
     }),
     applicationCreatorProps: PropTypes.shape({
       applicationTypes: PropTypes.arrayOf(
