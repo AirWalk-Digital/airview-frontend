@@ -23,8 +23,7 @@ Observations:
 - How to view an application table with data within /applications
 Bugs:
 - Table of contents link opens in new tab
-- Components passed to mainContent need margin to space out
-- various prop-type errors
+
 */
 
 export function ApplicationsPage() {

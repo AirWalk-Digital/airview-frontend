@@ -346,6 +346,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   additionalContent: {
-    marginBottom: "1em",
+    "& > *": {
+      marginBottom: theme.spacing(2),
+    },
   },
 }));
