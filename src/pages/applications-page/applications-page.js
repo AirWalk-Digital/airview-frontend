@@ -31,7 +31,6 @@ export function ApplicationsPage() {
   const [state, setState] = useState({
     loading: true,
     pageTitle: "",
-    breadCrumbLinks: [],
     bodyContent: "",
     knowledgeLinks: [],
     complianceTableApplications: [],
@@ -377,18 +376,6 @@ export function ApplicationsPage() {
           }
         }
 
-        // Build breadcrumb data
-        const breadcrumbLinks = [
-          {
-            label: "Home",
-            url: "/",
-          },
-          {
-            label: "Applications",
-            url: `/applications`,
-          },
-        ];
-
         // Build knowledge links
         const knowledgeData = await controller.getListing(
           "application",
@@ -453,7 +440,7 @@ export function ApplicationsPage() {
           applicationId: application.id,
           branches: branches,
           pageTitle: application.name,
-          breadcrumbLinks: breadcrumbLinks,
+          //breadcrumbLinks: breadcrumbLinks,
           bodyContent: bodyContent,
           frontmatter: markdownResponse?.data,
           loading: false,
@@ -506,7 +493,16 @@ export function ApplicationsPage() {
       loading={state.loading}
       onQueryChange={onQueryChange}
       previewMode={controller.getPreviewModeStatus()}
-      breadcrumbLinks={state.breadcrumbLinks}
+      breadcrumbLinks={[
+        {
+          label: "Home",
+          url: "/",
+        },
+        {
+          label: "Applications",
+          url: `/applications`,
+        },
+      ]}
       mainContentProps={{
         onUploadImage: handleOnUploadImage,
         content: [
