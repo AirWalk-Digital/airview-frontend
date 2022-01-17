@@ -145,11 +145,11 @@ Template.args = {
       applicationTypes: [
         {
           name: "Type One",
-          id: 1,
+          id: "ONE",
         },
         {
           name: "Type Two",
-          id: 2,
+          id: "TWO",
         },
       ],
       environments: [
