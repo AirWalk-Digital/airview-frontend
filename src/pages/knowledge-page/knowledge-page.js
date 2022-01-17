@@ -15,8 +15,6 @@ import { useSearch } from "../../hooks/use-search";
 import { TextPageTemplate } from "../../components/text-page-template";
 
 /*
-- Table of contents link opens in new tab
-- Components passed to mainContent need margin to space out
 - various prop-type errors
 */
 

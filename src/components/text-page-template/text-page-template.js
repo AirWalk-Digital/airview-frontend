@@ -46,7 +46,7 @@ export function TextPageTemplate({
       setTableOfContentsData(
         headings.map((heading) => ({
           label: heading.title,
-          url: `#${heading.id}`,
+          url: `${currentRoute}/#${heading.id}`,
         }))
       );
     }

@@ -23,7 +23,6 @@ Observations:
 - How to view an application table with data within /applications
 Bugs:
 - Table of contents link opens in new tab
-
 */
 
 export function ApplicationsPage() {
