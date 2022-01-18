@@ -35,8 +35,10 @@ export const MarkdownContent = React.forwardRef(
     });
 
     const handleOnChange = (changes, index) => {
+      const regEx = new RegExp(/^\\\W*$/gm);
+
       onChange({
-        markdown: changes.includes("\\", 0) ? "" : changes,
+        markdown: regEx.test(changes) ? changes.replace(/^\\/, "") : changes,
         index,
       });
     };
