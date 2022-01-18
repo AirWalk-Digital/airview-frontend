@@ -46,7 +46,7 @@ export function KnowledgePage() {
   const onSave = async (markdownData, frontmatter) => {
     try {
       const content = await resolveOutbound({
-        markdown: markdownData.markdown,
+        markdown: markdownData,
         frontmatter,
         markdownFileName: "_index.md",
       });
@@ -362,7 +362,7 @@ export function KnowledgePage() {
           controller.createBranch("application", branchName);
         },
         onSave: async (markdownData) => {
-          await onSave(markdownData, pageData.pageMetaData);
+          await onSave(markdownData.edits[0], pageData.pageMetaData);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
           await controller.createPullRequest(
