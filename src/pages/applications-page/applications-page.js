@@ -120,7 +120,7 @@ export function ApplicationsPage() {
     }
   };
 
-  const handleOnSave = async ({ markdown }) => {
+  const onSave = async (markdown) => {
     try {
       const content = await resolveOutbound({
         markdown: markdown,
@@ -549,7 +549,9 @@ export function ApplicationsPage() {
         onRequestToCreateBranch: (branchName) => {
           controller.createBranch("application", branchName);
         },
-        onSave: handleOnSave,
+        onSave: async (markdownData) => {
+          await onSave(markdownData.edits[0]);
+        },
         onRequestToCreatePullRequest: async (sourceBranch) => {
           await controller.createPullRequest(
             "application",
