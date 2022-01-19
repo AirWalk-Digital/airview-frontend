@@ -153,6 +153,20 @@ Template.args = {
       onSubmit: async (formData) => {
         action("onSubmit")(formData);
       },
+      pageTypes: [
+        {
+          name: "Knowledge",
+          value: "knowledge",
+        },
+        {
+          name: "Design",
+          value: "design",
+        },
+        {
+          name: "Architecture",
+          value: "architecture",
+        },
+      ],
       userFacing: true,
     },
     pageMetaEditorProps: {

@@ -7,6 +7,9 @@ import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import ListIcon from "@material-ui/icons/List";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import Typography from "@material-ui/core/Typography";
 import DayjsUtils from "@date-io/dayjs";
@@ -23,6 +26,7 @@ import {
 } from "./widget-dialog";
 
 function PageCreatorBase({
+  pageTypes,
   onSubmit,
   initialData,
   presentErrorsOnMount = false,
@@ -41,6 +45,7 @@ function PageCreatorBase({
       title: initialData.title,
       reviewDate: dayjs(initialData.reviewDate),
       userFacing: initialData.userFacing,
+      selectedPageType: pageTypes ? pageTypes[0].value : undefined,
     },
     formErrors: {
       title: null,
@@ -59,6 +64,16 @@ function PageCreatorBase({
   const [state, setState] = useState({ ...initialState });
 
   const styles = usePageCreatorStyles();
+
+  const handleOnPageTypeChange = (event) => {
+    setState((prevState) => ({
+      ...prevState,
+      formData: {
+        ...prevState.formData,
+        selectedPageType: event.target.value,
+      },
+    }));
+  };
 
   const handleOnTitleChange = (event) => {
     const value = event.target.value.trimStart();
@@ -214,6 +229,33 @@ function PageCreatorBase({
             )}
           </Typography>
 
+          {pageTypes && (
+            <FormControl
+              variant="outlined"
+              fullWidth
+              size="small"
+              disabled={state.working}
+              className={styles.pageTypeSelect}
+            >
+              <InputLabel id="page-type-select-label">Page Type</InputLabel>
+              <Select
+                labelId="page-type-select-label"
+                id="page-type-select"
+                value={state.formData.selectedPageType}
+                onChange={handleOnPageTypeChange}
+                label="Page Type"
+              >
+                {pageTypes?.map((pageType) => {
+                  return (
+                    <MenuItem value={pageType.value} key={pageType.value}>
+                      {pageType.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          )}
+
           <TextField
             label="Title"
             margin="normal"
@@ -329,12 +371,21 @@ const usePageCreatorStyles = makeStyles(() => ({
   dialogContainer: {
     position: "relative",
   },
+  pageTypeSelect: {
+    margin: `16px 1px 0 1px`,
+  },
   formHelperText: {
     margin: `8px 1px 0 1px`,
   },
 }));
 
 PageCreatorBase.propTypes = {
+  pageTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    })
+  ),
   onSubmit: PropTypes.func.isRequired,
   initialData: PropTypes.shape({
     title: PropTypes.string.isRequired,
@@ -350,7 +401,7 @@ PageCreatorBase.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-export function PageCreator({ onSubmit, userFacing }) {
+export function PageCreator({ onSubmit, userFacing, pageTypes }) {
   const initialData = {
     title: "",
     reviewDate: dayjs().add(6, "month").toISOString(),
@@ -364,7 +415,7 @@ export function PageCreator({ onSubmit, userFacing }) {
       widgetButtonIcon={<InsertDriveFileIcon />}
       submitButtonLabel="Create"
       id="page-creator"
-      {...{ onSubmit, initialData }}
+      {...{ onSubmit, initialData, pageTypes }}
     />
   );
 }
@@ -378,6 +429,15 @@ PageCreator.propTypes = {
    * Pass a boolean to set a default value for the user facing form value or pass undefined to not render the form input
    */
   userFacing: PropTypes.bool,
+  /**
+   * Pass an array of page types to allow a user to choose a particular page type to create, optional
+   */
+  pageTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    })
+  ),
 };
 
 export function PageMetaEditor({ onSubmit, initialData, disabled }) {

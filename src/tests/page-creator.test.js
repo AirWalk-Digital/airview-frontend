@@ -18,6 +18,7 @@ describe("PageCreator", () => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);
       expect(onSubmitSpy).toHaveBeenCalledWith(
         expect.objectContaining({
+          selectedPageType: "knowledge",
           title: "Test Page Title",
           reviewDate: expect.stringContaining(
             dayjs().add(2, "day").format("YYYY-MM-DD")

@@ -29,6 +29,20 @@ Template.args = {
       }, callbackDelay);
     });
   },
+  pageTypes: [
+    {
+      name: "Knowledge",
+      value: "knowledge",
+    },
+    {
+      name: "Design",
+      value: "design",
+    },
+    {
+      name: "Architecture",
+      value: "architecture",
+    },
+  ],
   userFacing: false,
 };
 

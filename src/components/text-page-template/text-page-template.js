@@ -263,6 +263,7 @@ TextPageTemplate.propTypes = {
     onRequestToCreatePullRequest: PropTypes.func.isRequired,
     pageCreatorProps: PropTypes.shape({
       onSubmit: PropTypes.func.isRequired,
+      pageTypes: PropTypes.array,
       userFacing: PropTypes.bool,
     }),
     pageMetaEditorProps: PropTypes.shape({
