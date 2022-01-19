@@ -75,19 +75,53 @@ Template.args = {
     ],
   },
   asideContentProps: {
-    relatedContent: {
-      menuTitle: "Related Content",
-      menuItems: [
-        {
-          label: "Related Link Item One",
-          url: "/",
-        },
-        {
-          label: "Related Link Item Two",
-          url: "/",
-        },
-      ],
-    },
+    menus: [
+      {
+        id: "related-content",
+        initialCollapsed: true,
+        menuTitle: "Related Content",
+        menuItems: [
+          {
+            label: "Related Link Item One",
+            url: "/",
+          },
+          {
+            label: "Related Link Item Two",
+            url: "/",
+          },
+        ],
+      },
+      {
+        id: "designs",
+        initialCollapsed: true,
+        menuTitle: "Designs",
+        menuItems: [
+          {
+            label: "Designs Document One",
+            url: "/",
+          },
+          {
+            label: "Designs Document Two",
+            url: "/",
+          },
+        ],
+      },
+      {
+        id: "architecture",
+        initialCollapsed: true,
+        menuTitle: "Architecture",
+        menuItems: [
+          {
+            label: "Architecture Document One",
+            url: "/",
+          },
+          {
+            label: "Architecture Document Two",
+            url: "/",
+          },
+        ],
+      },
+    ],
     tableOfContents: true,
   },
   previewModeControllerProps: {

@@ -171,14 +171,10 @@ export function TextPageTemplate({
               component="aside"
               className={styles.asideContainer}
             >
-              {asideContentProps?.relatedContent && (
-                <Menu
-                  loading={loading}
-                  initialCollapsed
-                  id="related-content"
-                  {...asideContentProps.relatedContent}
-                />
-              )}
+              {asideContentProps?.menus &&
+                asideContentProps.menus.map((menuProps) => (
+                  <Menu key={menuProps.id} loading={loading} {...menuProps} />
+                ))}
 
               {asideContentProps?.tableOfContents &&
                 tableOfContentsData.length > 0 &&
@@ -234,15 +230,19 @@ TextPageTemplate.propTypes = {
   }),
 
   asideContentProps: PropTypes.shape({
-    relatedContent: PropTypes.shape({
-      menuTitle: PropTypes.string.isRequired,
-      menuItems: PropTypes.arrayOf(
-        PropTypes.shape({
-          label: PropTypes.string.isRequired,
-          url: PropTypes.string.isRequired,
-        })
-      ),
-    }),
+    menus: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        menuTitle: PropTypes.string.isRequired,
+        initialCollapsed: PropTypes.bool.isRequired,
+        menuItems: PropTypes.arrayOf(
+          PropTypes.shape({
+            label: PropTypes.string.isRequired,
+            url: PropTypes.string.isRequired,
+          })
+        ),
+      })
+    ),
     tableOfContents: PropTypes.bool.isRequired,
   }),
 
