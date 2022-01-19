@@ -1,3 +1,8 @@
+/*
+  - design /application/{id}/designs/{id}
+  - achitecture /application/{id}/architecture/{id}
+*/
+
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
@@ -343,10 +348,14 @@ export function KnowledgePage() {
         ],
       }}
       asideContentProps={{
-        relatedContent: {
-          menuTitle: "Related Knowledge",
-          menuItems: pageData.relatedKnowledge,
-        },
+        menus: [
+          {
+            id: "aside-menu-related-knowledge",
+            initialCollapsed: true,
+            menuTitle: "Related Knowledge",
+            menuItems: pageData.relatedKnowledge,
+          },
+        ],
         tableOfContents: true,
       }}
       previewModeControllerProps={{

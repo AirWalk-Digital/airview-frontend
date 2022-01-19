@@ -531,10 +531,14 @@ export function ApplicationsPage() {
         ],
       }}
       asideContentProps={{
-        relatedContent: {
-          menuTitle: "Knowledge",
-          menuItems: state.knowledgeLinks,
-        },
+        menus: [
+          {
+            id: "aside-menu-knowledge",
+            initialCollapsed: true,
+            menuTitle: "Knowledge",
+            menuItems: state.knowledgeLinks,
+          },
+        ],
         tableOfContents: true,
       }}
       previewModeControllerProps={{
