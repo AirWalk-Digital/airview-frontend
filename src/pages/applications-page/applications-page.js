@@ -18,9 +18,11 @@ import { ComplianceTable } from "../../components/compliance-table";
 import { ControlOverview } from "../../components/control-overview";
 
 /*
-Observations:
-- How to get to microsoft teams dummy data application (applications/microsoft_teams)
-- How to view an application table with data within /applications
+To do:
+- Fetch designs pages data for aside menu
+- Fetch Architecture pages data for aside menu
+- Need a create designs button added to applications
+- need a create architecture button added to applications
 */
 
 export function ApplicationsPage() {
@@ -29,6 +31,8 @@ export function ApplicationsPage() {
     pageTitle: "",
     bodyContent: "",
     knowledgeLinks: [],
+    designsLinks: [],
+    architectureLinks: [],
     complianceTableApplications: [],
     branches: [],
     applications: [],
@@ -394,6 +398,50 @@ export function ApplicationsPage() {
             return links;
           }, []);
 
+        // Build designs links
+        const designsData = await controller.getListing(
+          "application",
+          `${application_id}/designs`
+        );
+
+        const designsLinks = Object.keys(designsData)
+          .sort()
+          .reduce((links, property) => {
+            if (
+              designsData[property]?.["_index.md"] &&
+              !isEmpty(designsData[property]["_index.md"]["__meta"])
+            ) {
+              links.push({
+                label: designsData[property]["_index.md"]["__meta"].title,
+                url: `/applications/${application_id}/designs/${property}`,
+              });
+            }
+
+            return links;
+          }, []);
+
+        // Build architecture links
+        const architectureData = await controller.getListing(
+          "application",
+          `${application_id}/architecture`
+        );
+
+        const architectureLinks = Object.keys(architectureData)
+          .sort()
+          .reduce((links, property) => {
+            if (
+              architectureData[property]?.["_index.md"] &&
+              !isEmpty(architectureData[property]["_index.md"]["__meta"])
+            ) {
+              links.push({
+                label: architectureData[property]["_index.md"]["__meta"].title,
+                url: `/applications/${application_id}/architecture/${property}`,
+              });
+            }
+
+            return links;
+          }, []);
+
         // Get compliance table data
         let applicationComplianceData;
 
@@ -441,6 +489,8 @@ export function ApplicationsPage() {
           frontmatter: markdownResponse?.data,
           loading: false,
           knowledgeLinks,
+          designsLinks,
+          architectureLinks,
           complianceTableTitle: "Compliance Data",
           complianceTableApplications: mapApplicationDataToSchema(
             applicationComplianceData
@@ -537,6 +587,18 @@ export function ApplicationsPage() {
             initialCollapsed: true,
             menuTitle: "Knowledge",
             menuItems: state.knowledgeLinks,
+          },
+          {
+            id: "aside-menu-designs",
+            initialCollapsed: true,
+            menuTitle: "Designs",
+            menuItems: state.designsLinks,
+          },
+          {
+            id: "aside-menu-architecture",
+            initialCollapsed: true,
+            menuTitle: "Architecture",
+            menuItems: state.architectureLinks,
           },
         ],
         tableOfContents: true,
