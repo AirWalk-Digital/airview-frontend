@@ -182,6 +182,10 @@ function PageCreatorBase({
       await onSubmit({
         ...state.formData,
         reviewDate: state.formData.reviewDate.toISOString(),
+        userFacing:
+          initialData.userFacing !== undefined || showUserFacing()
+            ? state.formData.userFacing
+            : undefined,
       });
 
       setState((prevState) => ({
