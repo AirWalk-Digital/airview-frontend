@@ -33,17 +33,19 @@ Template.args = {
     {
       name: "Knowledge",
       value: "knowledge",
+      showUserFacing: true,
     },
     {
       name: "Design",
       value: "design",
+      showUserFacing: false,
     },
     {
       name: "Architecture",
       value: "architecture",
+      showUserFacing: false,
     },
   ],
-  userFacing: false,
 };
 
 export const Closed = {

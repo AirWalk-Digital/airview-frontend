@@ -44,7 +44,7 @@ function PageCreatorBase({
     formData: {
       title: initialData.title,
       reviewDate: dayjs(initialData.reviewDate),
-      userFacing: initialData.userFacing,
+      userFacing: initialData.userFacing ?? false,
       selectedPageType: pageTypes ? pageTypes[0].value : undefined,
     },
     formErrors: {
@@ -64,6 +64,14 @@ function PageCreatorBase({
   const [state, setState] = useState({ ...initialState });
 
   const styles = usePageCreatorStyles();
+
+  const showUserFacing = () => {
+    if (!pageTypes) return false;
+
+    return pageTypes.find(
+      (pageType) => pageType.value === state.formData.selectedPageType
+    ).showUserFacing;
+  };
 
   const handleOnPageTypeChange = (event) => {
     setState((prevState) => ({
@@ -318,7 +326,7 @@ function PageCreatorBase({
             />
           </MuiPickersUtilsProvider>
 
-          {initialData?.userFacing !== undefined ? (
+          {initialData.userFacing !== undefined || showUserFacing() ? (
             <FormControl margin="normal">
               <FormControlLabel
                 control={
@@ -384,6 +392,7 @@ PageCreatorBase.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       value: PropTypes.string.isRequired,
+      showUserFacing: PropTypes.bool.isRequired,
     })
   ),
   onSubmit: PropTypes.func.isRequired,
@@ -401,11 +410,10 @@ PageCreatorBase.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-export function PageCreator({ onSubmit, userFacing, pageTypes }) {
+export function PageCreator({ onSubmit, pageTypes }) {
   const initialData = {
     title: "",
     reviewDate: dayjs().add(6, "month").toISOString(),
-    userFacing,
   };
 
   return (
@@ -426,16 +434,13 @@ PageCreator.propTypes = {
    */
   onSubmit: PropTypes.func.isRequired,
   /**
-   * Pass a boolean to set a default value for the user facing form value or pass undefined to not render the form input
-   */
-  userFacing: PropTypes.bool,
-  /**
    * Pass an array of page types to allow a user to choose a particular page type to create, optional
    */
   pageTypes: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       value: PropTypes.string.isRequired,
+      showUserFacing: PropTypes.bool.isRequired,
     })
   ),
 };
