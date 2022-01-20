@@ -66,13 +66,18 @@ export function DesignPage() {
     }
   };
 
-  const handleOnCreatePage = async ({ title, reviewDate, userFacing }) => {
+  const handleOnCreatePage = async ({
+    selectedPageType,
+    title,
+    reviewDate,
+    userFacing,
+  }) => {
     const slug = slugger(title);
 
     const frontmatter = {
       title,
       reviewDate,
-      userFacing,
+      ...(userFacing !== undefined && { userFacing: userFacing }),
     };
 
     // Temporary workaround to see if a file exists (before creating one)
@@ -80,11 +85,11 @@ export function DesignPage() {
     try {
       await controller.getFile(
         "application",
-        `${application_id}/designs/${slug}/_index.md` // change
+        `${application_id}/${selectedPageType}/${slug}/_index.md`
       );
 
       history.push(
-        `/applications/${application_id}/designs/${slug}?branch=${workingBranchName}` // change
+        `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
       );
     } catch (error) {
       // Only create page when 404 to prevent overwriting content when other errors are found
@@ -93,9 +98,14 @@ export function DesignPage() {
 
         const listing = await controller.getListing("application", null);
 
-        listing[application_id]["designs"][slug] = {
-          // The design property needs to be present or the creation will fail
-          // change
+        if (listing[application_id] === undefined) {
+          listing[application_id] = {};
+        }
+        if (listing[application_id][selectedPageType] === undefined) {
+          listing[application_id][selectedPageType] = {};
+        }
+
+        listing[application_id][selectedPageType][slug] = {
           "_index.md": {
             __meta: {
               ...frontmatter,
@@ -115,32 +125,27 @@ export function DesignPage() {
           */
           await controller.commitFile(
             "application",
-            `${application_id}/designs/${slug}/_index.md`, // change
+            `${application_id}/${selectedPageType}/${slug}/_index.md`,
             new Blob([markdown], { type: "text/plain" })
           );
 
           history.push(
-            `/applications/${application_id}/designs/${slug}?branch=${workingBranchName}` // change
+            `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
           );
         } catch (error) {
           console.log(error);
         }
       }
-      // All other errors, do not allow creation of file, possibly throw error here
+      //All other errors, do not allow creation of file, possibly throw error here
     }
   };
 
-  const handleOnRequestToEditMetaData = async ({
-    title,
-    reviewDate,
-    userFacing,
-  }) => {
+  const handleOnRequestToEditMetaData = async ({ title, reviewDate }) => {
     try {
       const frontmatter = {
         ...pageData.pageMetaData,
         title,
         reviewDate,
-        userFacing,
       };
 
       const listing = await controller.getListing("application", null);
@@ -209,14 +214,14 @@ export function DesignPage() {
       const {
         title = "",
         reviewDate = dayjs().add(6, "month").toISOString(),
-        userFacing = false,
+        //userFacing = false,
         ...legacyFrontMatter
       } = response.data;
 
       const pageMetaData = {
         title,
         reviewDate,
-        userFacing,
+        //userFacing,
         ...legacyFrontMatter,
       };
 
@@ -367,7 +372,7 @@ export function DesignPage() {
           await onSave(markdownData.edits[0], pageData.pageMetaData);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
-          await controller.createPullRequest(
+          return await controller.createPullRequest(
             "application",
             controller.getBaseBranchName("application"),
             sourceBranch
@@ -375,7 +380,23 @@ export function DesignPage() {
         },
         pageCreatorProps: {
           onSubmit: handleOnCreatePage,
-          userFacing: false,
+          pageTypes: [
+            {
+              name: "Design",
+              value: "designs",
+              showUserFacing: false,
+            },
+            {
+              name: "Knowledge",
+              value: "knowledge",
+              showUserFacing: true,
+            },
+            {
+              name: "Architecture",
+              value: "architecture",
+              showUserFacing: false,
+            },
+          ],
         },
         pageMetaEditorProps: {
           initialData: pageData.pageMetaData,
