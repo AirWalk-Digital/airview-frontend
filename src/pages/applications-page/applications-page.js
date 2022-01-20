@@ -624,7 +624,7 @@ export function ApplicationsPage() {
           await onSave(markdownData.edits[0]);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
-          await controller.createPullRequest(
+          return await controller.createPullRequest(
             "application",
             controller.getBaseBranchName("application"),
             sourceBranch
