@@ -226,13 +226,18 @@ export function ApplicationsPage() {
     }
   };
 
-  const handleOnCreatePage = async ({ title, reviewDate, userFacing }) => {
+  const handleOnCreatePage = async ({
+    selectedPageType,
+    title,
+    reviewDate,
+    userFacing,
+  }) => {
     const slug = slugger(title);
 
     const frontmatter = {
       title,
       reviewDate,
-      userFacing,
+      ...(userFacing !== undefined && { userFacing: userFacing }),
     };
 
     // Temporary workaround to see if a file exists (before creating one)
@@ -240,11 +245,11 @@ export function ApplicationsPage() {
     try {
       await controller.getFile(
         "application",
-        `${application_id}/knowledge/${slug}/_index.md`
+        `${application_id}/${selectedPageType}/${slug}/_index.md`
       );
 
       history.push(
-        `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
+        `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
       );
     } catch (error) {
       // Only create page when 404 to prevent overwriting content when other errors are found
@@ -256,11 +261,11 @@ export function ApplicationsPage() {
         if (listing[application_id] === undefined) {
           listing[application_id] = {};
         }
-        if (listing[application_id]["knowledge"] === undefined) {
-          listing[application_id]["knowledge"] = {};
+        if (listing[application_id][selectedPageType] === undefined) {
+          listing[application_id][selectedPageType] = {};
         }
 
-        listing[application_id]["knowledge"][slug] = {
+        listing[application_id][selectedPageType][slug] = {
           "_index.md": {
             __meta: {
               ...frontmatter,
@@ -280,12 +285,12 @@ export function ApplicationsPage() {
           */
           await controller.commitFile(
             "application",
-            `${application_id}/knowledge/${slug}/_index.md`,
+            `${application_id}/${selectedPageType}/${slug}/_index.md`,
             new Blob([markdown], { type: "text/plain" })
           );
 
           history.push(
-            `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
+            `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
           );
         } catch (error) {
           console.log(error);
@@ -627,7 +632,23 @@ export function ApplicationsPage() {
         },
         pageCreatorProps: {
           onSubmit: handleOnCreatePage,
-          userFacing: false,
+          pageTypes: [
+            {
+              name: "Knowledge",
+              value: "knowledge",
+              showUserFacing: true,
+            },
+            {
+              name: "Design",
+              value: "designs",
+              showUserFacing: false,
+            },
+            {
+              name: "Architecture",
+              value: "architecture",
+              showUserFacing: false,
+            },
+          ],
         },
         applicationCreatorProps: {
           applications: state.applications,
