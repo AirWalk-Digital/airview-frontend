@@ -26,6 +26,7 @@ export function ArchitecturePage() {
     breadcrumbLinks: [],
     relatedArchitecture: [], // change
     branches: [],
+    bodyContent: [],
   });
   const controller = useController();
   const navItems = useNav();
@@ -150,7 +151,7 @@ export function ArchitecturePage() {
 
       const listing = await controller.getListing("application", null);
 
-      listing[application_id]["designs"][slug] = {
+      listing[application_id]["architecture"][slug] = {
         // change
         "_index.md": {
           __meta: {
@@ -172,7 +173,7 @@ export function ArchitecturePage() {
 
       await controller.commitFile(
         "application",
-        `${application_id}/designs/${slug}/_index.md`, // change
+        `${application_id}/architecture/${slug}/_index.md`, // change
         new Blob([markdownString], { type: "text/plain" })
       );
 
@@ -197,25 +198,71 @@ export function ArchitecturePage() {
       // Enable loading state
       setPageData((prevState) => ({ ...prevState, loading: true }));
 
-      // Fetch and resolve markdown content / images
-      const mediaFetcher = (path) => controller.getMedia("application", path);
+      // Get original markdown
+      let originalMarkdown = [];
 
-      const response = await controller.getFile(
-        "application",
-        `${application_id}/architecture/${slug}/_index.md` // change
+      originalMarkdown.push(
+        await controller.getFile(
+          "application",
+          `${application_id}/architecture/${slug}/_index.md` // change
+        )
       );
 
-      const resolvedMarkdown = await resolveInbound(
-        response.content,
-        `${application_id}/architecture/${slug}`, // change
-        mediaFetcher
+      // Subsection markdown
+      try {
+        originalMarkdown.push(
+          await controller.getFile(
+            "application",
+            `${application_id}/architecture/${slug}/section-one.md` // change
+          )
+        );
+
+        originalMarkdown.push(
+          await controller.getFile(
+            "application",
+            `${application_id}/architecture/${slug}/section-two.md` // change
+          )
+        );
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log("originalMarkdown", originalMarkdown);
+
+      // Resolve markdown
+      const resolvedMarkdown = await Promise.all(
+        originalMarkdown.map(async (markdown, index) => {
+          return {
+            title: index > 0 ? `Section ${index + 1}` : null,
+            defaultValue: await resolveInbound(
+              markdown.content,
+              `${application_id}/architecture/${slug}`,
+              (path) => controller.getMedia("application", path)
+            ),
+          };
+        })
       );
+
+      console.log("resolvedMarkdown", resolvedMarkdown);
+
+      // const mainSection = await controller.getFile(
+      //   "application",
+      //   `${application_id}/architecture/${slug}/_index.md` // change
+      // );
+
+      // const resolvedMarkdown = await resolveInbound(
+      //   mainSection.content,
+      //   `${application_id}/architecture/${slug}`, // change
+      //   mediaFetcher
+      // );
+
+      // Process metadata / frontmatter
 
       const {
         title = "",
         reviewDate = dayjs().add(6, "month").toISOString(),
         ...legacyFrontMatter
-      } = response.data;
+      } = originalMarkdown[0].data;
 
       const pageMetaData = {
         title,
@@ -254,6 +301,8 @@ export function ArchitecturePage() {
         `${application_id}/architecture` // change
       );
 
+      console.log(relatedArchitectureData);
+
       const relatedArchitecture = Object.keys(relatedArchitectureData) // change
         .sort()
         .reduce((links, property) => {
@@ -271,15 +320,17 @@ export function ArchitecturePage() {
           return links;
         }, []);
 
+      console.log(relatedArchitecture);
+
       // Get branches
       const branches = await controller.getBranches("application");
 
       setPageData((prevState) => ({
         ...prevState,
         bodyContent: resolvedMarkdown,
-        orignalMarkdown: response.content,
+        originalMarkdown,
         relatedArchitecture,
-        pageTitle: response.data.title,
+        pageTitle: originalMarkdown[0].data.title,
         pageMetaData,
         breadcrumbLinks,
         loading: false,
@@ -342,17 +393,17 @@ export function ArchitecturePage() {
       breadcrumbLinks={pageData.breadcrumbLinks}
       mainContentProps={{
         onUploadImage: handleOnUploadImage,
-        content: [
-          {
-            defaultValue: pageData.bodyContent,
-          },
-        ],
+        content: pageData.bodyContent,
       }}
       asideContentProps={{
-        relatedContent: {
-          menuTitle: "Related Architecture", // change
-          menuItems: pageData.relatedArchitecture, // change
-        },
+        menus: [
+          {
+            id: "aside-menu-related-architecture",
+            initialCollapsed: true,
+            menuTitle: "Related Architecture",
+            menuItems: pageData.relatedArchitecture,
+          },
+        ],
         tableOfContents: true,
       }}
       previewModeControllerProps={{
