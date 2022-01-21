@@ -350,10 +350,14 @@ export function DesignPage() {
         ],
       }}
       asideContentProps={{
-        relatedContent: {
-          menuTitle: "Related Designs", // change
-          menuItems: pageData.relatedDesigns, // change
-        },
+        menus: [
+          {
+            id: "aside-menu-related-designs",
+            initialCollapsed: true,
+            menuTitle: "Related Designs",
+            menuItems: pageData.relatedDesigns,
+          },
+        ],
         tableOfContents: true,
       }}
       previewModeControllerProps={{
