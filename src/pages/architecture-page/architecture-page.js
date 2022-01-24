@@ -44,27 +44,35 @@ export function ArchitecturePage() {
     cleanupImages,
   } = useResolveMarkdown();
 
-  const onSave = async (markdownData, frontmatter) => {
-    try {
-      const content = await resolveOutbound({
-        markdown: markdownData,
-        frontmatter,
-        markdownFileName: "_index.md",
-      });
+  const onSave = async (edits) => {
+    console.log("edits", edits);
 
-      await controller.commitContent(
-        "application",
-        `${application_id}/designs/${slug}/`, // change
-        content
-      );
+    try {
+      for (const edit of edits) {
+        const content = await resolveOutbound({
+          markdown: edit.markdown,
+          frontmatter: pageData.originalMarkdown[edit.id].data,
+          markdownFileName: pageData.originalMarkdown[edit.id].id,
+        });
+
+        await controller.commitContent(
+          "application",
+          `${application_id}/architecture/${slug}/`, // change
+          content
+        );
+
+        console.log("content", content);
+      }
 
       setPageData((prevState) => ({
         ...prevState,
         shouldRefreshContent: true,
       }));
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
+
+    console.log("done");
   };
 
   const handleOnCreatePage = async ({
@@ -167,7 +175,7 @@ export function ArchitecturePage() {
       );
 
       const markdownString = matter.stringify(
-        pageData.originalMarkdown[0].content,
+        pageData.originalMarkdown["_index.md"].content,
         frontmatter
       );
 
@@ -199,30 +207,35 @@ export function ArchitecturePage() {
       setPageData((prevState) => ({ ...prevState, loading: true }));
 
       // Get original markdown
-      let originalMarkdown = [];
+      let originalMarkdown = {};
 
-      originalMarkdown.push(
-        await controller.getFile(
+      originalMarkdown["_index.md"] = {
+        id: "_index.md",
+        ...(await controller.getFile(
           "application",
-          `${application_id}/architecture/${slug}/_index.md` // change
-        )
-      );
+          `${application_id}/architecture/${slug}/_index.md`
+        )),
+      };
 
       // Subsection markdown
       try {
-        originalMarkdown.push(
-          await controller.getFile(
+        originalMarkdown["section-one.md"] = {
+          id: "section-one.md",
+          title: "Section One",
+          ...(await controller.getFile(
             "application",
             `${application_id}/architecture/${slug}/section-one.md` // change
-          )
-        );
+          )),
+        };
 
-        originalMarkdown.push(
-          await controller.getFile(
+        originalMarkdown["section-two.md"] = {
+          id: "section-two.md",
+          title: "Section Two",
+          ...(await controller.getFile(
             "application",
             `${application_id}/architecture/${slug}/section-two.md` // change
-          )
-        );
+          )),
+        };
       } catch (error) {
         console.log(error);
       }
@@ -231,11 +244,12 @@ export function ArchitecturePage() {
 
       // Resolve markdown
       const resolvedMarkdown = await Promise.all(
-        originalMarkdown.map(async (markdown, index) => {
+        Object.values(originalMarkdown).map(async (data, index) => {
           return {
-            title: index > 0 ? `Section ${index + 1}` : null,
+            id: data.id,
+            title: index > 0 ? data.title : null,
             defaultValue: await resolveInbound(
-              markdown.content,
+              data.content,
               `${application_id}/architecture/${slug}`,
               (path) => controller.getMedia("application", path)
             ),
@@ -262,7 +276,7 @@ export function ArchitecturePage() {
         title = "",
         reviewDate = dayjs().add(6, "month").toISOString(),
         ...legacyFrontMatter
-      } = originalMarkdown[0].data;
+      } = originalMarkdown["_index.md"].data;
 
       const pageMetaData = {
         title,
@@ -330,7 +344,7 @@ export function ArchitecturePage() {
         bodyContent: resolvedMarkdown,
         originalMarkdown,
         relatedArchitecture,
-        pageTitle: originalMarkdown[0].data.title,
+        pageTitle: originalMarkdown["_index.md"].data.title,
         pageMetaData,
         breadcrumbLinks,
         loading: false,
@@ -418,8 +432,8 @@ export function ArchitecturePage() {
         onRequestToCreateBranch: (branchName) => {
           controller.createBranch("application", branchName);
         },
-        onSave: async (markdownData) => {
-          await onSave(markdownData.edits[0], pageData.pageMetaData); // need to work with entire array
+        onSave: async ({ edits }) => {
+          await onSave(edits);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
           return await controller.createPullRequest(
