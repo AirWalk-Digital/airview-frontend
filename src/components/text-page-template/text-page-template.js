@@ -35,7 +35,7 @@ export function TextPageTemplate({
 }) {
   const styles = useStyles();
   const editorRef = useRef();
-  const editorChanges = useRef([]);
+  const editorChanges = useRef({});
   const [tableOfContentsData, setTableOfContentsData] = useState([]);
   const [canSave, setCanSave] = useState(false);
 
@@ -61,16 +61,24 @@ export function TextPageTemplate({
       setCanSave(true);
     }
 
-    editorChanges.current[index] = markdown;
+    editorChanges.current = {
+      ...editorChanges.current,
+      [mainContentProps.content[index].id]: {
+        id: mainContentProps.content[index].id,
+        markdown,
+      },
+    };
+
+    Object.values(editorChanges.current);
   };
 
   const handleOnSave = async (commitMessage) => {
     try {
       await previewModeControllerProps.onSave({
-        edits: editorChanges.current,
+        edits: Object.values(editorChanges.current),
         commitMessage,
       });
-      editorChanges.current = [];
+      editorChanges.current = {};
       setCanSave(false);
     } catch (error) {
       console.error("there was an error attempting to save your changes");
@@ -221,6 +229,7 @@ TextPageTemplate.propTypes = {
     onUploadImage: PropTypes.func,
     content: PropTypes.arrayOf(
       PropTypes.shape({
+        id: PropTypes.string.isRequired,
         title: PropTypes.string,
         placeholder: PropTypes.string,
         defaultValue: PropTypes.string,

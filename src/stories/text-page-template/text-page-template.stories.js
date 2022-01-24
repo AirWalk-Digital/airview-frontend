@@ -50,11 +50,13 @@ Template.args = {
     },
     content: [
       {
+        id: "1",
         title: "Content Block One",
         placeholder:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
       },
       {
+        id: "2",
         title: "Content Block Two",
         defaultValue: `#### Some default title and content \n Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?`,
         placeholder:
@@ -67,6 +69,7 @@ Template.args = {
         ),
       },
       {
+        id: "3",
         title: "Content Block Three",
         defaultValue: "",
         placeholder:
