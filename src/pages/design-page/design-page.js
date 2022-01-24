@@ -345,6 +345,7 @@ export function DesignPage() {
         onUploadImage: handleOnUploadImage,
         content: [
           {
+            id: "_index.md",
             defaultValue: pageData.bodyContent,
           },
         ],
@@ -373,7 +374,7 @@ export function DesignPage() {
           controller.createBranch("application", branchName);
         },
         onSave: async (markdownData) => {
-          await onSave(markdownData.edits[0], pageData.pageMetaData);
+          await onSave(markdownData.edits[0].markdown, pageData.pageMetaData);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
           return await controller.createPullRequest(

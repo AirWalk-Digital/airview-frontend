@@ -558,6 +558,7 @@ export function ApplicationsPage() {
         onUploadImage: handleOnUploadImage,
         content: [
           {
+            id: "_index.md",
             defaultValue: state.bodyContent,
             additionalContent: (
               <>
@@ -621,7 +622,7 @@ export function ApplicationsPage() {
           controller.createBranch("application", branchName);
         },
         onSave: async (markdownData) => {
-          await onSave(markdownData.edits[0]);
+          await onSave(markdownData.edits[0].markdown);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
           return await controller.createPullRequest(

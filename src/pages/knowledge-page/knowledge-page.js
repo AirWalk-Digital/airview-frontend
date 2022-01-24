@@ -343,6 +343,7 @@ export function KnowledgePage() {
         onUploadImage: handleOnUploadImage,
         content: [
           {
+            id: "_index.md",
             defaultValue: pageData.bodyContent,
           },
         ],
@@ -371,7 +372,7 @@ export function KnowledgePage() {
           controller.createBranch("application", branchName);
         },
         onSave: async (markdownData) => {
-          await onSave(markdownData.edits[0], pageData.pageMetaData);
+          await onSave(markdownData.edits[0].markdown, pageData.pageMetaData);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
           await controller.createPullRequest(
