@@ -167,7 +167,7 @@ export function ArchitecturePage() {
       );
 
       const markdownString = matter.stringify(
-        pageData.orignalMarkdown,
+        pageData.originalMarkdown[0].content,
         frontmatter
       );
 
