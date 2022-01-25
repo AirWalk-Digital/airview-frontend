@@ -45,8 +45,6 @@ export function ArchitecturePage() {
   } = useResolveMarkdown();
 
   const onSave = async (edits) => {
-    console.log("edits", edits);
-
     try {
       for (const edit of edits) {
         const content = await resolveOutbound({
@@ -60,8 +58,6 @@ export function ArchitecturePage() {
           `${application_id}/architecture/${slug}/`, // change
           content
         );
-
-        console.log("content", content);
       }
 
       setPageData((prevState) => ({
@@ -71,8 +67,6 @@ export function ArchitecturePage() {
     } catch (error) {
       console.log(error);
     }
-
-    console.log("done");
   };
 
   const handleOnCreatePage = async ({
@@ -211,6 +205,7 @@ export function ArchitecturePage() {
 
       originalMarkdown["_index.md"] = {
         id: "_index.md",
+        placeholder: "Main content placeholder text",
         ...(await controller.getFile(
           "application",
           `${application_id}/architecture/${slug}/_index.md`
@@ -222,6 +217,7 @@ export function ArchitecturePage() {
         originalMarkdown["section-one.md"] = {
           id: "section-one.md",
           title: "Section One",
+          placeholder: "Section One placeholder text",
           ...(await controller.getFile(
             "application",
             `${application_id}/architecture/${slug}/section-one.md` // change
@@ -231,13 +227,26 @@ export function ArchitecturePage() {
         originalMarkdown["section-two.md"] = {
           id: "section-two.md",
           title: "Section Two",
+          placeholder: "Section Two placeholder text",
           ...(await controller.getFile(
             "application",
             `${application_id}/architecture/${slug}/section-two.md` // change
           )),
         };
       } catch (error) {
-        console.log(error);
+        console.log("not found");
+
+        originalMarkdown["section-one.md"] = {
+          id: "section-one.md",
+          title: "Section One",
+          placeholder: "Section One placeholder text",
+        };
+
+        originalMarkdown["section-two.md"] = {
+          id: "section-two.md",
+          title: "Section Two",
+          placeholder: "Section Two placeholder text",
+        };
       }
 
       console.log("originalMarkdown", originalMarkdown);
@@ -248,11 +257,14 @@ export function ArchitecturePage() {
           return {
             id: data.id,
             title: index > 0 ? data.title : null,
-            defaultValue: await resolveInbound(
-              data.content,
-              `${application_id}/architecture/${slug}`,
-              (path) => controller.getMedia("application", path)
-            ),
+            ...(data?.content && {
+              defaultValue: await resolveInbound(
+                data.content,
+                `${application_id}/architecture/${slug}`,
+                (path) => controller.getMedia("application", path)
+              ),
+            }),
+            placeholder: data.placeholder,
           };
         })
       );
