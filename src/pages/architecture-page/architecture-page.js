@@ -234,22 +234,22 @@ export function ArchitecturePage() {
           )),
         };
       } catch (error) {
-        console.log("not found");
+        if (error.status === 404) {
+          originalMarkdown["section-one.md"] = {
+            id: "section-one.md",
+            title: "Section One",
+            placeholder: "Section One placeholder text",
+          };
 
-        originalMarkdown["section-one.md"] = {
-          id: "section-one.md",
-          title: "Section One",
-          placeholder: "Section One placeholder text",
-        };
-
-        originalMarkdown["section-two.md"] = {
-          id: "section-two.md",
-          title: "Section Two",
-          placeholder: "Section Two placeholder text",
-        };
+          originalMarkdown["section-two.md"] = {
+            id: "section-two.md",
+            title: "Section Two",
+            placeholder: "Section Two placeholder text",
+          };
+        } else {
+          throw new Error(error);
+        }
       }
-
-      console.log("originalMarkdown", originalMarkdown);
 
       // Resolve markdown
       const resolvedMarkdown = await Promise.all(
@@ -268,21 +268,6 @@ export function ArchitecturePage() {
           };
         })
       );
-
-      console.log("resolvedMarkdown", resolvedMarkdown);
-
-      // const mainSection = await controller.getFile(
-      //   "application",
-      //   `${application_id}/architecture/${slug}/_index.md` // change
-      // );
-
-      // const resolvedMarkdown = await resolveInbound(
-      //   mainSection.content,
-      //   `${application_id}/architecture/${slug}`, // change
-      //   mediaFetcher
-      // );
-
-      // Process metadata / frontmatter
 
       const {
         title = "",
@@ -327,8 +312,6 @@ export function ArchitecturePage() {
         `${application_id}/architecture` // change
       );
 
-      console.log(relatedArchitectureData);
-
       const relatedArchitecture = Object.keys(relatedArchitectureData) // change
         .sort()
         .reduce((links, property) => {
@@ -345,8 +328,6 @@ export function ArchitecturePage() {
 
           return links;
         }, []);
-
-      console.log(relatedArchitecture);
 
       // Get branches
       const branches = await controller.getBranches("application");
