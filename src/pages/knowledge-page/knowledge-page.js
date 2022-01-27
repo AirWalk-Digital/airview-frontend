@@ -383,7 +383,13 @@ export function KnowledgePage() {
         },
         pageCreatorProps: {
           onSubmit: handleOnCreatePage,
-          userFacing: false,
+          pageTypes: [
+            {
+              name: "Knowledge",
+              value: "knowledge",
+              showUserFacing: true,
+            },
+          ],
         },
         pageMetaEditorProps: {
           initialData: pageData.pageMetaData,
