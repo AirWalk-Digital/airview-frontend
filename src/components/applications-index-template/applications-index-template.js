@@ -5,10 +5,6 @@ import { useTheme } from "@material-ui/core/styles";
 import { Container, Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import WarningIcon from "@material-ui/icons/Warning";
-import { Helmet } from "react-helmet";
-import { PageHeader } from "../page-header";
-import { Breadcrumb } from "../breadcrumb";
-import { LocationProvider } from "../../hooks/use-location";
 import {
   ApplicationTile,
   ApplicationTileHeader,
@@ -20,6 +16,7 @@ import {
   ApplicationTileChip,
 } from "../application-tile";
 import { ProgressBar } from "../../components/progress-bar";
+import { LayoutBase } from "../layout-base";
 
 export function ApplicationsIndexTemplate({
   currentRoute,
@@ -167,26 +164,21 @@ export function ApplicationsIndexTemplate({
   };
 
   return (
-    <LocationProvider location={currentRoute}>
-      <Helmet>
-        <title>{`${pageTitle} | ${siteTitle}`}</title>
-      </Helmet>
-
-      <PageHeader
-        previewMode={false}
-        {...{ siteTitle, version, logoSrc, navItems, loading, onQueryChange }}
-      />
-
+    <LayoutBase
+      {...{
+        currentRoute,
+        pageTitle,
+        siteTitle,
+        version,
+        logoSrc,
+        navItems,
+        loading,
+        onQueryChange,
+        breadcrumbLinks,
+      }}
+      previewMode={false}
+    >
       <Container>
-        <Breadcrumb
-          links={breadcrumbLinks}
-          loading={loading}
-          activeRoute={pageTitle}
-          className={styles.breadcrumb}
-        />
-      </Container>
-
-      <Container className={styles.mainContainer}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h1" paragraph>
@@ -230,18 +222,11 @@ export function ApplicationsIndexTemplate({
           </Grid>
         )}
       </Container>
-    </LocationProvider>
+    </LayoutBase>
   );
 }
 
 const useStyles = makeStyles((theme) => ({
-  breadcrumb: {
-    paddingTop: theme.spacing(6),
-  },
-  mainContainer: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(8),
-  },
   applicationsContainer: {
     marginTop: theme.spacing(2),
   },

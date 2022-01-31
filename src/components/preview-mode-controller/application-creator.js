@@ -502,7 +502,7 @@ ApplicationCreator.propTypes = {
   applicationTypes: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
     })
   ).isRequired,
   /**

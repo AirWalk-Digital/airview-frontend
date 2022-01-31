@@ -1,7 +1,7 @@
 import React from "react";
 import { MarkdownContent } from "../../components/markdown-content";
 import { makeStyles } from "@material-ui/core/styles";
-import markdownContent from "../__resources/markdown-content.md";
+import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Modules/Markdown Content",
@@ -41,8 +41,24 @@ function Template(args) {
 }
 
 Template.args = {
-  defaultValue: markdownContent,
-  onChange: (data) => console.log(data),
+  content: [
+    {
+      title: "Content Block One",
+      placeholder:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit officia quidem quaerat rerum, nulla recusandae illum odit unde accusantium beatae qui maiores veritatis. Eum tempore, distinctio magnam aperiam voluptates sequi?",
+    },
+    {
+      title: "Content Block Two",
+      defaultValue: "Default value",
+      additionalContent: <span>Component test</span>,
+    },
+  ],
+  onChange: (markdown) => action("onChange")(markdown),
+  onUploadImage: async (file) => {
+    action("onUploadImage")(file);
+
+    return URL.createObjectURL(file);
+  },
 };
 
 export const Loading = {

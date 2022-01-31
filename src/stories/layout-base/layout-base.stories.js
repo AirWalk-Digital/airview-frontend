@@ -1,12 +1,13 @@
 import React from "react";
 import { Title, ArgsTable } from "@storybook/addon-docs";
-import * as PageHeaderStories from "../page-header/page-header.stories";
 import { makeStyles } from "@material-ui/core/styles";
-import { HomepageTemplate } from "../../components/homepage-template/";
+import * as PageHeaderStories from "../page-header/page-header.stories";
+import * as BreadcrumbStories from "../breadcrumb/breadcrumb.stories";
+import { LayoutBase } from "../../components/layout-base";
 
 export default {
-  title: "Templates/Homepage Template",
-  component: HomepageTemplate,
+  title: "Layouts/Layout Base",
+  component: LayoutBase,
   parameters: {
     layout: "fullscreen",
     docs: {
@@ -16,13 +17,6 @@ export default {
           <ArgsTable />
         </>
       ),
-    },
-  },
-  argTypes: {
-    previewMode: {
-      table: {
-        disable: true,
-      },
     },
   },
   decorators: [
@@ -42,13 +36,12 @@ export default {
 };
 
 function Template(args) {
-  return <HomepageTemplate {...args} />;
+  return <LayoutBase {...args} />;
 }
 
 Template.args = {
   currentRoute: "/",
-  pageTitle: "Application Template",
-  loading: false,
+  pageTitle: "Page Title",
 };
 
 export const Loading = {
@@ -56,13 +49,26 @@ export const Loading = {
   args: {
     ...Template.args,
     ...PageHeaderStories.Loading.args,
+    breadcrumbLinks: [],
   },
 };
 
-export const Loaded = {
-  ...Template,
+export const LoadedPreviewDisabled = {
+  ...Template.args,
   args: {
     ...Template.args,
     ...PageHeaderStories.PreviewDisabled.args,
+    breadcrumbLinks:
+      BreadcrumbStories.LoadedWithoutCollapsedBreadcrumbs.args.links,
+  },
+};
+
+export const LoadedPreviewEnabled = {
+  ...Template.args,
+  args: {
+    ...Template.args,
+    ...PageHeaderStories.PreviewEnabled.args,
+    breadcrumbLinks:
+      BreadcrumbStories.LoadedWithoutCollapsedBreadcrumbs.args.links,
   },
 };

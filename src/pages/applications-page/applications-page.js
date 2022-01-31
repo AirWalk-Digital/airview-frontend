@@ -4,7 +4,7 @@ import isEmpty from "lodash/isEmpty";
 import { default as slugger } from "slug";
 import * as matter from "gray-matter";
 import siteConfig from "../../site-config.json";
-import { ApplicationsTemplate } from "../../components/applications-template";
+import { TextPageTemplate } from "../../components/text-page-template";
 import { useNav } from "../../hooks/use-nav";
 import { useController } from "../../hooks/use-controller";
 import { useResetScroll } from "../../hooks/useResetScroll/use-reset-scroll";
@@ -14,14 +14,25 @@ import { useApiService } from "../../hooks/use-api-service/use-api-service";
 import { useQuery } from "../../hooks/use-query";
 import { useControlOverviewController } from "../../components/control-overview/use-control-overview-controller";
 import { useSearch } from "../../hooks/use-search";
+import { ComplianceTable } from "../../components/compliance-table";
+import { ControlOverview } from "../../components/control-overview";
+
+/*
+To do:
+- Fetch designs pages data for aside menu
+- Fetch Architecture pages data for aside menu
+- Need a create designs button added to applications
+- need a create architecture button added to applications
+*/
 
 export function ApplicationsPage() {
   const [state, setState] = useState({
     loading: true,
     pageTitle: "",
-    breadCrumbLinks: [],
     bodyContent: "",
     knowledgeLinks: [],
+    designsLinks: [],
+    architectureLinks: [],
     complianceTableApplications: [],
     branches: [],
     applications: [],
@@ -113,7 +124,7 @@ export function ApplicationsPage() {
     }
   };
 
-  const handleOnSave = async ({ markdown }) => {
+  const onSave = async (markdown) => {
     try {
       const content = await resolveOutbound({
         markdown: markdown,
@@ -215,13 +226,18 @@ export function ApplicationsPage() {
     }
   };
 
-  const handleOnCreatePage = async ({ title, reviewDate, userFacing }) => {
+  const handleOnCreatePage = async ({
+    selectedPageType,
+    title,
+    reviewDate,
+    userFacing,
+  }) => {
     const slug = slugger(title);
 
     const frontmatter = {
       title,
       reviewDate,
-      userFacing,
+      ...(userFacing !== undefined && { userFacing: userFacing }),
     };
 
     // Temporary workaround to see if a file exists (before creating one)
@@ -229,11 +245,11 @@ export function ApplicationsPage() {
     try {
       await controller.getFile(
         "application",
-        `${application_id}/knowledge/${slug}/_index.md`
+        `${application_id}/${selectedPageType}/${slug}/_index.md`
       );
 
       history.push(
-        `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
+        `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
       );
     } catch (error) {
       // Only create page when 404 to prevent overwriting content when other errors are found
@@ -245,11 +261,11 @@ export function ApplicationsPage() {
         if (listing[application_id] === undefined) {
           listing[application_id] = {};
         }
-        if (listing[application_id]["knowledge"] === undefined) {
-          listing[application_id]["knowledge"] = {};
+        if (listing[application_id][selectedPageType] === undefined) {
+          listing[application_id][selectedPageType] = {};
         }
 
-        listing[application_id]["knowledge"][slug] = {
+        listing[application_id][selectedPageType][slug] = {
           "_index.md": {
             __meta: {
               ...frontmatter,
@@ -269,12 +285,12 @@ export function ApplicationsPage() {
           */
           await controller.commitFile(
             "application",
-            `${application_id}/knowledge/${slug}/_index.md`,
+            `${application_id}/${selectedPageType}/${slug}/_index.md`,
             new Blob([markdown], { type: "text/plain" })
           );
 
           history.push(
-            `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
+            `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
           );
         } catch (error) {
           console.log(error);
@@ -352,8 +368,6 @@ export function ApplicationsPage() {
             `${application_id}/_index.md`
           );
 
-          console.log("markdown response", markdownResponse);
-
           bodyContent = await resolveInbound(
             markdownResponse.content,
             `${application_id}`,
@@ -366,18 +380,6 @@ export function ApplicationsPage() {
             throw new Error(error);
           }
         }
-
-        // Build breadcrumb data
-        const breadcrumbLinks = [
-          {
-            label: "Home",
-            url: "/",
-          },
-          {
-            label: "Applications",
-            url: `/applications`,
-          },
-        ];
 
         // Build knowledge links
         const knowledgeData = await controller.getListing(
@@ -395,6 +397,50 @@ export function ApplicationsPage() {
               links.push({
                 label: knowledgeData[property]["_index.md"]["__meta"].title,
                 url: `/applications/${application_id}/knowledge/${property}`,
+              });
+            }
+
+            return links;
+          }, []);
+
+        // Build designs links
+        const designsData = await controller.getListing(
+          "application",
+          `${application_id}/designs`
+        );
+
+        const designsLinks = Object.keys(designsData)
+          .sort()
+          .reduce((links, property) => {
+            if (
+              designsData[property]?.["_index.md"] &&
+              !isEmpty(designsData[property]["_index.md"]["__meta"])
+            ) {
+              links.push({
+                label: designsData[property]["_index.md"]["__meta"].title,
+                url: `/applications/${application_id}/designs/${property}`,
+              });
+            }
+
+            return links;
+          }, []);
+
+        // Build architecture links
+        const architectureData = await controller.getListing(
+          "application",
+          `${application_id}/architecture`
+        );
+
+        const architectureLinks = Object.keys(architectureData)
+          .sort()
+          .reduce((links, property) => {
+            if (
+              architectureData[property]?.["_index.md"] &&
+              !isEmpty(architectureData[property]["_index.md"]["__meta"])
+            ) {
+              links.push({
+                label: architectureData[property]["_index.md"]["__meta"].title,
+                url: `/applications/${application_id}/architecture/${property}`,
               });
             }
 
@@ -443,11 +489,13 @@ export function ApplicationsPage() {
           applicationId: application.id,
           branches: branches,
           pageTitle: application.name,
-          breadcrumbLinks: breadcrumbLinks,
+          //breadcrumbLinks: breadcrumbLinks,
           bodyContent: bodyContent,
           frontmatter: markdownResponse?.data,
           loading: false,
           knowledgeLinks,
+          designsLinks,
+          architectureLinks,
           complianceTableTitle: "Compliance Data",
           complianceTableApplications: mapApplicationDataToSchema(
             applicationComplianceData
@@ -486,58 +534,131 @@ export function ApplicationsPage() {
   ]);
 
   return (
-    <ApplicationsTemplate
+    <TextPageTemplate
       currentRoute={`/applications/${application_id}`}
-      siteTitle={siteConfig.siteTitle}
       pageTitle={state.pageTitle}
+      siteTitle={siteConfig.siteTitle}
       version={siteConfig.version}
       logoSrc={siteConfig.theme.logoSrc}
       navItems={navItems}
-      breadcrumbLinks={state.breadcrumbLinks}
-      bodyContent={state.bodyContent}
-      knowledgeLinks={state.knowledgeLinks}
-      complianceTableTitle={state.complianceTableTitle}
-      complianceTableApplications={state.complianceTableApplications}
-      complianceTableOnAcceptOfRisk={handleOnComplianceAcceptOfRisk}
-      complianceTableNoDataMessage={complianceTableNoDataMessage}
-      complianceTableInvalidPermissionsMessage={
-        complianceTableInvalidPermissionsMessage
-      }
-      workingRepo={controller.getWorkingRepoName("application")}
-      workingBranch={controller.getWorkingBranchName("application")}
-      branches={state.branches}
-      baseBranch={controller.getBaseBranchName("application")}
-      onRequestToSwitchBranch={(branchName) =>
-        controller.setWorkingBranchName("application", branchName)
-      }
-      onRequestToCreateBranch={(branchName) =>
-        controller.createBranch("application", branchName)
-      }
-      onRequestToCreatePullRequest={async (sourceBranch) =>
-        await controller.createPullRequest(
-          "application",
-          controller.getBaseBranchName("application"),
-          sourceBranch
-        )
-      }
-      onSave={handleOnSave}
-      applications={state.applications}
-      applicationTypes={state.applicationTypes}
-      environments={state.environments}
-      referenceTypes={state.referenceTypes}
-      onRequestToCreateApplication={handleOnRequestToCreateApplication}
-      previewMode={controller.getPreviewModeStatus()}
       loading={state.loading}
-      onTogglePreviewMode={controller.togglePreviewModeStatus}
-      onRequestToUploadImage={handleOnUploadImage}
-      onRequestToCreatePage={handleOnCreatePage}
-      controlOverviewTitle="Control Overview"
-      controlOverviewData={controlOverviewState}
-      onRequestOfControlsData={handleOnRequestOfControlsData}
-      onRequestOfResourcesData={handleOnRequestOfResourcesData}
-      onResourceExemptionDelete={() => {}}
-      onResourceExemptionSave={() => {}}
       onQueryChange={onQueryChange}
+      previewMode={controller.getPreviewModeStatus()}
+      breadcrumbLinks={[
+        {
+          label: "Home",
+          url: "/",
+        },
+        {
+          label: "Applications",
+          url: `/applications`,
+        },
+      ]}
+      mainContentProps={{
+        onUploadImage: handleOnUploadImage,
+        content: [
+          {
+            id: "_index.md",
+            defaultValue: state.bodyContent,
+            additionalContent: (
+              <>
+                <ComplianceTable
+                  title={state.complianceTableTitle}
+                  applications={state.complianceTableApplications}
+                  invalidPermissionsMessage={
+                    complianceTableInvalidPermissionsMessage
+                  }
+                  loading={state.loading}
+                  noDataMessage={complianceTableNoDataMessage}
+                  onAcceptOfRisk={handleOnComplianceAcceptOfRisk}
+                />
+                <ControlOverview
+                  loading={state.loading}
+                  title="Control Overview"
+                  data={controlOverviewState}
+                  onRequestOfControlsData={handleOnRequestOfControlsData}
+                  onRequestOfResourcesData={handleOnRequestOfResourcesData}
+                  onResourceExemptionDelete={() => {}}
+                  onResourceExemptionSave={() => {}}
+                />
+              </>
+            ),
+          },
+        ],
+      }}
+      asideContentProps={{
+        menus: [
+          {
+            id: "aside-menu-knowledge",
+            initialCollapsed: true,
+            menuTitle: "Knowledge",
+            menuItems: state.knowledgeLinks,
+          },
+          {
+            id: "aside-menu-designs",
+            initialCollapsed: true,
+            menuTitle: "Designs",
+            menuItems: state.designsLinks,
+          },
+          {
+            id: "aside-menu-architecture",
+            initialCollapsed: true,
+            menuTitle: "Architecture",
+            menuItems: state.architectureLinks,
+          },
+        ],
+        tableOfContents: true,
+      }}
+      previewModeControllerProps={{
+        branches: state.branches,
+        workingRepo: controller.getWorkingRepoName("application"),
+        workingBranch: controller.getWorkingBranchName("application"),
+        baseBranch: controller.getBaseBranchName("application"),
+        onToggle: controller.togglePreviewModeStatus,
+        onRequestToSwitchBranch: (branchName) => {
+          controller.setWorkingBranchName("application", branchName);
+        },
+        onRequestToCreateBranch: (branchName) => {
+          controller.createBranch("application", branchName);
+        },
+        onSave: async (markdownData) => {
+          await onSave(markdownData.edits[0].markdown);
+        },
+        onRequestToCreatePullRequest: async (sourceBranch) => {
+          return await controller.createPullRequest(
+            "application",
+            controller.getBaseBranchName("application"),
+            sourceBranch
+          );
+        },
+        pageCreatorProps: {
+          onSubmit: handleOnCreatePage,
+          pageTypes: [
+            {
+              name: "Knowledge",
+              value: "knowledge",
+              showUserFacing: true,
+            },
+            {
+              name: "Design",
+              value: "designs",
+              showUserFacing: false,
+            },
+            {
+              name: "Architecture",
+              value: "architecture",
+              showUserFacing: false,
+            },
+          ],
+        },
+        applicationCreatorProps: {
+          applications: state.applications,
+          applicationTypes: state.applicationTypes,
+          environments: state.environments,
+          referenceTypes: state.referenceTypes,
+          onSubmit: handleOnRequestToCreateApplication,
+        },
+      }}
     />
   );
 }

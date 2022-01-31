@@ -358,6 +358,7 @@ export class GithubClient {
       method: data.method,
       headers: headers,
       body: body,
+      cache: "no-cache",
     });
   }
 }

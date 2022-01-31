@@ -17,6 +17,8 @@ import { HomePage } from "./pages/homepage";
 import { ApplicationsIndexPage } from "./pages/applications-index-page";
 import { ApplicationsPage } from "./pages/applications-page";
 import { KnowledgePage } from "./pages/knowledge-page";
+import { DesignPage } from "./pages/design-page";
+import { ArchitecturePage } from "./pages/architecture-page";
 import { GithubAuthPage } from "./pages/github-auth-page";
 import { SigninCallbackPage } from "./pages/signin-callback-page";
 import { NotFoundPage } from "./pages/not-found-page";
@@ -94,6 +96,20 @@ function App() {
                 exact
               >
                 <KnowledgePage />
+              </PrivateRoute>
+
+              <PrivateRoute
+                path="/applications/:application_id/designs/:slug"
+                exact
+              >
+                <DesignPage />
+              </PrivateRoute>
+
+              <PrivateRoute
+                path="/applications/:application_id/architecture/:slug"
+                exact
+              >
+                <ArchitecturePage />
               </PrivateRoute>
 
               <Route path="/signin-callback">

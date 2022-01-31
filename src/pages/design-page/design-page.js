@@ -1,8 +1,3 @@
-/*
-  - design /application/{id}/designs/{id}
-  - achitecture /application/{id}/architecture/{id}
-*/
-
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
@@ -19,7 +14,7 @@ import { useIsMounted } from "../../hooks/use-is-mounted";
 import { useSearch } from "../../hooks/use-search";
 import { TextPageTemplate } from "../../components/text-page-template";
 
-export function KnowledgePage() {
+export function DesignPage() {
   const { application_id, slug } = useParams();
   const location = useLocation();
   let history = useHistory();
@@ -29,7 +24,7 @@ export function KnowledgePage() {
     shouldRefreshContent: false,
     pageTitle: "",
     breadcrumbLinks: [],
-    relatedKnowledge: [],
+    relatedDesign: [], // change
     branches: [],
   });
   const controller = useController();
@@ -58,7 +53,7 @@ export function KnowledgePage() {
 
       await controller.commitContent(
         "application",
-        `${application_id}/knowledge/${slug}/`,
+        `${application_id}/designs/${slug}/`, // change
         content
       );
 
@@ -71,13 +66,18 @@ export function KnowledgePage() {
     }
   };
 
-  const handleOnCreatePage = async ({ title, reviewDate, userFacing }) => {
+  const handleOnCreatePage = async ({
+    selectedPageType,
+    title,
+    reviewDate,
+    userFacing,
+  }) => {
     const slug = slugger(title);
 
     const frontmatter = {
       title,
       reviewDate,
-      userFacing,
+      ...(userFacing !== undefined && { userFacing: userFacing }),
     };
 
     // Temporary workaround to see if a file exists (before creating one)
@@ -85,11 +85,11 @@ export function KnowledgePage() {
     try {
       await controller.getFile(
         "application",
-        `${application_id}/knowledge/${slug}/_index.md`
+        `${application_id}/${selectedPageType}/${slug}/_index.md`
       );
 
       history.push(
-        `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
+        `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
       );
     } catch (error) {
       // Only create page when 404 to prevent overwriting content when other errors are found
@@ -98,7 +98,14 @@ export function KnowledgePage() {
 
         const listing = await controller.getListing("application", null);
 
-        listing[application_id]["knowledge"][slug] = {
+        if (listing[application_id] === undefined) {
+          listing[application_id] = {};
+        }
+        if (listing[application_id][selectedPageType] === undefined) {
+          listing[application_id][selectedPageType] = {};
+        }
+
+        listing[application_id][selectedPageType][slug] = {
           "_index.md": {
             __meta: {
               ...frontmatter,
@@ -118,37 +125,33 @@ export function KnowledgePage() {
           */
           await controller.commitFile(
             "application",
-            `${application_id}/knowledge/${slug}/_index.md`,
+            `${application_id}/${selectedPageType}/${slug}/_index.md`,
             new Blob([markdown], { type: "text/plain" })
           );
 
           history.push(
-            `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
+            `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
           );
         } catch (error) {
           console.log(error);
         }
       }
-      // All other errors, do not allow creation of file, possibly throw error here
+      //All other errors, do not allow creation of file, possibly throw error here
     }
   };
 
-  const handleOnRequestToEditMetaData = async ({
-    title,
-    reviewDate,
-    userFacing,
-  }) => {
+  const handleOnRequestToEditMetaData = async ({ title, reviewDate }) => {
     try {
       const frontmatter = {
         ...pageData.pageMetaData,
         title,
         reviewDate,
-        userFacing,
       };
 
       const listing = await controller.getListing("application", null);
 
-      listing[application_id]["knowledge"][slug] = {
+      listing[application_id]["designs"][slug] = {
+        // change
         "_index.md": {
           __meta: {
             ...frontmatter,
@@ -169,7 +172,7 @@ export function KnowledgePage() {
 
       await controller.commitFile(
         "application",
-        `${application_id}/knowledge/${slug}/_index.md`,
+        `${application_id}/designs/${slug}/_index.md`, // change
         new Blob([markdownString], { type: "text/plain" })
       );
 
@@ -199,26 +202,26 @@ export function KnowledgePage() {
 
       const response = await controller.getFile(
         "application",
-        `${application_id}/knowledge/${slug}/_index.md`
+        `${application_id}/designs/${slug}/_index.md` // change
       );
 
       const resolvedMarkdown = await resolveInbound(
         response.content,
-        `${application_id}/knowledge/${slug}`,
+        `${application_id}/designs/${slug}`, // change
         mediaFetcher
       );
 
       const {
         title = "",
         reviewDate = dayjs().add(6, "month").toISOString(),
-        userFacing = false,
+        //userFacing = false,
         ...legacyFrontMatter
       } = response.data;
 
       const pageMetaData = {
         title,
         reviewDate,
-        userFacing,
+        //userFacing,
         ...legacyFrontMatter,
       };
 
@@ -242,28 +245,27 @@ export function KnowledgePage() {
           url: `/applications/${application_id}`,
         },
         {
-          label: "Knowledge",
-          url: `/applications/${application_id}/knowledge/${slug}`,
+          label: "Designs", // change
+          url: `/applications/${application_id}/designs/${slug}`, // change
         },
       ];
 
-      // Build related knowledge data
-      const relatedKnowledgeData = await controller.getListing(
+      // Build related designs data
+      const relatedDesignsData = await controller.getListing(
         "application",
-        `${application_id}/knowledge`
+        `${application_id}/designs` // change
       );
 
-      const relatedKnowledge = Object.keys(relatedKnowledgeData)
+      const relatedDesigns = Object.keys(relatedDesignsData) // change
         .sort()
         .reduce((links, property) => {
           if (
-            relatedKnowledgeData[property]?.["_index.md"] &&
-            !isEmpty(relatedKnowledgeData[property]["_index.md"]["__meta"])
+            relatedDesignsData[property]?.["_index.md"] &&
+            !isEmpty(relatedDesignsData[property]["_index.md"]["__meta"])
           ) {
             links.push({
-              label:
-                relatedKnowledgeData[property]["_index.md"]["__meta"].title,
-              url: `/applications/${application_id}/knowledge/${property}`,
+              label: relatedDesignsData[property]["_index.md"]["__meta"].title,
+              url: `/applications/${application_id}/designs/${property}`,
             });
           }
 
@@ -277,7 +279,7 @@ export function KnowledgePage() {
         ...prevState,
         bodyContent: resolvedMarkdown,
         orignalMarkdown: response.content,
-        relatedKnowledge,
+        relatedDesigns,
         pageTitle: response.data.title,
         pageMetaData,
         breadcrumbLinks,
@@ -329,7 +331,7 @@ export function KnowledgePage() {
 
   return (
     <TextPageTemplate
-      currentRoute={`/applications/${application_id}/knowledge/${slug}`}
+      currentRoute={`/applications/${application_id}/designs/${slug}`} // change
       pageTitle={pageData.pageTitle}
       siteTitle={siteConfig.siteTitle}
       version={siteConfig.version}
@@ -351,10 +353,10 @@ export function KnowledgePage() {
       asideContentProps={{
         menus: [
           {
-            id: "aside-menu-related-knowledge",
+            id: "aside-menu-related-designs",
             initialCollapsed: true,
-            menuTitle: "Related Knowledge",
-            menuItems: pageData.relatedKnowledge,
+            menuTitle: "Related Designs",
+            menuItems: pageData.relatedDesigns,
           },
         ],
         tableOfContents: true,
@@ -375,7 +377,7 @@ export function KnowledgePage() {
           await onSave(markdownData.edits[0].markdown, pageData.pageMetaData);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
-          await controller.createPullRequest(
+          return await controller.createPullRequest(
             "application",
             controller.getBaseBranchName("application"),
             sourceBranch
@@ -385,9 +387,19 @@ export function KnowledgePage() {
           onSubmit: handleOnCreatePage,
           pageTypes: [
             {
+              name: "Design",
+              value: "designs",
+              showUserFacing: false,
+            },
+            {
               name: "Knowledge",
               value: "knowledge",
               showUserFacing: true,
+            },
+            {
+              name: "Architecture",
+              value: "architecture",
+              showUserFacing: false,
             },
           ],
         },

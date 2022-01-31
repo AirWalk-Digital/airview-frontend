@@ -1,12 +1,12 @@
 import React from "react";
 import { screen, userEvent, within } from "@storybook/testing-library";
 import { action } from "@storybook/addon-actions";
-import { KnowledgePageMetaEditor } from "../../components/preview-mode-controller";
+import { PageMetaEditor } from "../../components/preview-mode-controller";
 import dayjs from "dayjs";
 
 export default {
-  title: "Modules/Preview Mode Controller/Widgets/Knowledge Page Meta Editor",
-  component: KnowledgePageMetaEditor,
+  title: "Modules/Preview Mode Controller/Widgets/Page Meta Editor",
+  component: PageMetaEditor,
   parameters: {
     layout: "centered",
   },
@@ -16,15 +16,15 @@ const callbackDelay = process.env.NODE_ENV === "test" ? 0 : 1000;
 const inputDelay = process.env.NODE_ENV === "test" ? 0 : 100;
 
 function Template(args) {
-  return <KnowledgePageMetaEditor {...args} />;
+  return <PageMetaEditor {...args} />;
 }
 
 Template.args = {
   disabled: false,
   initialData: {
-    title: "Test Knowledge Page",
+    title: "Test Page Title",
     reviewDate: dayjs().toISOString(),
-    userFacing: true,
+    userFacing: false,
   },
   onSubmit: async (formData) => {
     action("onSubmit")(formData);
@@ -54,9 +54,7 @@ export const InitialOpen = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.click(
-      canvas.getByRole("button", { name: /edit knowledge page/i })
-    );
+    await userEvent.click(canvas.getByRole("button", { name: /edit page/i }));
   },
 };
 
@@ -66,14 +64,14 @@ export const WithValidFormData = {
     await InitialOpen.play(context);
 
     const dialog = await screen.findByRole("dialog", {
-      name: /edit knowledge/i,
+      name: /edit page/i,
     });
 
     const titleInput = await within(dialog).findByLabelText(/title/i);
 
     await userEvent.clear(titleInput);
 
-    await userEvent.type(titleInput, "Test Knowledge Page Amended", {
+    await userEvent.type(titleInput, "Test Page Title Amended", {
       delay: inputDelay,
     });
 
@@ -101,14 +99,14 @@ export const WithInvalidFormData = {
     await InitialOpen.play(context);
 
     const dialog = await screen.findByRole("dialog", {
-      name: /edit knowledge/i,
+      name: /edit page/i,
     });
 
     const titleInput = await within(dialog).findByLabelText(/title/i);
 
     await userEvent.clear(titleInput);
 
-    await userEvent.type(titleInput, "Test Knowledge Page Amended*", {
+    await userEvent.type(titleInput, "Test Page Title Amended*", {
       delay: inputDelay,
     });
 
@@ -143,7 +141,7 @@ export const Submitting = {
     await WithValidFormData.play(context);
 
     const dialog = screen.getByRole("dialog", {
-      name: /edit knowledge/i,
+      name: /edit page/i,
     });
 
     await userEvent.click(

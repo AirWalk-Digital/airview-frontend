@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import siteConfig from "../../site-config.json";
 import { useNav } from "../../hooks/use-nav";
 import { useSearch } from "../../hooks/use-search";
-import { BasicTextPageFullWidthTemplate } from "../../components/basic-text-page-full-width-template";
+import { TextPageTemplate } from "../../components/text-page-template";
 
 export function NotFoundPage() {
   const location = useLocation();
@@ -11,7 +11,7 @@ export function NotFoundPage() {
   const onQueryChange = useSearch();
 
   return (
-    <BasicTextPageFullWidthTemplate
+    <TextPageTemplate
       currentRoute="/not-found"
       pageTitle="Page Not Found"
       siteTitle={siteConfig.siteTitle}
@@ -24,7 +24,13 @@ export function NotFoundPage() {
           url: "/",
         },
       ]}
-      bodyContent={`The requested page at path *${requestedUrl}* was not found. Please check you have requested the correct URL. **If you were editing un-published content then this message is expected until the content is published**. Click [here](/) to head back to the homepage.`}
+      mainContentProps={{
+        content: [
+          {
+            defaultValue: `The requested page at path *${requestedUrl}* was not found. Please check you have requested the correct URL. **If you were editing un-published content then this message is expected until the content is published**. Click [here](/) to head back to the homepage.`,
+          },
+        ],
+      }}
       loading={false}
       onQueryChange={onQueryChange}
     />

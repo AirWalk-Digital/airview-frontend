@@ -18,7 +18,7 @@ describe("ApplicationCreator", () => {
 
       expect(onSubmitSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          applicationType: 1,
+          applicationType: "ONE",
           environmentId: 1,
           name: "Test application name",
           parentId: 1,

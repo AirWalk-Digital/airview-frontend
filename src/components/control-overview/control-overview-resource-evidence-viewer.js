@@ -28,7 +28,11 @@ export function ControlOverviewResourceEvidenceViewer({
 
       <DialogContent dividers>
         <MarkdownContent
-          defaultValue={resourceEvidenceData}
+          content={[
+            {
+              defaultValue: resourceEvidenceData,
+            },
+          ]}
           readOnly={true}
           loading={false}
         />

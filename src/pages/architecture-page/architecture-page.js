@@ -1,8 +1,3 @@
-/*
-  - design /application/{id}/designs/{id}
-  - achitecture /application/{id}/architecture/{id}
-*/
-
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
@@ -19,7 +14,7 @@ import { useIsMounted } from "../../hooks/use-is-mounted";
 import { useSearch } from "../../hooks/use-search";
 import { TextPageTemplate } from "../../components/text-page-template";
 
-export function KnowledgePage() {
+export function ArchitecturePage() {
   const { application_id, slug } = useParams();
   const location = useLocation();
   let history = useHistory();
@@ -29,8 +24,9 @@ export function KnowledgePage() {
     shouldRefreshContent: false,
     pageTitle: "",
     breadcrumbLinks: [],
-    relatedKnowledge: [],
+    relatedArchitecture: [], // change
     branches: [],
+    bodyContent: [],
   });
   const controller = useController();
   const navItems = useNav();
@@ -48,36 +44,43 @@ export function KnowledgePage() {
     cleanupImages,
   } = useResolveMarkdown();
 
-  const onSave = async (markdownData, frontmatter) => {
+  const onSave = async (edits) => {
     try {
-      const content = await resolveOutbound({
-        markdown: markdownData,
-        frontmatter,
-        markdownFileName: "_index.md",
-      });
+      for (const edit of edits) {
+        const content = await resolveOutbound({
+          markdown: edit.markdown,
+          frontmatter: pageData.originalMarkdown[edit.id].data,
+          markdownFileName: pageData.originalMarkdown[edit.id].id,
+        });
 
-      await controller.commitContent(
-        "application",
-        `${application_id}/knowledge/${slug}/`,
-        content
-      );
+        await controller.commitContent(
+          "application",
+          `${application_id}/architecture/${slug}/`, // change
+          content
+        );
+      }
 
       setPageData((prevState) => ({
         ...prevState,
         shouldRefreshContent: true,
       }));
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
-  const handleOnCreatePage = async ({ title, reviewDate, userFacing }) => {
+  const handleOnCreatePage = async ({
+    selectedPageType,
+    title,
+    reviewDate,
+    userFacing,
+  }) => {
     const slug = slugger(title);
 
     const frontmatter = {
       title,
       reviewDate,
-      userFacing,
+      ...(userFacing !== undefined && { userFacing: userFacing }),
     };
 
     // Temporary workaround to see if a file exists (before creating one)
@@ -85,11 +88,11 @@ export function KnowledgePage() {
     try {
       await controller.getFile(
         "application",
-        `${application_id}/knowledge/${slug}/_index.md`
+        `${application_id}/${selectedPageType}/${slug}/_index.md`
       );
 
       history.push(
-        `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
+        `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
       );
     } catch (error) {
       // Only create page when 404 to prevent overwriting content when other errors are found
@@ -98,7 +101,14 @@ export function KnowledgePage() {
 
         const listing = await controller.getListing("application", null);
 
-        listing[application_id]["knowledge"][slug] = {
+        if (listing[application_id] === undefined) {
+          listing[application_id] = {};
+        }
+        if (listing[application_id][selectedPageType] === undefined) {
+          listing[application_id][selectedPageType] = {};
+        }
+
+        listing[application_id][selectedPageType][slug] = {
           "_index.md": {
             __meta: {
               ...frontmatter,
@@ -118,37 +128,33 @@ export function KnowledgePage() {
           */
           await controller.commitFile(
             "application",
-            `${application_id}/knowledge/${slug}/_index.md`,
+            `${application_id}/${selectedPageType}/${slug}/_index.md`,
             new Blob([markdown], { type: "text/plain" })
           );
 
           history.push(
-            `/applications/${application_id}/knowledge/${slug}?branch=${workingBranchName}`
+            `/applications/${application_id}/${selectedPageType}/${slug}?branch=${workingBranchName}`
           );
         } catch (error) {
           console.log(error);
         }
       }
-      // All other errors, do not allow creation of file, possibly throw error here
+      //All other errors, do not allow creation of file, possibly throw error here
     }
   };
 
-  const handleOnRequestToEditMetaData = async ({
-    title,
-    reviewDate,
-    userFacing,
-  }) => {
+  const handleOnRequestToEditMetaData = async ({ title, reviewDate }) => {
     try {
       const frontmatter = {
         ...pageData.pageMetaData,
         title,
         reviewDate,
-        userFacing,
       };
 
       const listing = await controller.getListing("application", null);
 
-      listing[application_id]["knowledge"][slug] = {
+      listing[application_id]["architecture"][slug] = {
+        // change
         "_index.md": {
           __meta: {
             ...frontmatter,
@@ -163,13 +169,13 @@ export function KnowledgePage() {
       );
 
       const markdownString = matter.stringify(
-        pageData.orignalMarkdown,
+        pageData.originalMarkdown["_index.md"].content,
         frontmatter
       );
 
       await controller.commitFile(
         "application",
-        `${application_id}/knowledge/${slug}/_index.md`,
+        `${application_id}/architecture/${slug}/_index.md`, // change
         new Blob([markdownString], { type: "text/plain" })
       );
 
@@ -194,31 +200,84 @@ export function KnowledgePage() {
       // Enable loading state
       setPageData((prevState) => ({ ...prevState, loading: true }));
 
-      // Fetch and resolve markdown content / images
-      const mediaFetcher = (path) => controller.getMedia("application", path);
+      // Get original markdown
+      let originalMarkdown = {};
 
-      const response = await controller.getFile(
-        "application",
-        `${application_id}/knowledge/${slug}/_index.md`
-      );
+      originalMarkdown["_index.md"] = {
+        id: "_index.md",
+        placeholder: "Main content placeholder text",
+        ...(await controller.getFile(
+          "application",
+          `${application_id}/architecture/${slug}/_index.md`
+        )),
+      };
 
-      const resolvedMarkdown = await resolveInbound(
-        response.content,
-        `${application_id}/knowledge/${slug}`,
-        mediaFetcher
+      // Subsection markdown
+      try {
+        originalMarkdown["section-one.md"] = {
+          id: "section-one.md",
+          title: "Section One",
+          placeholder: "Section One placeholder text",
+          ...(await controller.getFile(
+            "application",
+            `${application_id}/architecture/${slug}/section-one.md` // change
+          )),
+        };
+
+        originalMarkdown["section-two.md"] = {
+          id: "section-two.md",
+          title: "Section Two",
+          placeholder: "Section Two placeholder text",
+          ...(await controller.getFile(
+            "application",
+            `${application_id}/architecture/${slug}/section-two.md` // change
+          )),
+        };
+      } catch (error) {
+        if (error.status === 404) {
+          originalMarkdown["section-one.md"] = {
+            id: "section-one.md",
+            title: "Section One",
+            placeholder: "Section One placeholder text",
+          };
+
+          originalMarkdown["section-two.md"] = {
+            id: "section-two.md",
+            title: "Section Two",
+            placeholder: "Section Two placeholder text",
+          };
+        } else {
+          throw new Error(error);
+        }
+      }
+
+      // Resolve markdown
+      const resolvedMarkdown = await Promise.all(
+        Object.values(originalMarkdown).map(async (data, index) => {
+          return {
+            id: data.id,
+            title: index > 0 ? data.title : null,
+            ...(data?.content && {
+              defaultValue: await resolveInbound(
+                data.content,
+                `${application_id}/architecture/${slug}`,
+                (path) => controller.getMedia("application", path)
+              ),
+            }),
+            placeholder: data.placeholder,
+          };
+        })
       );
 
       const {
         title = "",
         reviewDate = dayjs().add(6, "month").toISOString(),
-        userFacing = false,
         ...legacyFrontMatter
-      } = response.data;
+      } = originalMarkdown["_index.md"].data;
 
       const pageMetaData = {
         title,
         reviewDate,
-        userFacing,
         ...legacyFrontMatter,
       };
 
@@ -242,28 +301,28 @@ export function KnowledgePage() {
           url: `/applications/${application_id}`,
         },
         {
-          label: "Knowledge",
-          url: `/applications/${application_id}/knowledge/${slug}`,
+          label: "Architecture", // change
+          url: `/applications/${application_id}/architecture/${slug}`, // change
         },
       ];
 
-      // Build related knowledge data
-      const relatedKnowledgeData = await controller.getListing(
+      // Build related architecture data
+      const relatedArchitectureData = await controller.getListing(
         "application",
-        `${application_id}/knowledge`
+        `${application_id}/architecture` // change
       );
 
-      const relatedKnowledge = Object.keys(relatedKnowledgeData)
+      const relatedArchitecture = Object.keys(relatedArchitectureData) // change
         .sort()
         .reduce((links, property) => {
           if (
-            relatedKnowledgeData[property]?.["_index.md"] &&
-            !isEmpty(relatedKnowledgeData[property]["_index.md"]["__meta"])
+            relatedArchitectureData[property]?.["_index.md"] &&
+            !isEmpty(relatedArchitectureData[property]["_index.md"]["__meta"])
           ) {
             links.push({
               label:
-                relatedKnowledgeData[property]["_index.md"]["__meta"].title,
-              url: `/applications/${application_id}/knowledge/${property}`,
+                relatedArchitectureData[property]["_index.md"]["__meta"].title,
+              url: `/applications/${application_id}/architecture/${property}`,
             });
           }
 
@@ -276,9 +335,9 @@ export function KnowledgePage() {
       setPageData((prevState) => ({
         ...prevState,
         bodyContent: resolvedMarkdown,
-        orignalMarkdown: response.content,
-        relatedKnowledge,
-        pageTitle: response.data.title,
+        originalMarkdown,
+        relatedArchitecture,
+        pageTitle: originalMarkdown["_index.md"].data.title,
         pageMetaData,
         breadcrumbLinks,
         loading: false,
@@ -329,7 +388,7 @@ export function KnowledgePage() {
 
   return (
     <TextPageTemplate
-      currentRoute={`/applications/${application_id}/knowledge/${slug}`}
+      currentRoute={`/applications/${application_id}/architecture/${slug}`} // change
       pageTitle={pageData.pageTitle}
       siteTitle={siteConfig.siteTitle}
       version={siteConfig.version}
@@ -341,20 +400,15 @@ export function KnowledgePage() {
       breadcrumbLinks={pageData.breadcrumbLinks}
       mainContentProps={{
         onUploadImage: handleOnUploadImage,
-        content: [
-          {
-            id: "_index.md",
-            defaultValue: pageData.bodyContent,
-          },
-        ],
+        content: pageData.bodyContent,
       }}
       asideContentProps={{
         menus: [
           {
-            id: "aside-menu-related-knowledge",
+            id: "aside-menu-related-architecture",
             initialCollapsed: true,
-            menuTitle: "Related Knowledge",
-            menuItems: pageData.relatedKnowledge,
+            menuTitle: "Related Architecture",
+            menuItems: pageData.relatedArchitecture,
           },
         ],
         tableOfContents: true,
@@ -371,11 +425,11 @@ export function KnowledgePage() {
         onRequestToCreateBranch: (branchName) => {
           controller.createBranch("application", branchName);
         },
-        onSave: async (markdownData) => {
-          await onSave(markdownData.edits[0].markdown, pageData.pageMetaData);
+        onSave: async ({ edits }) => {
+          await onSave(edits);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
-          await controller.createPullRequest(
+          return await controller.createPullRequest(
             "application",
             controller.getBaseBranchName("application"),
             sourceBranch
@@ -384,6 +438,16 @@ export function KnowledgePage() {
         pageCreatorProps: {
           onSubmit: handleOnCreatePage,
           pageTypes: [
+            {
+              name: "Architecture",
+              value: "architecture",
+              showUserFacing: false,
+            },
+            {
+              name: "Design",
+              value: "designs",
+              showUserFacing: false,
+            },
             {
               name: "Knowledge",
               value: "knowledge",
