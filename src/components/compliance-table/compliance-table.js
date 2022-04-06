@@ -196,8 +196,15 @@ ComplianceTable.propTypes = {
   applications: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
-      controlType: PropTypes.oneOf(["security", "operational", "task"])
-        .isRequired,
+      qualityModel: PropTypes.oneOf([
+        "log_excellence",
+        "security",
+        "reliability",
+        "performance_efficiency",
+        "cost_optimisation",
+        "portability",
+        "usability_and_compatibility",
+      ]).isRequired,
       severity: PropTypes.oneOf(["high", "medium", "low"]).isRequired,
       name: PropTypes.string.isRequired,
       tickets: PropTypes.arrayOf(

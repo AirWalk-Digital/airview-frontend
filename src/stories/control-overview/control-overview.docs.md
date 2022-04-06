@@ -70,7 +70,7 @@ The function should return data equal to the `controls` key within the `data` pr
         url: string,
       },
     ],
-    controlType: string,
+    qualityModel: string,
     lifecycle: string,
   },
 ] | "error";

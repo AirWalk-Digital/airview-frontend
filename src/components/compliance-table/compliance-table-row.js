@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import SecurityIcon from "@material-ui/icons/Security";
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -28,7 +26,7 @@ function ComplianceTableRow({
   environment,
   raisedDate,
   timeSinceRaised,
-  controlType,
+  qualityModel,
   severity,
   name,
   tickets,
@@ -39,17 +37,22 @@ function ComplianceTableRow({
   const [open, setOpen] = useState(false);
 
   const IconComponent = useMemo(() => {
-    if (controlType === "security") return SecurityIcon;
-    if (controlType === "operational") return PowerSettingsNewIcon;
-    if (controlType === "task") return AssignmentTurnedInIcon;
-  }, [controlType]);
+    return SecurityIcon;
+
+    /*
+      To do: it doesn't make sense to use this data as the drill down is based off of qualityModel, so these will always be the same per group 
+    if (qualityModel === "security") return SecurityIcon;
+    if (qualityModel === "operational") return PowerSettingsNewIcon;
+    if (qualityModel === "task") return AssignmentTurnedInIcon;
+    */
+  }, [qualityModel]);
 
   return (
     <React.Fragment>
       <TableRow classes={{ root: classes.tableBodyRowRoot }}>
         <TableCell aria-label="status">
           <Tooltip
-            title={`Control type: ${controlType}. Severity: ${severity}`}
+            title={`Control type: ${qualityModel}. Severity: ${severity}`}
             placement="bottom-start"
           >
             <IconComponent
@@ -65,7 +68,7 @@ function ComplianceTableRow({
           </Tooltip>
 
           <span className={sharedClasses.visuallyHidden}>
-            {`Control type: ${controlType}. Severity: ${severity}`}
+            {`Control type: ${qualityModel}. Severity: ${severity}`}
           </span>
         </TableCell>
 
@@ -136,7 +139,7 @@ ComplianceTableRow.propTypes = {
   environment: PropTypes.string.isRequired,
   raisedDate: PropTypes.string.isRequired,
   timeSinceRaised: PropTypes.string.isRequired,
-  controlType: PropTypes.oneOf(["security", "operational", "task"]).isRequired,
+  qualityModel: PropTypes.oneOf(["security", "operational", "task"]).isRequired,
   severity: PropTypes.oneOf(["high", "medium", "low"]).isRequired,
   name: PropTypes.string.isRequired,
   tickets: PropTypes.arrayOf(

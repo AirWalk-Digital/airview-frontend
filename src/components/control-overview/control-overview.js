@@ -197,7 +197,7 @@ export function ControlOverview({
                           <ControlOverviewItemDetail
                             control={control.control}
                             frameworks={control.frameworks}
-                            controlType={control.controlType}
+                            controlAction={control.controlAction}
                             lifecycle={control.lifecycle}
                           />
 
@@ -324,7 +324,7 @@ ControlOverview.propTypes = {
                 url: PropTypes.string,
               })
             ),
-            controlType: PropTypes.string,
+            qualityModel: PropTypes.string,
             lifecycle: PropTypes.string,
           })
         ),
