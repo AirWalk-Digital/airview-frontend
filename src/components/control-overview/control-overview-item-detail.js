@@ -7,7 +7,6 @@ import Typography from "@material-ui/core/Typography";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 export function ControlOverviewItemDetail({
-  control,
   frameworks,
   controlAction,
   lifecycle,
@@ -18,29 +17,6 @@ export function ControlOverviewItemDetail({
     <Grid container spacing={2}>
       <Grid item xs={9}>
         <div className={classes.itemDetails}>
-          <div className={classes.itemDetail}>
-            <div className={classes.itemDetailLeftContent}>
-              <Typography className={classes.itemDetailTitle}>
-                Control:
-              </Typography>
-            </div>
-
-            <div className={classes.itemDetailRightContent}>
-              <Typography variant="body2">{control.name}</Typography>
-
-              <Button
-                size="small"
-                variant="outlined"
-                href={control.url}
-                color="primary"
-                endIcon={<OpenInNewIcon />}
-                className={classes.itemDetailAction}
-              >
-                View
-              </Button>
-            </div>
-          </div>
-
           <div className={classes.itemDetail}>
             <div className={classes.itemDetailLeftContent}>
               <Typography className={classes.itemDetailTitle}>

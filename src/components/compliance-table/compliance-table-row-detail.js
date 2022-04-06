@@ -55,22 +55,6 @@ function ComplianceTableRowDetail({
           </li>
 
           <li className={classes.instanceInfoItem}>
-            <span>Control:</span>
-            <span className={classes.control}>
-              {detailData.control.name}
-              <Button
-                size="small"
-                variant="outlined"
-                href={detailData.control.url}
-                color="primary"
-                endIcon={<OpenInNewIcon />}
-              >
-                View
-              </Button>
-            </span>
-          </li>
-
-          <li className={classes.instanceInfoItem}>
             <span>Frameworks:</span>
             <span>
               {detailData.frameworks?.map((framework, index) => {
