@@ -184,9 +184,9 @@ export function ApplicationsPage() {
 
           control: { name: item.name, url: "/" },
           frameworks: [],
-          controlType:
-            item.controlType.charAt(0).toUpperCase() +
-            item.controlType.slice(1).toLowerCase(),
+          controlAction:
+            item.controlAction.charAt(0).toUpperCase() +
+            item.controlAction.slice(1).toLowerCase(),
           lifecycle: item.systemStage,
         };
       });
@@ -305,7 +305,7 @@ export function ApplicationsPage() {
 
     return applications.map((data) => ({
       id: data.id,
-      controlType: data.controlType,
+      qualityModel: data.qualityModel.toLowerCase(),
       severity: data.severity,
       name: data.name,
       environment: data.environment,

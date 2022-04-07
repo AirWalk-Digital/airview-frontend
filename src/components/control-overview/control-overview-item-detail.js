@@ -9,7 +9,7 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 export function ControlOverviewItemDetail({
   control,
   frameworks,
-  controlType,
+  controlAction,
   lifecycle,
 }) {
   const classes = useControlOverviewItemDetailStyles();
@@ -68,12 +68,12 @@ export function ControlOverviewItemDetail({
           <div className={classes.itemDetail}>
             <div className={classes.itemDetailLeftContent}>
               <Typography className={classes.itemDetailTitle}>
-                Control Type:
+                Control Action:
               </Typography>
             </div>
 
             <div className={classes.itemDetailRightContent}>
-              <Typography variant="body2">{controlType}</Typography>
+              <Typography variant="body2">{controlAction}</Typography>
             </div>
           </div>
 
@@ -119,7 +119,7 @@ ControlOverviewItemDetail.propTypes = {
       url: PropTypes.string,
     })
   ),
-  controlType: PropTypes.string,
+  controlAction: PropTypes.string,
   lifecycle: PropTypes.string,
 };
 

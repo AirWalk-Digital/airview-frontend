@@ -37,7 +37,7 @@ export const controls = {
           url: "/",
         },
       ],
-      controlType: "Control type test label 1",
+      qualityModel: "Control type test label 1",
       lifecycle: "Lifecycle test label 1",
     },
     {
@@ -60,7 +60,7 @@ export const controls = {
           url: "/",
         },
       ],
-      controlType: "Control type test label 2",
+      qualityModel: "Control type test label 2",
       lifecycle: "Lifecycle test label 2",
     },
     {
@@ -83,7 +83,7 @@ export const controls = {
           url: "/",
         },
       ],
-      controlType: "Control type test label 3",
+      qualityModel: "Control type test label 3",
       lifecycle: "Lifecycle test label 3",
     },
   ],

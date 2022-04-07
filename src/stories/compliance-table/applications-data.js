@@ -1,7 +1,7 @@
 export const applicationsData = [
   {
     id: 1,
-    controlType: "operational",
+    qualityModel: "operational",
     severity: "medium",
     name: "Vivamus vestibulum ntulla nec ante",
     tickets: [
@@ -51,7 +51,7 @@ export const applicationsData = [
   },
   {
     id: 2,
-    controlType: "security",
+    qualityModel: "security",
     severity: "high",
     name: "Donec consectetuer ligula vulputate sem tristique cursus",
     tickets: [
@@ -101,7 +101,7 @@ export const applicationsData = [
   },
   {
     id: 3,
-    controlType: "task",
+    qualityModel: "task",
     severity: "low",
     name: "Integer vitae libero ac risus egestas placerat",
     tickets: [
@@ -160,7 +160,7 @@ export const applicationsData = [
   },
   {
     id: 4,
-    controlType: "task",
+    qualityModel: "task",
     severity: "low",
     name: "Vivamus id diam bibendum, rhoncus leo quis, consequat",
     tickets: [
@@ -210,7 +210,7 @@ export const applicationsData = [
   },
   {
     id: 5,
-    controlType: "security",
+    qualityModel: "security",
     severity: "medium",
     name: "Phasellus fermentum tincidunt nisl",
     tickets: [
