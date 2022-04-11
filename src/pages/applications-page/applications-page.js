@@ -159,8 +159,9 @@ export function ApplicationsPage() {
     return models.map((item, index) => {
       return {
         id: index,
-        title:
-          item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase(),
+        title: (
+          item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase()
+        ).replaceAll("_", " "),
       };
     });
   }, state.applicationId);
@@ -183,11 +184,13 @@ export function ApplicationsPage() {
             item.severity.slice(1).toLowerCase(),
 
           control: { name: item.name, url: "/" },
-          frameworks: [],
+          frameworks: [{ name: "PCI DSS" }],
           controlAction:
             item.controlAction.charAt(0).toUpperCase() +
             item.controlAction.slice(1).toLowerCase(),
-          lifecycle: item.systemStage,
+          lifecycle:
+            item.systemStage.charAt(0).toUpperCase() +
+            item.systemStage.slice(1).toLowerCase(),
         };
       });
     });
@@ -205,7 +208,13 @@ export function ApplicationsPage() {
       return resources.map((item) => {
         const status =
           item.state === "FLAGGED" ? "Non-Compliant" : "Monitoring";
-        return { ...item, type: "Unknown", status: status };
+        return {
+          ...item,
+          type:
+            item.type.charAt(0).toUpperCase() +
+            item.type.slice(1).toLowerCase(),
+          status: status,
+        };
       });
     });
   };
@@ -324,12 +333,15 @@ export function ApplicationsPage() {
           name: data.name,
           url: "",
         },
-        frameworks: [],
+        frameworks: [{ name: "PCI DSS" }],
         environment: data.environment,
-        assignmentGroup: "-",
-        assignee: "-",
+        assignmentGroup: "Information Security",
+        assignee: "John Smith",
         systemSource: data.systemName,
-        systemStage: data.systemStage,
+
+        systemStage:
+          data.systemStage.charAt(0).toUpperCase() +
+          data.systemStage.slice(1).toLowerCase(),
       },
     }));
   };
