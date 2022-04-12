@@ -375,7 +375,7 @@ export function KnowledgePage() {
           await onSave(markdownData.edits[0].markdown, pageData.pageMetaData);
         },
         onRequestToCreatePullRequest: async (sourceBranch) => {
-          await controller.createPullRequest(
+          return await controller.createPullRequest(
             "application",
             controller.getBaseBranchName("application"),
             sourceBranch
