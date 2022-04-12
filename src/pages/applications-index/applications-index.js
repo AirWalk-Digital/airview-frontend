@@ -75,7 +75,7 @@ export function ApplicationsIndex({
             complianceData.find((f) => f.id === m.id)?.environments || []
           ).map((e) => ({
             ...e,
-            environment: e.environment || "n/a",
+            environment: "Production", //e.environment || "n/a",
             overviewValue: (1 - e.failedControls / e.totalControls) * 100,
           }));
 

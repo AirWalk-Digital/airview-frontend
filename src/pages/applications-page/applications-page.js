@@ -210,6 +210,7 @@ export function ApplicationsPage() {
           item.state === "FLAGGED" ? "Non-Compliant" : "Monitoring";
         return {
           ...item,
+          environment: "Production",
           type:
             item.type.charAt(0).toUpperCase() +
             item.type.slice(1).toLowerCase(),
