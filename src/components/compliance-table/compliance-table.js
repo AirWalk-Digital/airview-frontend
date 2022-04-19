@@ -147,7 +147,6 @@ function ComplianceTable({
 
   const filters = getFiltersDerrivedFromApplicationData(applications);
 
-  console.log(applications);
   return (
     <TableContainer component={Paper}>
       <ComplianceTableToolbar
