@@ -146,7 +146,7 @@ function ToggleComponent() {
 export function ToggleEventsPage() {
   const pageProps = {
     currentRoute: "/toggle-events",
-    pageTitle: "Toggle Events",
+    // pageTitle: "Toggle Events",
     siteTitle: siteConfig.siteTitle,
     version: siteConfig.version,
     logoSrc: siteConfig.theme.logoSrc,
