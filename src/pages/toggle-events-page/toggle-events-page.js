@@ -157,7 +157,7 @@ export function ToggleEventsPage() {
     breadcrumbLinks: [],
   };
   return (
-    <LayoutBase pageProps={pageProps}>
+    <LayoutBase {...pageProps}>
       <ToggleComponent />
     </LayoutBase>
   );
