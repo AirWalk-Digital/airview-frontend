@@ -147,6 +147,7 @@ function ComplianceTable({
 
   const filters = getFiltersDerrivedFromApplicationData(applications);
 
+  console.log(applications);
   return (
     <TableContainer component={Paper}>
       <ComplianceTableToolbar
@@ -169,6 +170,7 @@ function ComplianceTable({
               {...getTicketTimeData(application.raisedDateTime)}
             >
               <ComplianceTableRowDetail
+                key={application.id}
                 detailData={application.applicationDetailData}
                 applicationId={application.id}
                 onAcceptOfRisk={onAcceptOfRisk}
