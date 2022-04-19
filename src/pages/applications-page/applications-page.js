@@ -40,6 +40,8 @@ export function ApplicationsPage() {
     environments: [],
     referenceTypes: [],
   });
+
+  const [complianceState, setComplianceStates] = useState({ loading: false });
   const { application_id } = useParams();
   const location = useLocation();
   let history = useHistory();
@@ -546,6 +548,50 @@ export function ApplicationsPage() {
     isMounted,
   ]);
 
+  useEffect(() => {
+    const getComplianceData = async () => {
+      let applicationComplianceData;
+
+      if (state.applicationId == undefined) {
+        return;
+      }
+
+      try {
+        applicationComplianceData = JSON.parse(
+          await (
+            await apiService(
+              `/api/applications/${state.applicationId}/control-statuses`
+            )
+          ).data.text()
+        );
+        if (
+          JSON.stringify(complianceState.applicationComplianceData) !=
+          JSON.stringify(applicationComplianceData)
+        ) {
+          console.log(
+            complianceState.applicationComplianceData,
+            applicationComplianceData
+          );
+          setComplianceStates({
+            applicationComplianceData,
+            complianceTableTitle: "Compliance Data",
+            complianceTableApplications: mapApplicationDataToSchema(
+              applicationComplianceData
+            ),
+          });
+        }
+      } catch (error) {
+        if (error.status !== 403) throw error;
+      }
+    };
+
+    const timer = setInterval(() => {
+      getComplianceData();
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [state.applicationId]);
+
   return (
     <TextPageTemplate
       currentRoute={`/applications/${application_id}`}
@@ -576,12 +622,13 @@ export function ApplicationsPage() {
             additionalContent: (
               <>
                 <ComplianceTable
-                  title={state.complianceTableTitle}
-                  applications={state.complianceTableApplications}
+                  title={complianceState.complianceTableTitle}
+                  applications={complianceState.complianceTableApplications}
                   invalidPermissionsMessage={
                     complianceTableInvalidPermissionsMessage
                   }
-                  loading={state.loading}
+                  loading={complianceState.loading}
+                  // loading={false}
                   noDataMessage={complianceTableNoDataMessage}
                   onAcceptOfRisk={handleOnComplianceAcceptOfRisk}
                 />

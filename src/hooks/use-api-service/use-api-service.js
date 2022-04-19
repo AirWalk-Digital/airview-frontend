@@ -19,7 +19,7 @@ export function useApiService() {
     });
   };
 
-  const callApiHelper = async (resource, method = "get", data = {}) => {
+  const callApiHelper = async (resource, method = "get", data) => {
     const endpoint = `${process.env.REACT_APP_API_HOST}${resource}`;
 
     if (userData && userData?.access_token) {

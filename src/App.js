@@ -27,6 +27,8 @@ import { PrivateRoute } from "./components/private-route";
 import { AuthProvider } from "oidc-react";
 import { getContentBackendConfig } from "./lib/markdown-backend-config";
 
+import { ToggleEventsPage } from "./pages/toggle-events-page";
+
 // Move into lib - test
 function getOidcConfig(history, location) {
   return {
@@ -77,6 +79,10 @@ function App() {
             <Switch>
               <PrivateRoute path="/" exact>
                 <HomePage />
+              </PrivateRoute>
+
+              <PrivateRoute path="/toggle-events" exact>
+                <ToggleEventsPage />
               </PrivateRoute>
 
               <PrivateRoute path="/applications" exact>

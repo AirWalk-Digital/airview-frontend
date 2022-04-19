@@ -8,6 +8,7 @@ module.exports = function (app) {
       pathRewrite: {
         "^/api": "/", // remove base path
       },
+      secure: false,
       changeOrigin: true,
       /* logLevel: "debug", */
     })
