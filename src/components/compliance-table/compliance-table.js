@@ -169,6 +169,7 @@ function ComplianceTable({
               {...getTicketTimeData(application.raisedDateTime)}
             >
               <ComplianceTableRowDetail
+                key={application.id}
                 detailData={application.applicationDetailData}
                 applicationId={application.id}
                 onAcceptOfRisk={onAcceptOfRisk}
