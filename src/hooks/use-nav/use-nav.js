@@ -20,7 +20,8 @@ export function useNav() {
   const getChildren = (apps, parent) => {
     const children = apps
       .filter((f) => f._parentId === parent._id)
-      .map((m) => getChildren(apps, m));
+      .map((m) => getChildren(apps, m))
+      .sort((a, b) => a.name.localeCompare(b.name));
     if (children.length > 0) {
       parent.children = [
         { id: parent.id, ref: parent.ref, name: parent.name, url: parent.url },
@@ -33,7 +34,8 @@ export function useNav() {
   const indentApps = (apps) => {
     const parents = apps
       .filter((f) => f._parentId === null)
-      .map((m) => getChildren(apps, m));
+      .map((m) => getChildren(apps, m))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     return parents;
   };
@@ -54,12 +56,12 @@ export function useNav() {
           },
           {
             id: "applications",
-            name: "Applications",
+            name: "Applications & Services",
             children: [
               {
                 id: "applications",
                 ref: "applications",
-                name: "All Applications",
+                name: "All Applications & Services",
                 url: "/applications",
               },
               ...indentedApps,
