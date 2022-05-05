@@ -606,7 +606,7 @@ export function ApplicationsPage() {
             menuTitle: "Architecture",
             menuItems: state.architectureLinks,
           },
-        ],
+        ].filter((f) => f.menuItems.length > 0),
         tableOfContents: true,
       }}
       previewModeControllerProps={{
