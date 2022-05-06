@@ -29,8 +29,8 @@ export function ArchitecturePage() {
     bodyContent: [],
   });
   const controller = useController();
-  const navItems = useNav();
   const previewStatus = controller.getPreviewModeStatus();
+  const navItems = useNav(previewStatus);
   const workingBranchName = controller.getWorkingBranchName("application");
   const isMounted = useIsMounted();
   const onQueryChange = useSearch();
