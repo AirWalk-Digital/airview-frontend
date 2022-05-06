@@ -81,7 +81,7 @@ export function TextPageTemplate({
       editorChanges.current = {};
       setCanSave(false);
     } catch (error) {
-      console.error("there was an error attempting to save your changes");
+      throw { error: error.message };
     }
   };
 

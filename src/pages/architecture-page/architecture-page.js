@@ -45,28 +45,24 @@ export function ArchitecturePage() {
   } = useResolveMarkdown();
 
   const onSave = async (edits) => {
-    try {
-      for (const edit of edits) {
-        const content = await resolveOutbound({
-          markdown: edit.markdown,
-          frontmatter: pageData.originalMarkdown[edit.id].data,
-          markdownFileName: pageData.originalMarkdown[edit.id].id,
-        });
+    for (const edit of edits) {
+      const content = await resolveOutbound({
+        markdown: edit.markdown,
+        frontmatter: pageData.originalMarkdown[edit.id].data,
+        markdownFileName: pageData.originalMarkdown[edit.id].id,
+      });
 
-        await controller.commitContent(
-          "application",
-          `${application_id}/architecture/${slug}/`, // change
-          content
-        );
-      }
-
-      setPageData((prevState) => ({
-        ...prevState,
-        shouldRefreshContent: true,
-      }));
-    } catch (error) {
-      console.log(error);
+      await controller.commitContent(
+        "application",
+        `${application_id}/architecture/${slug}/`, // change
+        content
+      );
     }
+
+    setPageData((prevState) => ({
+      ...prevState,
+      shouldRefreshContent: true,
+    }));
   };
 
   const handleOnCreatePage = async ({
