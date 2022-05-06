@@ -44,9 +44,9 @@ export function ApplicationsPage() {
   const location = useLocation();
   let history = useHistory();
   const queryBranch = useQuery().get("branch");
-  const navItems = useNav();
   const controller = useController();
   const previewStatus = controller.getPreviewModeStatus();
+  const navItems = useNav(previewStatus);
   const workingBranchName = controller.getWorkingBranchName("application");
   const isMounted = useIsMounted();
   const apiService = useApiService();
