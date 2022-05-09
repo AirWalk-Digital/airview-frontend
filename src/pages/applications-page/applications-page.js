@@ -125,21 +125,17 @@ export function ApplicationsPage() {
   };
 
   const onSave = async (markdown) => {
-    try {
-      const content = await resolveOutbound({
-        markdown: markdown,
-        frontmatter: state.frontmatter,
-        markdownFileName: "_index.md",
-      });
+    const content = await resolveOutbound({
+      markdown: markdown,
+      frontmatter: state.frontmatter,
+      markdownFileName: "_index.md",
+    });
 
-      await controller.commitContent(
-        "application",
-        `${application_id}/`,
-        content
-      );
-    } catch (error) {
-      console.error(error);
-    }
+    await controller.commitContent(
+      "application",
+      `${application_id}/`,
+      content
+    );
   };
   const [
     controlOverviewState,

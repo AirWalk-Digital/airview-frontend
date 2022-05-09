@@ -44,26 +44,22 @@ export function DesignPage() {
   } = useResolveMarkdown();
 
   const onSave = async (markdownData, frontmatter) => {
-    try {
-      const content = await resolveOutbound({
-        markdown: markdownData,
-        frontmatter,
-        markdownFileName: "_index.md",
-      });
+    const content = await resolveOutbound({
+      markdown: markdownData,
+      frontmatter,
+      markdownFileName: "_index.md",
+    });
 
-      await controller.commitContent(
-        "application",
-        `${application_id}/designs/${slug}/`, // change
-        content
-      );
+    await controller.commitContent(
+      "application",
+      `${application_id}/designs/${slug}/`, // change
+      content
+    );
 
-      setPageData((prevState) => ({
-        ...prevState,
-        shouldRefreshContent: true,
-      }));
-    } catch (error) {
-      console.error(error);
-    }
+    setPageData((prevState) => ({
+      ...prevState,
+      shouldRefreshContent: true,
+    }));
   };
 
   const handleOnCreatePage = async ({
