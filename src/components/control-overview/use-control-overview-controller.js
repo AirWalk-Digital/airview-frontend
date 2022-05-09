@@ -44,8 +44,12 @@ function useControlOverviewController(getInitalData, applicationId) {
   async function initializeData() {
     dispatch({ type: "INITIALIZE", payload: "loading" });
 
-    const data = await getInitalData();
-    dispatch({ type: "INITIALIZE", payload: data });
+    try {
+      const data = await getInitalData();
+      dispatch({ type: "INITIALIZE", payload: data });
+    } catch {
+      dispatch({ type: "INITIALIZE" });
+    }
   }
 
   async function setControlsData(id, getData) {
