@@ -48,7 +48,7 @@ function useControlOverviewController(getInitalData, applicationId) {
       const data = await getInitalData();
       dispatch({ type: "INITIALIZE", payload: data });
     } catch {
-      dispatch({ type: "INITIALIZE", payload: undefined });
+      dispatch({ type: "INITIALIZE" });
     }
   }
 
