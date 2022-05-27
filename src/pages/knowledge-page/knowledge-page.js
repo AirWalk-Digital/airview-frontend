@@ -143,6 +143,8 @@ export function KnowledgePage() {
       };
 
       const listing = await controller.getListing("application", null);
+      console.log(listing);
+      console.log(application_id);
 
       listing[application_id]["knowledge"][slug] = {
         "_index.md": {
