@@ -45,7 +45,7 @@ export class GithubClient {
     authCallbackRoute,
     redirect_uri,
     authScope = "public_repo",
-    defaultCommitMessage = "Update from TinaCMS",
+    defaultCommitMessage = "Automated documentation update",
   }: GithubClientOptions) {
     this.proxy = proxy;
     this.clientId = clientId;

@@ -51,7 +51,7 @@ export class GithubClient {
     clientId,
     authCallbackRoute,
     redirect_uri,
-    defaultCommitMessage = "Update from TinaCMS",
+    defaultCommitMessage = "Automated documentation update",
   }: GithubClientOptions) {
     this.organisation = organisation;
     this.project = project;
