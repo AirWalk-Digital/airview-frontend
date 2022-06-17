@@ -74,6 +74,7 @@ export function ControllerProvider({ initialState, children, client }) {
   };
 
   const commitContent = async (route, filePath, content) => {
+    await setPreviewMode(true);
     for (let item of content) {
       await commitFile(
         route,
