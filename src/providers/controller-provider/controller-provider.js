@@ -4,7 +4,7 @@ import { useStore } from "../../store/store";
 import { useApiService } from "../../hooks/use-api-service";
 import * as matter from "gray-matter";
 import get from "lodash/get";
-import path from "path";
+import path from "path-browserify";
 
 export const ControllerProviderContext = React.createContext();
 
