@@ -45,7 +45,7 @@
     "react-scripts": "^5.0.0",
     "react-syntax-highlighter": "^15.4.3",
     "remark-gfm": "^1.0.0",
-    "rich-markdown-editor": "^11.21.3",
+    "rich-markdown-editor": "^11.21.2",
     "slug": "^4.0.2",
     "style-loader": "^2.0.0",
     "styled-components": "^5.2.1",
