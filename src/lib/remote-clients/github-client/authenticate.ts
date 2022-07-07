@@ -24,7 +24,9 @@ export const authenticate = (
   scope: string = "public_repo",
   redirect_uri: string
 ): Promise<void> => {
-  const authState = Math.random().toString(36).substring(7);
+  const array = new Uint32Array(1);
+  window.crypto.getRandomValues(array);
+  const authState = array[0].toString(36);
 
   const url = `https://github.com/login/oauth/authorize?scope=${scope}&client_id=${clientId}&state=${authState}&redirect_uri=${redirect_uri}`;
 
