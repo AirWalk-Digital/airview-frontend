@@ -7,6 +7,7 @@ const devDependencies = {
   "@types/mime": "^2.0.3",
   "babel-jest": "^26.6.3",
   husky: "^7.0.4",
+  "react-scripts": "^4.0.3",
 };
 
 const data = JSON.stringify({ ...exist, devDependencies });
