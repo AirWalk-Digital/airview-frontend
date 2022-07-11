@@ -20,7 +20,7 @@ import { authenticate } from "./authenticate";
 
 import { b64EncodeUnicode } from "./base64";
 import { GithubClientOptions, Branch, AuthScope } from "../interfaces";
-import mime from "mime-types";
+import mime from "mime";
 import { AirviewApiError } from "../../error";
 export * from "./authenticate";
 
@@ -87,7 +87,7 @@ export class GithubClient {
       });
 
       return data;
-    } catch (e) {
+    } catch (e: any) {
       if ((e.status = 401)) {
         return;
       }
@@ -150,7 +150,7 @@ export class GithubClient {
         method: "GET",
       });
       return data;
-    } catch (e) {
+    } catch (e: any) {
       if ((e.status = 404)) {
         return;
       }
@@ -230,7 +230,7 @@ export class GithubClient {
   // }
 
   async fetchFile(filePath: string, repo: string, branch: string) {
-    const mimeType = mime.lookup(filePath);
+    const mimeType = mime.getType(filePath);
     const request = await this.req({
       url: `https://api.github.com/repos/${repo}/contents/${removeLeadingSlash(
         filePath

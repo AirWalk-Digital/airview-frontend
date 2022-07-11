@@ -24,7 +24,9 @@ export const authenticate = (
   scope: string,
   redirect_uri: string
 ): Promise<void> => {
-  const authState = Math.random().toString(36).substring(7);
+  const array = new Uint32Array(1);
+  window.crypto.getRandomValues(array);
+  const authState = array[0].toString(36);
 
   //https://docs.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops
 
